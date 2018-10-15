@@ -22,8 +22,15 @@ export default {
     mounted(){
         var mySwiper = new Swiper ('.swiper-container', {
             loop: true,
+            autoplay:1000,
             // 如果需要分页器
-            pagination: '.swiper-pagination',
+            pagination: '.swiper-pagination',  autoplay: true,//可选选项，自动滑动
+            autoplayDisableOnInteraction: false,
+			loopAdditionalSlides : 1,
+            loop : true,
+            pagination: {
+                el: '.swiper-pagination',
+            }
         })        
     }
 }
