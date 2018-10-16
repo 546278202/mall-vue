@@ -3,7 +3,7 @@
         <div der="" class="top-naver" style="display:flex;height: 50px;align-items: center;border-bottom: 1px solid #ccc;background: #fff;">
            <a class="top-right" id="show-msg" style="width:45px;">
                 <i class="iconfont icon-xiaoxi" style="font-size: 1rem ;"></i>
-                <p style="font-size: 0.6rem ;line-height: 0.25rem ;">消息</p>
+                <p style="font-size: 0.6rem ;">消息</p>
             </a>
             <div class="searchInput">
                 <i class="iconfont icon-iconfontzhizuobiaozhun22" style="font-size: 1rem  ;position: absolute;left: 0.6rem ;top: 0.5rem ;"></i>
@@ -11,7 +11,7 @@
             </div>
            <a class="top-right" id="show-msg" style="width:45px;">
                 <i class="iconfont icon-xiaoxi" style="font-size: 1rem ;"></i>
-                <p style="font-size: 0.6rem ;line-height: 0.25rem ;">消息</p>
+                <p style="font-size: 0.6rem ;">消息</p>
             </a>
         </div>
     </section>
