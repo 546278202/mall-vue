@@ -1,0 +1,216 @@
+<template>    
+    <div>
+        <div class="My_top">
+  			<div class="My-top-naver">
+			    <a class="My-top-left" id="goSet">设置</a>
+		  	   	<a class="My-top-right">消息</a>
+	  	   	</div>
+            <div class="My-top-block">
+				<div style="height:1.5rem;text-align:center;color:#333333; display:flex;">
+					<div class="person" id="PersonMsg">
+						<a id="touXing" class="touXing"><i class="iconfont icon-wode-" style="font-size: 2rem ;"></i></a>
+					</div>
+				</div>	 
+			   	<div id="UserName" style="height:3.5rem;font-weight: bold;text-align: center;color: #333333;font-size: 15px;line-height:2.5rem;">小丸子</div>
+			   	<div style="height:2.5rem;text-align:center;color:#333333; display:flex;">
+			   		<a href="../collection/collection.html" style="flex:1;">
+			   			<p style="font-size:12px;color:#333;">我的收藏</p>
+			   			<p id="collectionCount" style="color:#f3cb0a;font-size: 18px;">1</p>
+			   		</a>
+					<a style="flex:1;"></a>
+			   		
+			   		<a href="../collection/record.html" style="flex:1;">
+						<p style="font-size:12px;color:#333;">足迹</p>
+			   			<p id="lookPathCount" style="color:#f3cb0a;font-size: 18px;">7</p>
+			   		</a>
+			   	</div>
+	  	   	</div>     
+		</div>
+        <div class="my-Order">
+			<a class="myList" href="../order/order.html?tabCode=">
+				<div class="left">我的订单</div>
+				<div class="right"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
+			</a>
+			<div class="stateList">
+				<a href="../order/order.html?tabCode=0">
+					<img src="../../images/state1.png">
+					<p>待付款</p>
+					<span id="orderStatus0" class="tableState"></span>
+				</a>
+				<a href="../order/order.html?tabCode=1">
+					<img src="../../images/state2.png">
+					<p>待发货</p>
+					<span id="orderStatus1" class="tableState" style="display: inline;">1</span>
+				</a>
+				<a href="../order/order.html?tabCode=2">
+					<img src="../../images/state3.png">
+					<p>待收货</p>
+					<span id="orderStatus2" class="tableState"></span>
+				</a>
+				<a href="../discuss/commentlist.html">
+					<img src="../../images/state4.png">
+					<p>待评价</p>
+					<span id="orderStatus3" class="tableState"></span>
+				</a>
+				<a href="../aftersale/salelist.html">
+					<img src="../../images/state5.png">
+					<p>售后</p>
+					<span id="orderStatus4" class="tableState"></span>
+				</a>
+			</div>
+	  	</div>
+        <FootBar></FootBar>
+    </div>        
+</template>
+<script>
+import axios from 'axios'
+import SearchBar from '../../components/SearchBar'
+import FootBar from '../../components/FootBar'
+import { InfiniteScroll } from 'mint-ui';
+export default {
+    data () {
+        return {
+            dataList:[],
+            last:''
+        }
+    },
+    mounted(){
+        axios.post('http://47.93.4.157:8086/mall_api/classify/getClassifyList', {
+
+        })
+        .then( (response) => {
+            this.dataList=response.data.data;
+           
+        })
+        .catch( (error) => {
+            console.log(error);
+        })    
+    },
+    
+    components:{
+        SearchBar,
+        FootBar
+    },
+    methods: {
+        loadMore() {
+            this.loading = true;
+            setTimeout(() => {
+                let last = this.list[this.list.length - 1];
+                for (let i = 1; i <= 10; i++) {
+                this.list.push(last + i);
+                }
+                this.loading = false;
+            }, 2500);
+        }
+    },
+
+}
+</script>
+
+<style lang="scss" scoped>
+    .My_top {
+        height: 10rem;
+        background: #f3cb0a;
+        color: #fff;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        position: relative;
+        .My-top-naver {
+            display: flex;
+            .My-top-left {
+                flex: 1;
+                text-align: left;
+                padding-left: 10px;
+                color: #fff;
+            }
+            .My-top-right {
+                flex: 1;
+                text-align: right;
+                padding-right: 10px;
+                color: #fff;
+            }
+        }
+    }
+    .My-top-block {
+        background: #fff;
+        border-radius: 20px;
+        width: 90%;
+        position: absolute;
+        margin: 0 5%;
+        top: 5rem;
+        height: 7.5rem;
+        box-sizing: border-box;
+    }
+    .My-top-block .person {
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        top: -20%;
+    }
+    .My-top-block .touXing {
+        width: 60px;
+        height: 60px;
+        color: #333333;
+        background: #fff;
+        display: inline-block;
+        border-radius: 10px;
+        box-shadow: 0 1px 14px #dcdcdc;
+        color: #f3cb0a;
+        overflow: hidden;
+    }
+    .my-Order {
+        background: #fff;
+        width: 100%;
+        margin-top: 3rem;
+        font-size: 0.7rem;
+        .myList {
+            display: flex;
+            height: 40px;
+            line-height: 40px;
+            padding: 0 10px;
+            font-size: 15px;
+            .left {
+                flex: 1;
+                text-align: left;
+            }
+            .myList .right {
+                flex: 1;
+                text-align: right;
+            }
+        }
+        .stateList {
+            display: flex;
+            border-top: 1px solid #f3cb0a;
+            align-items: center;
+            height: 80px;
+            a {
+                flex: 1;
+                text-align: center;
+                color: #666;
+                position: relative;
+                img {
+                    height: 30px;
+                }
+            }
+        }
+    }
+
+    .tableState {
+        position: absolute;
+        top: 0;
+        right: 0.7rem;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        font-size: 10px;
+        font-weight: 500!important;
+        text-align: center;
+        color: #fff;
+        background-color: #f23030;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        border-radius: 8px;
+        overflow: hidden;
+        display: none;
+    }
+</style>

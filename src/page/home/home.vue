@@ -6,7 +6,7 @@
                 <mt-swipe-item v-for="item in items" :key="item"><img v-bind:src="item" style="width: 100%;height: 100%;"></mt-swipe-item>
             </mt-swipe>
             <div class="block-img">
-                <img src="../images/main5.jpg" style="width:100%;">
+                <img src="../../images/main5.jpg" style="width:100%;">
             </div>
             <ul infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list">
                 <div id="WareList">
@@ -25,8 +25,8 @@
 </template>
 <script>
 import axios from 'axios'
-import SearchBar from '../components/SearchBar'
-import FootBar from '../components/FootBar'
+import SearchBar from '../../components/SearchBar'
+import FootBar from '../../components/FootBar'
 import { Swipe, SwipeItem } from 'mint-ui'
 import { InfiniteScroll } from 'mint-ui';
 export default {
@@ -73,7 +73,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style  lang="scss" scoped>
     #WareList li{
         width: 50%;padding: 5px;float: left;background: #fff;
         box-sizing: border-box;

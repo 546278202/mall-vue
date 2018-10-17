@@ -1,25 +1,16 @@
 <template>
-    <section>
-        <div der="" class="naver">
-            <li v-for="(item, index) in items" :key="index"  @click="selectTimer(index)"
-                :class="timeIndex === index ? 'default default-active' : 'default' ">
-                {{item.name}}
-            </li>
-        </div>
-    </section>
+    <div der="" class="naver">
+        <section @click = "gotoAddress('/home')" class="guide_item"><span>首页</span> </section>
+        <section @click = "gotoAddress('/productList')" class="guide_item"><span>分类</span> </section>
+        <section @click = "gotoAddress('/buyCart')" class="guide_item"><span>购物车</span> </section>
+        <section @click = "gotoAddress('/mine')" class="guide_item"><span>我的</span> </section>
+    </div>
 </template>
 <script>
 export default {
     data () {
         return {
-            timeIndex: 0,
-            items: [
-                {name: '首页'},
-                {name: '列表'},
-                {name: '购物车'},
-                {name: '我的'},
-            ],
-           
+            timeIndex: 0,      
         }
     },
     mounted(){
@@ -29,7 +20,9 @@ export default {
         selectTimer(index) {
             this.timeIndex = index;
         },
-
+        gotoAddress(path){
+        	this.$router.push(path)
+        }
     },
 
 }
@@ -59,11 +52,12 @@ export default {
         left: 0;
         z-index: 100;
         width: 100%;
-        li{
+        .guide_item{
             flex:1;
             font-size: 14px;
-        };
+        }
     }
+    
     .default{
         color: #404040;
     }
