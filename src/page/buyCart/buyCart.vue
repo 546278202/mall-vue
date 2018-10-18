@@ -1,23 +1,18 @@
 <template>    
     <div style="overflow:hidden;">
-        <SearchBar></SearchBar>
+        <Header></Header>
         <div class="page-infinite-wrapper" style="height: 571px;font-size:14px;">
             <ul infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list" style="display:flex;height: 100%;"> 
-                <div style="width:68px;">
-                    <li v-for="(item,index) in dataList" :key="index" style="height:50px;line-height:50px;">{{item.categoryName}}</li>
-                </div>
-                <div style="flex:1;background: #fff;">  
-                    <li v-for="(item,index) in dataList" :key="index">{{item.categoryName}}</li>
-                </div>
+                
             </ul>
         </div>
-        <FootBar></FootBar>
+        <Footer></Footer>
     </div>
 </template>
 <script>
 import axios from 'axios'
-import SearchBar from '../../components/SearchBar'
-import FootBar from '../../components/FootBar'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 import { InfiniteScroll } from 'mint-ui';
 export default {
     data () {
@@ -40,8 +35,8 @@ export default {
     },
     
     components:{
-        SearchBar,
-        FootBar
+        Header,
+        Footer
     },
     methods: {
         loadMore() {

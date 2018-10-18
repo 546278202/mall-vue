@@ -3,20 +3,9 @@
         <Search></Search>
         <div class="page-infinite-wrapper" style="height: 571px;font-size:14px;">
             <ul infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list" style="display:flex;height: 100%;"> 
-                <div style="width:68px;">
-                    <li v-for="(item,index) in dataList" :key="index" style="height:50px;line-height:50px;">{{item.categoryName}}</li>
-                </div>
-                <div style="flex:1;background: #fff;text-align: left;overflow: scroll;">  
-                    <li v-for="(item,index) in dataList" :key="index" >
-                        <div class="title">{{item.categoryName}}</div>
-                        <div>
-                            <a v-for="(i,index) in item.children" :key="index" class="list_img"><router-link :to="{path:'/search',query{shopname:i.categoryName}}"><img v-bind:src='categoryIcon' style="width:40px;height:40px;"></router-link></a>
-                        </div>
-                    </li>
-                </div>
+                
             </ul>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 <script>

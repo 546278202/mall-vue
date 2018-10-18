@@ -5,6 +5,8 @@ import productList from '@/page/productList/productList'
 import buyCart from '@/page/buyCart/buyCart'
 import mine from '@/page/mine/mine'
 import login from '@/page/login/login'
+import search from '@/page/search/search'
+
 
 
 Vue.use(Router)
@@ -36,10 +38,16 @@ export default new Router({
             component: mine
         },
         {
-          path: '/login',
-          name: 'login',
-          component: login
-      },
+            path: '/login',
+            name: 'login',
+            component: login
+        },
+        //搜索页
+        {
+            path: '/search',
+            name: 'search',
+            component: search
+        },
   
     ]
 })

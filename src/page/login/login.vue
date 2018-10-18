@@ -8,17 +8,17 @@
             <div style="margin-top:40px;">
                 <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
                     <i class="iconfont icon-zhanghao"></i>
-                    <input type="text" placeholder="请输入号码/手机号" id="" name="mobile" style="border:0;width:100%;" v-model="message">
+                    <input type="text" placeholder="请输入号码/手机号" style="border:0;width:100%;" ref="input1">
                 </div>
             </div>	
             <div style="margin-top:15px;">
                 <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
                     <i class="iconfont icon-mima"></i>
-                    <input type="text" placeholder="请输入密码" id="" name="mobile" style="border:0;width:100%;" ref="input1">
+                    <input type="text" placeholder="请输入密码"  style="border:0;width:100%;" ref="input2">
                 </div>
             </div>	
             <div style="position:relative;margin-top:37px;">
-                <button class="button" style="width: 275px;margin:0 auto;" @click="mobileLogin">>确定</button>
+                <button class="button" style="width: 275px;margin:0 auto;" @click="getMessage">确定</button>
             </div>
             <div style="position:relative;">
                 <div style="width: 275px;margin:0 auto;text-align: right;line-height:25px; ">
@@ -31,15 +31,19 @@
 </template>
 <script>
 import axios from 'axios'
+import md5 from 'js-md5';
+import { Toast } from 'mint-ui'
+import { MessageBox } from 'mint-ui';
 export default {
     data () {
         return {
             dataList:[],
-            message:''
+            message:'',
         }
     },
     mounted(){
-        // console.log(message)
+        
+       
         axios.post('http://47.93.4.157:8086/mall_api/classify/getClassifyList', {
 
         })
@@ -59,16 +63,38 @@ export default {
         
     },
     methods: {
-        //发送登录信息
-        mobileLogin(){
-            alert("S")
-            if ("") {
-               
-            }else{
-               
-               
-            }
-        },
+        getMessage:function(){
+            let v1=this.$refs.input1.value
+            let v2=this.$refs.input2.value
+            // 登陆
+            axios.post('http://47.93.4.157:8086/mall_api/user/login', {
+                userName: v1,
+                pwd:md5(v2)
+            })
+            .then( (response) => {
+                let res=response.data;
+                if(res.code==0 && res.success==true){
+                    Toast({
+                        message: '登陆成功',
+                        position: 'bottom',
+                        duration: 1000
+                    });
+                    sessionStorage.baseUser=JSON.stringify(res.data);         	
+                    console.log(JSON.parse(sessionStorage.baseUser))
+                    this.$router.push({path:'/home'});
+                }else{
+                    MessageBox({
+                        title: '提示',
+                        message:res.msg,
+                        showCancelButton: true
+                    });
+                }
+            
+            })
+            .catch( (error) => {
+                console.log(error);
+            })    
+        } 
     },
 }
 </script>

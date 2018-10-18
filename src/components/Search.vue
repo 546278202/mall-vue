@@ -1,12 +1,11 @@
 <template>
     <section>
         <div der="" class="top-naver" style="display:flex;height: 50px;align-items: center;border-bottom: 1px solid #ccc;background: #fff;">
-           <a class="top-right" id="show-msg" style="width:45px;">
-                <i class="iconfont icon-xiaoxi" style="font-size: 1rem ;"></i>
-                <p style="font-size: 0.6rem ;">消息</p>
+            <a class="top-left" style="line-height: 2.5rem;width: 45px;">
+                <i class="iconfont icon-fanhui" style="font-size: 1rem"></i>
             </a>
-            <div class="searchInput">
-                <i class="iconfont icon-iconfontzhizuobiaozhun22" style="font-size: 1rem  ;position: absolute;left: 0.6rem ;top: 0.5rem ;"></i>
+            <div class="searchInput" >
+                <i class="iconfont icon-iconfontzhizuobiaozhun22"></i>
                 <input type="text" placeholder="请输入商品名称" id="SearchInput" class="form-control" name="mobile" style="width: 100%;border:0;">
             </div>
            <a class="top-right" id="show-msg" style="width:45px;">
@@ -48,5 +47,7 @@ export default {
         line-height: 30px;
         flex:1;
         padding: 0 10px;
+        display: flex;
+        align-items: center;
     }
 </style>

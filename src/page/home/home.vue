@@ -1,6 +1,6 @@
 <template>    
     <div style="overflow:hidden;">
-        <SearchBar></SearchBar>
+        <Search></Search>
         <div class="page-infinite-wrapper" style="height: 571px;">
             <mt-swipe :auto="4000" style="height:200px;">
                 <mt-swipe-item v-for="item in items" :key="item"><img v-bind:src="item" style="width: 100%;height: 100%;"></mt-swipe-item>
@@ -20,13 +20,13 @@
                 </div>
             </ul>
         </div>
-        <FootBar></FootBar>
+        <Footer></Footer>
     </div>
 </template>
 <script>
 import axios from 'axios'
-import SearchBar from '../../components/SearchBar'
-import FootBar from '../../components/FootBar'
+import Search from '../../components/Search'
+import Footer from '../../components/Footer'
 import { Swipe, SwipeItem } from 'mint-ui'
 import { InfiniteScroll } from 'mint-ui';
 export default {
@@ -54,8 +54,8 @@ export default {
     },
     
     components:{
-        SearchBar,
-        FootBar
+        Search,
+        Footer
     },
     methods: {
         loadMore() {

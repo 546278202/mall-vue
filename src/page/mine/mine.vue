@@ -2,8 +2,11 @@
     <div>
         <div class="My_top">
   			<div class="My-top-naver">
-			    <a class="My-top-left" id="goSet">设置</a>
-		  	   	<a class="My-top-right">消息</a>
+			    <a class="My-top-left" id="goSet"><i class="iconfont icon-shezhi" style="font-size: 2rem ;"></i></a>
+		  	   	<a class="My-top-right">
+                    <div>消息</div>
+                    <i class="iconfont icon-xiaoxi" style="font-size: 1.3rem ;"></i>
+                </a>
 	  	   	</div>
             <div class="My-top-block">
 				<div style="height:1.5rem;text-align:center;color:#333333; display:flex;">
@@ -11,17 +14,17 @@
 						<a id="touXing" class="touXing"><i class="iconfont icon-wode-" style="font-size: 2rem ;"></i></a>
 					</div>
 				</div>	 
-			   	<div id="UserName" style="height:3.5rem;font-weight: bold;text-align: center;color: #333333;font-size: 15px;line-height:2.5rem;">小丸子</div>
+			   	<div id="UserName" style="height:3.5rem;font-weight: bold;text-align: center;color: #333333;font-size: 15px;line-height:2.5rem;">{{dataList.nickName}}</div>
 			   	<div style="height:2.5rem;text-align:center;color:#333333; display:flex;">
 			   		<a href="../collection/collection.html" style="flex:1;">
 			   			<p style="font-size:12px;color:#333;">我的收藏</p>
-			   			<p id="collectionCount" style="color:#f3cb0a;font-size: 18px;">1</p>
+			   			<p id="collectionCount" style="color:#f3cb0a;font-size: 18px;">{{dataList.collectionCount}}</p>
 			   		</a>
 					<a style="flex:1;"></a>
 			   		
 			   		<a href="../collection/record.html" style="flex:1;">
 						<p style="font-size:12px;color:#333;">足迹</p>
-			   			<p id="lookPathCount" style="color:#f3cb0a;font-size: 18px;">7</p>
+			   			<p id="lookPathCount" style="color:#f3cb0a;font-size: 18px;">{{dataList.lookPathCount}}</p>
 			   		</a>
 			   	</div>
 	  	   	</div>     
@@ -40,7 +43,7 @@
 				<a href="../order/order.html?tabCode=1">
 					<img src="../../images/state2.png">
 					<p>待发货</p>
-					<span id="orderStatus1" class="tableState" style="display: inline;">1</span>
+					<span id="orderStatus1" class="tableState" style="display: inline;">{{dataList.orderStatus1}}</span>
 				</a>
 				<a href="../order/order.html?tabCode=2">
 					<img src="../../images/state3.png">
@@ -59,27 +62,31 @@
 				</a>
 			</div>
 	  	</div>
-        <FootBar></FootBar>
+        <Footer></Footer>
     </div>        
 </template>
 <script>
 import axios from 'axios'
-import SearchBar from '../../components/SearchBar'
-import FootBar from '../../components/FootBar'
+import Search from '../../components/Search'
+import Footer from '../../components/Footer'
 import { InfiniteScroll } from 'mint-ui';
 export default {
     data () {
         return {
-            dataList:[],
+            dataList:'',
             last:''
         }
     },
     mounted(){
-        axios.post('http://47.93.4.157:8086/mall_api/classify/getClassifyList', {
+        let baseUser=JSON.parse(sessionStorage.baseUser);
+        let userId=baseUser.userId;
 
+        axios.post('http://47.93.4.157:8086/mall_api/common/get_home_info', {
+            "userId":userId,
         })
         .then( (response) => {
             this.dataList=response.data.data;
+            console.log(response.data)
            
         })
         .catch( (error) => {
@@ -88,8 +95,8 @@ export default {
     },
     
     components:{
-        SearchBar,
-        FootBar
+        Search,
+        Footer
     },
     methods: {
         loadMore() {
@@ -116,7 +123,9 @@ export default {
         border-bottom-right-radius: 30px;
         position: relative;
         .My-top-naver {
+            height: 50px;
             display: flex;
+            align-items: center;
             .My-top-left {
                 flex: 1;
                 text-align: left;
@@ -124,6 +133,7 @@ export default {
                 color: #fff;
             }
             .My-top-right {
+                font-size: 14px;
                 flex: 1;
                 text-align: right;
                 padding-right: 10px;
@@ -157,6 +167,10 @@ export default {
         box-shadow: 0 1px 14px #dcdcdc;
         color: #f3cb0a;
         overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
     }
     .my-Order {
         background: #fff;
