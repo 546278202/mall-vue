@@ -24,16 +24,16 @@ export default {
         }
     },
   mounted(){
-      axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_list', {
-          firstName: 'Fred',
-          lastName: 'Flintstone'
-      })
-      .then(function (response) {
-          console.log(response);
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+        // axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_list', {
+        //     firstName: 'Fred',
+        //     lastName: 'Flintstone'
+        // })
+        // .then(function (response) {
+            
+        // })
+        // .catch(function (error) {
+            
+        // });
   }
 }
 </script>

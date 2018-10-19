@@ -3,20 +3,25 @@
         <Search></Search>
         <div class="page-infinite-wrapper" style="height: 571px;">
             <mt-swipe :auto="4000" style="height:200px;">
-                <mt-swipe-item v-for="item in items" :key="item"><img v-bind:src="item" style="width: 100%;height: 100%;"></mt-swipe-item>
+                <mt-swipe-item v-for="item in items" :key="item">
+                    <img v-bind:src="item" style="width: 100%;height: 100%;">
+                </mt-swipe-item>
             </mt-swipe>
             <div class="block-img">
                 <img src="../../images/main5.jpg" style="width:100%;">
             </div>
             <ul infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list">
                 <div id="WareList">
-                    <li v-for="(item,index) in lists" :key="index">
-                        <div class="ListImg" style="height:130px;overflow:hidden;">
-                            <img v-bind:src="item.warePic" style="display:block;margin:0 auto;height:100%;">
-                        </div>
-                        <div class="txt">{{item.warename}}</div>
-                        <div class="money"><span>￥</span><span>{{item.wareprice}}</span></div>
-                    </li>
+                    <router-link  v-for="(item,index) in lists" :key="index" :to="{path:'/detail' , query:{id:item.wareid}}">
+                        <li>
+                            <div class="ListImg" style="height:130px;overflow:hidden;">
+                                <img v-bind:src="item.warePic" style="display:block;margin:0 auto;height:100%;">
+                            </div>
+                            <div class="txt">{{item.warename}}</div>
+                        
+                            <div class="money">￥{{item.wareprice}}</div>
+                        </li>                    
+                    </router-link>
                 </div>
             </ul>
         </div>
@@ -34,19 +39,19 @@ export default {
         return {
             items:[],
             lists:[],
-            last:''
         }
     },
     mounted(){
         axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_list', {
-            time: '2018-10-15 14:48:26',
+            time: this.getNowFormatDate(),
             pageNum:"1",
             pageSize:"10",
            
         })
         .then( (response) => {
-            this.lists=response.data.data[0].wareList.list
+            this.lists=response.data.data[0].wareList.list;
             this.items=response.data.data[0].recommendWare[0].coverList;
+            
         })
         .catch( (error) => {
             console.log(error);
@@ -58,15 +63,22 @@ export default {
         Footer
     },
     methods: {
-        loadMore() {
-            this.loading = true;
-            setTimeout(() => {
-                let last = this.list[this.list.length - 1];
-                for (let i = 1; i <= 10; i++) {
-                this.list.push(last + i);
-                }
-                this.loading = false;
-            }, 2500);
+        getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+            return currentdate;
         }
     },
 

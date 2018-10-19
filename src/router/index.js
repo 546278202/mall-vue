@@ -2,10 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/page/home/home'
 import productList from '@/page/productList/productList'
-import buyCart from '@/page/buyCart/buyCart'
+import buyCar from '@/page/buyCar/buyCar'
 import mine from '@/page/mine/mine'
 import login from '@/page/login/login'
 import search from '@/page/search/search'
+import detail from '@/page/detail/detail'
+
 
 
 
@@ -28,9 +30,9 @@ export default new Router({
             component: productList
         },
         {
-            path: '/buyCart',
-            name: 'buyCart',
-            component: buyCart
+            path: '/buyCar',
+            name: 'buyCar',
+            component: buyCar
         }, 
         {
             path: '/mine',
@@ -47,6 +49,12 @@ export default new Router({
             path: '/search',
             name: 'search',
             component: search
+        },
+        //详情页
+        {
+            path: '/detail',
+            name: 'detail',
+            component: detail
         },
   
     ]

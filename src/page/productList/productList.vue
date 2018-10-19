@@ -10,7 +10,10 @@
                     <li v-for="(item,index) in dataList" :key="index" >
                         <div class="title">{{item.categoryName}}</div>
                         <div>
-                            <a v-for="(i,index) in item.children" :key="index" class="list_img"><router-link :to="{path:'/search',query{shopname:i.categoryName}}"><img v-bind:src='categoryIcon' style="width:40px;height:40px;"></router-link></a>
+                            <router-link v-for="(i,index) in item.children" :key="index" class="list_img" :to="{path:'/search' , query:{name:i.categoryName}}">
+                                <img v-bind:src='i.categoryIcon' style="width:40px;height:40px;">
+                                <div>{{i.categoryName}}</div>
+                            </router-link>
                         </div>
                     </li>
                 </div>

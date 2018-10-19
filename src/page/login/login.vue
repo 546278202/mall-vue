@@ -74,11 +74,6 @@ export default {
             .then( (response) => {
                 let res=response.data;
                 if(res.code==0 && res.success==true){
-                    Toast({
-                        message: '登陆成功',
-                        position: 'bottom',
-                        duration: 1000
-                    });
                     sessionStorage.baseUser=JSON.stringify(res.data);         	
                     console.log(JSON.parse(sessionStorage.baseUser))
                     this.$router.push({path:'/home'});
@@ -121,6 +116,12 @@ export default {
         font-size: 15px;
     }
     .icon-zhanghao {
+        position: absolute;
+        left: 5px;
+        font-size: 1.2rem;
+        color: #000;
+    }
+    .iconfont{
         position: absolute;
         left: 5px;
         font-size: 1.2rem;

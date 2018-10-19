@@ -1,67 +1,112 @@
 <template>
-    <div der="" class="naver">
+    <!-- <div der="" class="naver">
         <section @click = "gotoAddress('/home')" class="guide_item"><span>首页</span> </section>
         <section @click = "gotoAddress('/productList')" class="guide_item"><span>分类</span> </section>
         <section @click = "gotoAddress('/buyCart')" class="guide_item"><span>购物车</span> </section>
         <section @click = "gotoAddress('/mine')" class="guide_item"><span>我的</span> </section>
+    </div>-->
+    <div class="nav-box">
+        <li class="nav-item"
+            v-for="(item, index) in nav"
+            @click="routerLink(index, item.path)"
+            :key="index">
+        <!-- 判断高亮表 -->
+        <p :class=" navIndex === index ? 'item-cn item-cn-active' : 'item-cn'">
+            {{ item.title }}
+        </p>
+        <!-- 判断高亮表 -->
+        <p :class="navIndex === index ? 'item-en item-en-active' : 'item-en'">
+            {{ item.en }}
+        </p>
+        </li>
     </div>
 </template>
 <script>
 export default {
     data () {
         return {
-            timeIndex: 0,      
+            nav: [
+                {title: '首页', en: 'Code', path: '/home'},
+                {title: '分类', en: 'Source', path: '/productList'},
+                {title: '购物车', en: 'About', path: '/buyCar'},
+                {title: '我的', en: 'About', path: '/mine'},
+            ],
+            navIndex: 0,   
         }
     },
     mounted(){
     
     },
     methods: {
-        selectTimer(index) {
-            this.timeIndex = index;
+        routerLink(index, path) {
+        // 点击哪个路由就赋值给自定义的下下标
+        this.navIndex = index;
+        // 路由跳转
+        this.$router.push(path)
         },
-        gotoAddress(path){
-        	this.$router.push(path)
+
+        checkRouterLocal(path) {
+        // 查找当前路由下标高亮
+        this.navIndex = this.nav.findIndex(item => item.path === path);
+        }
+
+    },
+    watch: {
+        "$route"() {
+            let path = this.$route.path;
+            // 检索当前路径
+            this.checkRouterLocal(path);
         }
     },
 
 }
 </script>
 <style lang="scss" scoped>
-    .searchInput{
-        position: relative;
-        border: 1px solid #ccc;
-        height: 30px;
-        border-radius: 30px;
-        overflow: hidden;
-        line-height: 30px;
-        flex:1;
-        padding: 0 10px;
-        
-    }
-    .naver{
-        display: flex;
-        height: 50px;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        border-top: 1px solid #ccc;
-        background: #fff;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        z-index: 100;
-        width: 100%;
-        .guide_item{
-            flex:1;
-            font-size: 14px;
-        }
-    }
-    
-    .default{
-        color: #404040;
-    }
-    .default-active{
-        color: #f5d53b;
-    }
+.nav-box {
+    display: flex;
+    width:100%;
+    position: fixed;
+    bottom: 0;
+    background: #fff;
+    border-top:1px solid #eee; 
+}
+
+.nav-item {
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+  line-height: 25px;
+  flex:1;
+}
+
+/*导航普通状态*/
+.item-cn {
+  color: #1c2438;
+  font-weight: 800;
+}
+
+/*导航普通状态*/
+.item-en {
+  color: #666;
+  font-size: 12px;
+}
+
+/*导航高亮*/
+.item-cn-active {
+  color: #2d8cf0;
+}
+
+/*导航高亮*/
+.item-en-active {
+  color: #5cadff;
+}
+
+.nav-item:hover .item-cn {
+  color: #2d8cf0;
+}
+
+.nav-item:hover .item-en {
+  color: #5cadff;
+}
 </style>

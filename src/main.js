@@ -28,6 +28,7 @@ axios.interceptors.request.use(function (config) {
   if(token) {
       config.headers.common['Authorization'] = "Bearer " + token;
   }
+
   return config;
 },function (error) {
   return Promise.reject(error)
@@ -52,6 +53,7 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
+// 获取当前时间，格式YYYY-MM-DD
 Vue.prototype.getNowFormatDate = function() {
   var date = new Date();
   var seperator1 = "-";
@@ -59,14 +61,15 @@ Vue.prototype.getNowFormatDate = function() {
   var month = date.getMonth() + 1;
   var strDate = date.getDate();
   if (month >= 1 && month <= 9) {
-    month = "0" + month;
+      month = "0" + month;
   }
   if (strDate >= 0 && strDate <= 9) {
-    strDate = "0" + strDate;
+      strDate = "0" + strDate;
   }
   var currentdate = year + seperator1 + month + seperator1 + strDate;
   return currentdate;
 };
+
 
 /* eslint-disable no-new */
 new Vue({
