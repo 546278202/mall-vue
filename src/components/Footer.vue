@@ -1,9 +1,17 @@
 <template>
     <div class="nav-box">
-        <li class="nav-item" v-for="(item, index) in nav"  @click="routerLink(index, item.path)"  :key="index">
-            <p :class=" navIndex === index ? 'item-cn item-cn-active' : 'item-cn'">
-                {{ item.title }}
-            </p>
+        <li class="nav-item"
+            v-for="(item, index) in nav"
+            @click="routerLink(index, item.path)"
+            :key="index">
+        <!-- 判断高亮表 -->
+        <p :class=" navIndex === index ? 'item-cn item-cn-active' : 'item-cn'">
+            {{ item.title }}
+        </p>
+        <!-- 判断高亮表 -->
+        <p :class="navIndex === index ? 'item-en item-en-active' : 'item-en'">
+            {{ item.en }}
+        </p>
         </li>
     </div>
 </template>
