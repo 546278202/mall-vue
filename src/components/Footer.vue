@@ -1,23 +1,9 @@
 <template>
-    <!-- <div der="" class="naver">
-        <section @click = "gotoAddress('/home')" class="guide_item"><span>首页</span> </section>
-        <section @click = "gotoAddress('/productList')" class="guide_item"><span>分类</span> </section>
-        <section @click = "gotoAddress('/buyCart')" class="guide_item"><span>购物车</span> </section>
-        <section @click = "gotoAddress('/mine')" class="guide_item"><span>我的</span> </section>
-    </div>-->
     <div class="nav-box">
-        <li class="nav-item"
-            v-for="(item, index) in nav"
-            @click="routerLink(index, item.path)"
-            :key="index">
-        <!-- 判断高亮表 -->
-        <p :class=" navIndex === index ? 'item-cn item-cn-active' : 'item-cn'">
-            {{ item.title }}
-        </p>
-        <!-- 判断高亮表 -->
-        <p :class="navIndex === index ? 'item-en item-en-active' : 'item-en'">
-            {{ item.en }}
-        </p>
+        <li class="nav-item" v-for="(item, index) in nav"  @click="routerLink(index, item.path)"  :key="index">
+            <p :class=" navIndex === index ? 'item-cn item-cn-active' : 'item-cn'">
+                {{ item.title }}
+            </p>
         </li>
     </div>
 </template>
