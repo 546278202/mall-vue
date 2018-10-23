@@ -1,7 +1,7 @@
 <template>
     <section>
         <div der="" class="top-naver" style="display:flex;height: 50px;align-items: center;border-bottom: 1px solid #ccc;background: #fff;">
-            <a class="top-left" style="line-height: 2.5rem;width: 45px;">
+            <a class="top-left" style="line-height: 2.5rem;width: 45px;" @click="$router.back(-1)">
                 <i class="iconfont icon-fanhui" style="font-size: 1rem"></i>
             </a>
             <div class="searchInput" >
@@ -23,18 +23,15 @@ export default {
             msg: ''
         }
     },
-  mounted(){
-        // axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_list', {
-        //     firstName: 'Fred',
-        //     lastName: 'Flintstone'
-        // })
-        // .then(function (response) {
-            
-        // })
-        // .catch(function (error) {
-            
-        // });
-  }
+    mounted(){
+       
+    },
+    methods: {
+        goBack() {
+            this.$route.go(-1)
+        }
+    },    
+    
 }
 </script>
 <style scoped>

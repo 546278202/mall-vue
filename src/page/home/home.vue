@@ -33,7 +33,8 @@ import axios from 'axios'
 import Search from '../../components/Search'
 import Footer from '../../components/Footer'
 import { Swipe, SwipeItem } from 'mint-ui'
-import { InfiniteScroll } from 'mint-ui';
+import { Indicator } from 'mint-ui';
+
 export default {
     data () {
         return {
@@ -42,6 +43,7 @@ export default {
         }
     },
     mounted(){
+        Indicator.open('加载中...')
         axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_list', {
             time: this.getNowFormatDate(),
             pageNum:"1",
@@ -49,13 +51,15 @@ export default {
            
         })
         .then( (response) => {
+            Indicator.close();
             this.lists=response.data.data[0].wareList.list;
-            this.items=response.data.data[0].recommendWare[0].coverList;
-            
+            this.items=response.data.data[0].recommendWare[0].coverList;  
         })
         .catch( (error) => {
             console.log(error);
-        })    
+        })   
+        
+
     },
     
     components:{

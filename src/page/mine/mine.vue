@@ -70,6 +70,7 @@ import axios from 'axios'
 import Search from '../../components/Search'
 import Footer from '../../components/Footer'
 import { InfiniteScroll } from 'mint-ui';
+import { Indicator } from 'mint-ui';
 export default {
     data () {
         return {
@@ -78,20 +79,17 @@ export default {
         }
     },
     mounted(){
-        let baseUser=JSON.parse(sessionStorage.baseUser);
-        let userId=baseUser.userId;
+        Indicator.open('加载中...')
 
-        axios.post('http://47.93.4.157:8086/mall_api/common/get_home_info', {
-            "userId":userId,
-        })
-        .then( (response) => {
-            this.dataList=response.data.data;
-            console.log(response.data)
-           
-        })
-        .catch( (error) => {
-            console.log(error);
-        })    
+        if(sessionStorage.baseUser==undefined){
+            this.$router.push("/login")
+        }else{
+            let baseUser=JSON.parse(sessionStorage.baseUser);
+            let userId=baseUser.userId;
+            this.getData(userId);
+        }
+       
+       
     },
     
     components:{
@@ -99,15 +97,20 @@ export default {
         Footer
     },
     methods: {
-        loadMore() {
-            this.loading = true;
-            setTimeout(() => {
-                let last = this.list[this.list.length - 1];
-                for (let i = 1; i <= 10; i++) {
-                this.list.push(last + i);
-                }
-                this.loading = false;
-            }, 2500);
+        getData(userId) {
+            axios.post('http://47.93.4.157:8086/mall_api/common/get_home_info', {
+                "userId":userId,
+            })
+            .then( (response) => {
+                Indicator.close()
+               
+                this.dataList=response.data.data;
+                console.log(response.data)
+            })
+           
+            .catch( (error) => {
+                console.log(error);
+            })    
         }
     },
 

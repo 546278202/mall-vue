@@ -1,7 +1,7 @@
 <template>
     <section>
         <header style="line-height:2.5rem;display:flex;background:#fff;">
-            <a id="top-back" style="flex:1;padding-left:5px;text-align:left;">
+            <a id="top-back" style="flex:1;padding-left:5px;text-align:left;" @click="$router.back(-1)">
                 <i class="iconfont icon-fanhui" style="font-size:1rem;"></i>
             </a>
             <a class="shop_car" style="flex:1;">购物车</a>

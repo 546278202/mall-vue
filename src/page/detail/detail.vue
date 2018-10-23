@@ -1,11 +1,7 @@
 <template>    
     <div>
         <div class="page-infinite-wrapper">
-            <ul
-                v-infinite-scroll="loadMore"
-                infinite-scroll-disabled="loading"
-                infinite-scroll-distance="10">
-            <!-- <ul v-infinite-scroll infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list" style="height: 100%;">  -->
+            <ul infinite-scroll-disabled="loading" infinite-scroll-distance="10">
                 <header style="height:2.5rem;line-height:2.5rem;display:flex;background:#fff;box-sizing: border-box;">
                     <a id="top-back" style="flex:1;padding-left:5px;text-align: left;"><i class="iconfont icon-fanhui" style="font-size:1rem;"></i></a> 
                     <a class="shop_car" style="flex:1;text-align: center;">商品详情</a>	    
@@ -33,7 +29,7 @@
                 </div>
 
                 <div class="shop-msg">
-                    <div class="Voucher" id="MumSelection">
+                    <div class="Voucher"  @click="alertDemo">
                         <a class="one">已选</a>
                         <a id="HasTrue" style="font-size: 0.6rem;color:#999;" specstock="1">1.5kg</a>
                         <a class="go-Voucher"><i class="iconfont icon-xiangyou"></i></a>
@@ -56,16 +52,41 @@
         <div class="footer">
 			<a id="common-cart-num"><i class="iconfont icon-gouwuche"></i><p>购物车</p><span class="cart-num" style="display: none;"></span></a>
 			<a id="CurrentMall" mallnumber="M201809041013011157"><i class="iconfont icon-shouye1"></i><p>店铺</p></a>
-			<a class="add-car" @click="aa" style="color:#fff;font-size: 15px;">加购物车</a>
+			<a class="add-car" style="color:#fff;font-size: 15px;">加购物车</a>
 			<a class="to-buy open-popup" id="to-buy" style="color:#fff;font-size: 15px;">立刻购买</a>
 		</div>
+
+        <div class="go-buy-wrap" v-show="isShow"></div>
+        <div class="go-buy" v-show="isShow">
+            <div class="alert-price" style="position:relative;height:'';">
+				<div id="CancelBtn" @click="removeDemo"><img src="../../images/delete.png" style="width:100%;height:100%;display: block;"></div>
+				<div class="ActivePrice" style="flex:1;"><span>￥</span><span id="ActivePrice">42</span></div>
+			</div>
+            <div style="height:10rem;overflow: auto; -webkit-overflow-scrolling:touch;">
+				<div class="bottom">
+					<div class="btn" id="YiJiTitle">{{specJson.specName}}</div>
+					<div class="ColorWrap" style="overflow: hidden;" >
+                        <li class="KG4 current" specprice="42" specstock="1" v-for="(item,index) in specJson.specValue" :key="index">{{item.specName}}</li>
+                    </div>					
+				</div>
+				<!-- <div class="bottom">
+					<div class="btn" id="ErJiTitle">{{specJson.specValue[0].specValue[0].specName}}</div>
+					<div class="SizeWrap" >
+                        <div class="parentDiv cc" style="overflow: hidden; display: block;" v-for="(item,index) in specJson.specValue" :key="index">
+                            <li class="KG4 current" specstock="0"  v-for="(i,index) in item.specValue" :key="index">{{i.specValue}}</li>
+                        </div>
+                       
+                    </div>					
+			    </div> -->
+			    <div class="bottom" id="amountModule">无货</div>
+		    </div>
+        </div>
     </div>
 </template>
 <script>
 import axios from 'axios'
 import Footer from '../../components/Footer'
-import { Swipe, SwipeItem } from 'mint-ui'
-import { InfiniteScroll } from 'mint-ui'
+import { Swipe, SwipeItem,Indicator } from 'mint-ui'
 
 export default {
     data () {
@@ -73,38 +94,41 @@ export default {
             items:[],
             last:'',
             warecontent:'',
+            isShow:false,
+            specJson:'' //规格
         }
     },
     mounted(){
-        axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_info', {
-            "wareid":this.$route.query.id,
-        })
-        .then( (response) => {
-            this.items=response.data.data.coverList;
-            this.warecontent=response.data.data.warecontent;           
-        })
-        .catch( (error) => {
-            console.log(error);
-        })    
+        Indicator.open('加载中...'),
+        this.getData(),
+        Indicator.close()
     },
     
     components:{
         Footer
     },
     methods: {
-        loadMore() {
-            this.loading = true;
-            setTimeout(() => {
-                let last = this.list[this.list.length - 1];
-                for (let i = 1; i <= 10; i++) {
-                this.list.push(last + i);
-                }
-                this.loading = false;
-            }, 2500);
+        getData() {
+            axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_info', {
+                "wareid":this.$route.query.id,
+            })
+            .then( (response) => {
+                Indicator.close()
+                this.items=response.data.data.coverList;
+                this.warecontent=response.data.data.warecontent;  
+                this.specJson=response.data.data.specJson;        
+            })
+            .catch( (error) => {
+                console.log(error);
+            })    
         },
-        aa(){
-            alert("ss")
-        }
+        alertDemo() {
+            this.isShow = !this.isShow
+        },
+        removeDemo(){
+            this.isShow = !this.isShow
+        },
+        
     },
 
 }
@@ -192,5 +216,74 @@ export default {
             line-height: 2.5rem;
             color: #fff;
         }
+    }
+
+    // 弹出层
+    .go-buy-wrap{
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.3);
+        z-index: 998;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        opacity: 0.5;
+    }
+    .go-buy{
+        background: #fff;
+        z-index: 999;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        bottom: 0;
+        height:50%;
+        width: 100%;
+        overflow: hidden;
+    }
+    .alert-price {
+        height: 75px;
+        line-height: 75px;
+        text-align: center;
+        color: #cc0000;
+        font-size: 30px;
+    }
+    #CancelBtn{
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        padding: 10px;
+        display: block;
+        width: 45px;
+        height: 45px;
+        overflow: hidden;
+    }
+    .bottom {
+        line-height: 1.5rem;
+        padding-left: 10px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        font-size: 14px;
+        .btn {
+            color: #333;
+            width: 2.5rem;
+            text-align: center;
+            border-radius: 5px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 0.7rem;
+            float: left;
+        }
+       
+    }
+    .KG4 {
+        background: #dcdcdc;
+        padding: 0 5px;
+        text-align: center;
+        border-radius: 5px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        font-size: 0.7rem;
+        color: #999;
+        float: left;
     }
 </style>
