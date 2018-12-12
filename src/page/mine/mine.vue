@@ -38,27 +38,26 @@
 				<a href="../order/order.html?tabCode=0">
 					<img src="../../images/state1.png">
 					<p>待付款</p>
-					<span id="orderStatus0" class="tableState"></span>
+					<div class="tableState" v-if="dataList.orderStatus0>0">{{dataList.orderStatus0}}</div>
 				</a>
 				<a href="../order/order.html?tabCode=1">
 					<img src="../../images/state2.png">
 					<p>待发货</p>
-					<span id="orderStatus1" class="tableState" style="display: inline;">{{dataList.orderStatus1}}</span>
+					<div class="tableState" v-if="dataList.orderStatus1>0">{{dataList.orderStatus1}}</div>
 				</a>
 				<a href="../order/order.html?tabCode=2">
 					<img src="../../images/state3.png">
 					<p>待收货</p>
-					<span id="orderStatus2" class="tableState"></span>
+					<div class="tableState" v-if="dataList.orderStatus2>0">{{dataList.orderStatus2}}</div>
 				</a>
 				<a href="../discuss/commentlist.html">
 					<img src="../../images/state4.png">
 					<p>待评价</p>
-					<span id="orderStatus3" class="tableState"></span>
+					<div class="tableState" v-if="dataList.orderStatus3>0">{{dataList.orderStatus3}}</div>
 				</a>
 				<a href="../aftersale/salelist.html">
 					<img src="../../images/state5.png">
 					<p>售后</p>
-					<span id="orderStatus4" class="tableState"></span>
 				</a>
 			</div>
 	  	</div>
@@ -66,7 +65,6 @@
     </div>        
 </template>
 <script>
-import axios from 'axios'
 import Search from '../../components/Search'
 import Footer from '../../components/Footer'
 import { InfiniteScroll } from 'mint-ui';
@@ -79,8 +77,6 @@ export default {
         }
     },
     mounted(){
-        Indicator.open('加载中...')
-
         if(sessionStorage.baseUser==undefined){
             this.$router.push("/login")
         }else{
@@ -88,26 +84,21 @@ export default {
             let userId=baseUser.userId;
             this.getData(userId);
         }
-       
-       
     },
-    
     components:{
         Search,
         Footer
     },
     methods: {
         getData(userId) {
-            axios.post('http://47.93.4.157:8086/mall_api/common/get_home_info', {
-                "userId":userId,
-            })
+            Indicator.open('加载中...')
+            let data={ "userId":userId}
+            this.$http.post(process.env.API_HOST + "/mall_api/common/get_home_info", data)
             .then( (response) => {
                 Indicator.close()
-               
                 this.dataList=response.data.data;
                 console.log(response.data)
             })
-           
             .catch( (error) => {
                 console.log(error);
             })    
@@ -228,6 +219,5 @@ export default {
         line-height: 16px;
         border-radius: 8px;
         overflow: hidden;
-        display: none;
     }
 </style>

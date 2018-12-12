@@ -32,7 +32,10 @@ export default new Router({
         {
             path: '/buyCar',
             name: 'buyCar',
-            component: buyCar
+            component: buyCar,
+            meta:{
+                requireAuth:true //需要登陆
+            }
         }, 
         {
             path: '/mine',

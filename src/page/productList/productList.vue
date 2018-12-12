@@ -36,9 +36,8 @@ export default {
         }
     },
     mounted(){
-        axios.post('http://47.93.4.157:8086/mall_api/classify/getClassifyList', {
-
-        })
+        let data={}
+        this.$http.post(process.env.API_HOST + "/mall_api/classify/getClassifyList", data)
         .then( (response) => {
             this.dataList=response.data.data;    
         })

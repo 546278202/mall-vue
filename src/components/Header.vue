@@ -1,7 +1,7 @@
 <template>
     <section>
         <header style="line-height:2.5rem;display:flex;background:#fff;">
-            <a id="top-back" style="flex:1;padding-left:5px;text-align:left;" @click="$router.back(-1)">
+            <a id="top-back" style="flex:1;padding-left:5px;text-align:left;" @click="goback">
                 <i class="iconfont icon-fanhui" style="font-size:1rem;"></i>
             </a>
             <a class="shop_car" style="flex:1;">购物车</a>
@@ -10,25 +10,21 @@
     </section>
 </template>
 <script>
-import axios from 'axios'
 export default {
     data () {
         return {
-            msg: ''
+
         }
     },
-  mounted(){
-      axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_list', {
-          firstName: 'Fred',
-          lastName: 'Flintstone'
-      })
-      .then(function (response) {
-          console.log(response);
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
-  }
+    mounted(){
+    
+    },
+    methods: {
+        goback:function(){
+            this.$router.go(-1)
+        }
+    }
+
 }
 </script>
 <style scoped>

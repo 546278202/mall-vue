@@ -2,7 +2,10 @@
     <div style="overflow:hidden;">
         <Search></Search>
         <div class="page-infinite-wrapper" style="font-size:14px;">
-            <ul infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list" style="height: 100%;background: #fff;"> 
+          
+            <div style="font-size:14px;height:45px;line-height:45px;" v-if="dataList.length<1" >暂无数据</div>
+            
+            <ul v-else infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list" style="height: 100%;background: #fff;"> 
                 <router-link class="list_one" href="../shopdetail/shopdetail.html?wareid=91" v-for="(item,index) in dataList" :key="index" :to="{path:'/detail' , query:{id:item.wareid}}">
                     <div class="left"><img v-bind:src='item.warePic' style="width:100%;height:100%;"></div>
                     <div class="right">
@@ -16,10 +19,11 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
 import Search from '../../components/Search'
 import Footer from '../../components/Footer'
 import { InfiniteScroll } from 'mint-ui';
+import { getNowFormatDate } from "../../config/mUtils";
+
 export default {
     data () {
         return {
@@ -29,16 +33,16 @@ export default {
         }
     },
     mounted(){
-        axios.post('http://47.93.4.157:8086/mall_api/shop/get_serverlist', {
+        this.$http.post(process.env.API_HOST + "/mall_api/shop/get_serverlist", {
             shopname: this.$route.query.name,
             type: 0,
             categoryType: 0,
             pageNum: 1,
             pageSize: 10,
-            time:this.getNowFormatDate(),
+            time:getNowFormatDate(),
         })
         .then( (response) => {
-            this.dataList=response.data.data[0].wareList.list;
+            this.dataList=response.data.data.wareList;
         })
         .catch( (error) => {
             console.log(error);
@@ -50,23 +54,6 @@ export default {
         Footer
     },
     methods: {
-        getNowFormatDate() {
-            var date = new Date();
-            var seperator1 = "-";
-            var seperator2 = ":";
-            var month = date.getMonth() + 1;
-            var strDate = date.getDate();
-            if (month >= 1 && month <= 9) {
-                month = "0" + month;
-            }
-            if (strDate >= 0 && strDate <= 9) {
-                strDate = "0" + strDate;
-            }
-            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                    + " " + date.getHours() + seperator2 + date.getMinutes()
-                    + seperator2 + date.getSeconds();
-            return currentdate;
-        },
         loadMore() {
             this.loading = true;
             setTimeout(() => {

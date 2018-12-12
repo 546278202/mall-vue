@@ -69,22 +69,13 @@
                         <li class="KG4 current" specprice="42" specstock="1" v-for="(item,index) in specJson.specValue" :key="index">{{item.specName}}</li>
                     </div>					
 				</div>
-				<!-- <div class="bottom">
-					<div class="btn" id="ErJiTitle">{{specJson.specValue[0].specValue[0].specName}}</div>
-					<div class="SizeWrap" >
-                        <div class="parentDiv cc" style="overflow: hidden; display: block;" v-for="(item,index) in specJson.specValue" :key="index">
-                            <li class="KG4 current" specstock="0"  v-for="(i,index) in item.specValue" :key="index">{{i.specValue}}</li>
-                        </div>
-                       
-                    </div>					
-			    </div> -->
+			
 			    <div class="bottom" id="amountModule">无货</div>
 		    </div>
         </div>
     </div>
 </template>
 <script>
-import axios from 'axios'
 import Footer from '../../components/Footer'
 import { Swipe, SwipeItem,Indicator } from 'mint-ui'
 
@@ -109,18 +100,20 @@ export default {
     },
     methods: {
         getData() {
-            axios.post('http://47.93.4.157:8086/mall_api/shop/get_ware_info', {
+            let data={
                 "wareid":this.$route.query.id,
-            })
-            .then( (response) => {
-                Indicator.close()
+            }
+            this.$http
+            .post(process.env.API_HOST + "/mall_api/shop/get_ware_info", data)
+            .then(response => {
+                Indicator.close();
                 this.items=response.data.data.coverList;
                 this.warecontent=response.data.data.warecontent;  
-                this.specJson=response.data.data.specJson;        
+                this.specJson=response.data.data.specJson;       
             })
-            .catch( (error) => {
+            .catch(error => {
                 console.log(error);
-            })    
+            }); 
         },
         alertDemo() {
             this.isShow = !this.isShow

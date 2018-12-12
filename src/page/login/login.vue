@@ -8,13 +8,13 @@
             <div style="margin-top:40px;">
                 <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
                     <i class="iconfont icon-zhanghao"></i>
-                    <input type="text" placeholder="请输入号码/手机号" style="border:0;width:100%;" ref="input1">
+                    <input type="text" v-model="input1" placeholder="请输入号码/手机号" style="border:0;width:100%;" refs="input1">
                 </div>
             </div>	
             <div style="margin-top:15px;">
                 <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
                     <i class="iconfont icon-mima"></i>
-                    <input type="text" placeholder="请输入密码"  style="border:0;width:100%;" ref="input2">
+                    <input type="text" v-model="input2" placeholder="请输入密码"  style="border:0;width:100%;" refs="input2">
                 </div>
             </div>	
             <div style="position:relative;margin-top:37px;">
@@ -30,30 +30,19 @@
     </div> 
 </template>
 <script>
-import axios from 'axios'
 import md5 from 'js-md5';
 import { Toast } from 'mint-ui'
-import { MessageBox } from 'mint-ui';
 export default {
     data () {
         return {
             dataList:[],
             message:'',
+            input1:'',
+            input2:''
         }
     },
     mounted(){
-        
-       
-        axios.post('http://47.93.4.157:8086/mall_api/classify/getClassifyList', {
 
-        })
-        .then( (response) => {
-            this.dataList=response.data.data;
-           
-        })
-        .catch( (error) => {
-            console.log(error);
-        })    
     },
     
     components:{
@@ -64,25 +53,30 @@ export default {
     },
     methods: {
         getMessage:function(){
-            let v1=this.$refs.input1.value
-            let v2=this.$refs.input2.value
-            // 登陆
-            axios.post('http://47.93.4.157:8086/mall_api/user/login', {
-                userName: v1,
-                pwd:md5(v2)
-            })
+            let data={  
+                userName:this.input1,
+                pwd:md5(this.input2)
+            }
+            if(data.userName==''){
+                return false
+            }
+            if(data.pwd==''){
+                return false
+            }
+            console.log(data)
+            this.$http.post(process.env.API_HOST + "/mall_api/user/login", data)
             .then( (response) => {
                 let res=response.data;
                 if(res.code==0 && res.success==true){
+                    this.$store.state.code=res.code
+                    // this.$store.commit('increment')
                     sessionStorage.baseUser=JSON.stringify(res.data);         	
-                    console.log(JSON.parse(sessionStorage.baseUser))
-                    this.$router.push({path:'/home'});
+                    // console.log(JSON.parse(sessionStorage.baseUser))
+                    setTimeout(function(){
+                        this.$router.push({path:'/home'});
+                    },100)
                 }else{
-                    MessageBox({
-                        title: '提示',
-                        message:res.msg,
-                        showCancelButton: true
-                    });
+                    Toast(res.msg);
                 }
             
             })
