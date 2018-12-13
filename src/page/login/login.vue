@@ -69,12 +69,11 @@ export default {
                 let res=response.data;
                 if(res.code==0 && res.success==true){
                     this.$store.state.code=res.code
-                    // this.$store.commit('increment')
                     sessionStorage.baseUser=JSON.stringify(res.data);         	
-                    // console.log(JSON.parse(sessionStorage.baseUser))
-                    setTimeout(function(){
+                    setTimeout(()=>{
                         this.$router.push({path:'/home'});
-                    },100)
+                    },600)
+                   
                 }else{
                     Toast(res.msg);
                 }

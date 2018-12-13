@@ -4,62 +4,25 @@
         <div class="page-infinite-wrapper" style="height: 571px;font-size:14px;">
             <ul infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list">
                 <div class="list" v-for="item in dataList">
-                    <a class="ShopName"  href="../mall/mall.html?mallnumber=M201807021112146037">
-                        <div style="display:flex;display: flex; align-items: center;justify-content: center;">
-                            <label class="label-checkbox item-content" style="height:22px;">
-                                <input type="checkbox" name="checkbox">
-                                <div class="item-media" >
-                                    <i class="icon icon-form-checkbox"></i>
-                                </div>
-                            </label>
-                        </div>
+                    <a class="ShopName">
                         <div class="left">{{item.mallAdminId}}</div>
-                        <div class="right">
-                            <i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i>
-                        </div>
+                        <div class="right"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
                     </a>
-                    <!-- <div class="ShopList">
-                        <li cartid="1707">
-                            <div style="width:100%;float:left;display:flex;padding:5px 10px;">
-                                <div style="display:flex;display: flex; align-items: center;justify-content: center;">
-                                    <label class="label-checkbox item-content" style="height:22px;">
-                                        <input type="checkbox" name="checkbox">
-                                        <div class="item-media" id="ShopCheck" style="display:flex;">
-                                            <i class="icon icon-form-checkbox"></i>
-                                        </div>
-                                    </label>
+                    <div style="display:flex; padding: 5px 10px;">
+                        <div class="shopimg"><img :src="item.warePic" style="width:5rem;"></div>
+                        <div style="flex:1;">
+                            <div class="titletxt">{{item.warename}}</div>
+                            <div class="shopsize">{{item.specname}}</div>
+                            <div style="width:100%;display:flex;justify-content: space-between;">
+                                <div class="shopprice">￥{{item.wareprice}}</div>
+                                <div class="quantity">
+                                    <div class="addition"><i class="iconfont icon-iconfontadd"></i></div>
+                                    <input class="number" id="CurrentNumber" value="1">
+                                    <div class="subtraction"><i class="iconfont icon-iconfontmove"></i></div>
                                 </div>
-                                <div class="ShopImg">
-                                    <img src="https://zhangwoyun.feijizhe.com/photos/9/20180716/20180716_764-1.png"
-                                        style="width:5rem;">
-                                </div>
-                                <div style="width:100%;flex-direction: column;float:rigth;">
-                                    <div class="TitleTxt">
-                                        <span>ceshi</span>
-                                    </div>
-                                    <div class="ShopSize">
-                                        <span>香辣</span>
-                                    </div>
-                                    <div class style="width:100%;display:flex;">
-                                        <div class="ShopPrice">
-                                            <span>￥</span>
-                                            <span id="ActivePrice">0.01</span>
-                                        </div>
-                                        <div class="Quantity" warenowstock="undefined" wareid="94" cartid="1707">
-                                            <span class="addition">
-                                                <i class="iconfont icon-iconfontadd"></i>
-                                            </span>
-                                            <input class="number" id="CurrentNumber" value="1">
-                                            <span class="subtraction">
-                                                <i class="iconfont icon-iconfontmove"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="DelMe" id="DelMe">删除</div>
-                        </li>
-                    </div> -->
+                            </div> 
+                        </div>
+                    </div>
                 </div>
             </ul>
         </div>
@@ -137,12 +100,49 @@
             }
         }
     }
-    .label-checkbox {
+    .shopimg{
         margin-right: 10px;
-        display: flex;
-        float: left;
-        align-items: center;
-        justify-content: center;
     }
-   
+    .titletxt {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        font-size: 0.7rem;
+        text-align: left;
+    }
+    .shopsize {
+        height: 1.7rem;
+        color: #999;
+        font-size: 0.6rem;
+        text-align: left;
+    }
+    .shopprice{
+        color: #cc0000;
+        font-size: 0.9rem;
+    }
+    .quantity{
+        display: flex;
+        border: 1px solid #e5e5e5;
+        text-align: center;
+        border-radius: 5px;
+        font-size: 15px;
+        height:30px;
+        line-height: 30px;
+        box-sizing: border-box;
+        .addition {
+            width: 30px;
+            border-right: 1px solid #e5e5e5;
+        }
+        .number {
+            border: 0;
+            width: 45px;
+            text-align: center;
+        }
+        .subtraction {
+            width: 30px;
+            border-left: 1px solid #e5e5e5;
+        }
+    }    
 </style>

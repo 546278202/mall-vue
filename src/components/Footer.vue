@@ -1,6 +1,6 @@
 <template>
     <div class="nav-box">
-        <router-link :to="{ path: 'home' }" @click.native="aaa">
+        <router-link :to="{ path: 'home' }">
             <div>
                 <i class="iconfont icon-shouye1"></i>
             </div>

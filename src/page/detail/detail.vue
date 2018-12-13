@@ -3,9 +3,9 @@
         <div class="page-infinite-wrapper">
             <ul infinite-scroll-disabled="loading" infinite-scroll-distance="10">
                 <header style="height:2.5rem;line-height:2.5rem;display:flex;background:#fff;box-sizing: border-box;">
-                    <a id="top-back" style="flex:1;padding-left:5px;text-align: left;"><i class="iconfont icon-fanhui" style="font-size:1rem;"></i></a> 
+                    <a @click="goback" style="flex:1;padding-left:5px;text-align: left;"><i class="iconfont icon-fanhui" style="font-size:1rem;"></i></a> 
                     <a class="shop_car" style="flex:1;text-align: center;">商品详情</a>	    
-                    <a class="" style="flex:1;"></a>	    		  	   
+                    <a style="flex:1;"></a>	    		  	   
                 </header>
                 <mt-swipe :auto="4000" style="height:200px;">
                     <mt-swipe-item v-for="item in items" :key="item">
@@ -50,27 +50,26 @@
             </ul>
         </div>
         <div class="footer">
-			<a id="common-cart-num"><i class="iconfont icon-gouwuche"></i><p>购物车</p><span class="cart-num" style="display: none;"></span></a>
-			<a id="CurrentMall" mallnumber="M201809041013011157"><i class="iconfont icon-shouye1"></i><p>店铺</p></a>
-			<a class="add-car" style="color:#fff;font-size: 15px;">加购物车</a>
-			<a class="to-buy open-popup" id="to-buy" style="color:#fff;font-size: 15px;">立刻购买</a>
+			<a><i class="iconfont icon-gouwuche"></i><p>购物车</p><span class="cart-num" style="display: none;"></span></a>
+			<a><i class="iconfont icon-shouye1"></i><p>店铺</p></a>
+			<a @click="addcar" class="add-car" style="color:#fff;font-size: 15px;">加购物车</a>
+			<a class="to-buy open-popup" style="color:#fff;font-size: 15px;">立刻购买</a>
 		</div>
 
         <div class="go-buy-wrap" v-show="isShow"></div>
         <div class="go-buy" v-show="isShow">
-            <div class="alert-price" style="position:relative;height:'';">
-				<div id="CancelBtn" @click="removeDemo"><img src="../../images/delete.png" style="width:100%;height:100%;display: block;"></div>
-				<div class="ActivePrice" style="flex:1;"><span>￥</span><span id="ActivePrice">42</span></div>
+            <div class="alert-price" style="position:relative;overflow:hidden;">
+				<div style="width:45px;height:45px;padding:10px;box-sizing: border-box;"  @click="removeDemo"><img src="../../images/delete.png" style="width:100%;height:100%;display: block;"></div>
+				<div class="ActivePrice" style="flex:1;"><span>￥42</span></div>
 			</div>
             <div style="height:10rem;overflow: auto; -webkit-overflow-scrolling:touch;">
 				<div class="bottom">
-					<div class="btn" id="YiJiTitle">{{specJson.specName}}</div>
+					<div class="btn">{{specJson.specName}}</div>
 					<div class="ColorWrap" style="overflow: hidden;" >
-                        <li class="KG4 current" specprice="42" specstock="1" v-for="(item,index) in specJson.specValue" :key="index">{{item.specName}}</li>
+                        <li v-for="(item,index) in specJson.specValue"  @click="addClass(index,$event)" :class="{act:index==current}" class="KG4">{{item.specName}}</li>
                     </div>					
 				</div>
-			
-			    <div class="bottom" id="amountModule">无货</div>
+			    <!-- <div class="bottom" id="amountModule">无货</div> -->
 		    </div>
         </div>
     </div>
@@ -82,11 +81,14 @@ import { Swipe, SwipeItem,Indicator } from 'mint-ui'
 export default {
     data () {
         return {
+            data:'',
             items:[],
             last:'',
             warecontent:'',
             isShow:false,
-            specJson:'' //规格
+            specJson:'', //规格
+            
+            current:0
         }
     },
     mounted(){
@@ -99,6 +101,7 @@ export default {
         Footer
     },
     methods: {
+
         getData() {
             let data={
                 "wareid":this.$route.query.id,
@@ -107,6 +110,8 @@ export default {
             .post(process.env.API_HOST + "/mall_api/shop/get_ware_info", data)
             .then(response => {
                 Indicator.close();
+                console.log(response)
+                this.data=response.data.data;
                 this.items=response.data.data.coverList;
                 this.warecontent=response.data.data.warecontent;  
                 this.specJson=response.data.data.specJson;       
@@ -121,9 +126,34 @@ export default {
         removeDemo(){
             this.isShow = !this.isShow
         },
-        
+        addClass:function(index,event){	
+            this.current=index;
+            console.log(event);
+            console.log(this.specJson)
+            console.log(event.currentTarget.innerText);
+		},
+        goback(){
+            this.$router.go(-1)
+        },
+        addcar(){
+            console.log(this.data)
+            let data={
+                // userId:userId,		
+                // wareid:this.$route.query.id, 		 
+                // count:Count,     	
+                // specname:specname,  
+                // price:Price,		 
+            }	
+        // this.$http
+        //     .post(process.env.API_HOST + "/mall_api/cart/add", data)
+        //     .then(response => {
+               
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     }); 
+        } 
     },
-
 }
 </script>
 
@@ -234,8 +264,7 @@ export default {
         overflow: hidden;
     }
     .alert-price {
-        height: 75px;
-        line-height: 75px;
+        overflow: hidden;
         text-align: center;
         color: #cc0000;
         font-size: 30px;
@@ -278,5 +307,9 @@ export default {
         font-size: 0.7rem;
         color: #999;
         float: left;
+    }
+    .act {
+        background: #fdcd00;
+        color: #fff;
     }
 </style>

@@ -7,8 +7,6 @@
                     <img v-bind:src="item.wareCover" style="width: 100%;height: 100%;">
                 </mt-swipe-item>
             </mt-swipe>
-            <h2>{{this.$store.state.loginInfo}}</h2>
-
             <div class="block-img">
                 <img src="../../images/main5.jpg" style="width:100%;">
             </div>
