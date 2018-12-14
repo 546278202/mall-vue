@@ -21,7 +21,7 @@
                         </div>	
                     </div>
                     <div class="txt2">
-                        <a class="Postage" id="PostageParent">包邮</a>
+                        <a class="Postage">包邮</a>
                             <a class="Monthly-sales" style="text-align: right;">月销量0件</a>
                             <a class="Coupon" style="display: flex;justify-content: center;"></a>
                         <a class="Price"><span>￥</span><span id="Price">0.2</span></a>
@@ -31,7 +31,7 @@
                 <div class="shop-msg">
                     <div class="Voucher"  @click="alertDemo">
                         <a class="one">已选</a>
-                        <a id="HasTrue" style="font-size: 0.6rem;color:#999;" specstock="1">1.5kg</a>
+                        <a style="font-size: 0.6rem;color:#999;">{{mspecName+" , "+buyNum}}</a>
                         <a class="go-Voucher"><i class="iconfont icon-xiangyou"></i></a>
                     </div>
                     <div class="Voucher">
@@ -50,9 +50,13 @@
             </ul>
         </div>
         <div class="footer">
-			<a><i class="iconfont icon-gouwuche"></i><p>购物车</p><span class="cart-num" style="display: none;"></span></a>
+            <router-link :to="{ path: 'buyCar' }">
+                <i class="iconfont icon-gouwuche"></i>
+                <p>购物车</p>
+                <!-- <span class="cart-num" style="display: none;"></span> -->
+            </router-link>
 			<a><i class="iconfont icon-shouye1"></i><p>店铺</p></a>
-			<a @click="addcar" class="add-car" style="color:#fff;font-size: 15px;">加购物车</a>
+			<a @click="addcar" class="add-car">加购物车</a>
 			<a class="to-buy open-popup" style="color:#fff;font-size: 15px;">立刻购买</a>
 		</div>
 
@@ -60,7 +64,7 @@
         <div class="go-buy" v-show="isShow">
             <div class="alert-price" style="position:relative;overflow:hidden;">
 				<div style="width:45px;height:45px;padding:10px;box-sizing: border-box;"  @click="removeDemo"><img src="../../images/delete.png" style="width:100%;height:100%;display: block;"></div>
-				<div class="ActivePrice" style="flex:1;"><span>￥42</span></div>
+				<div class="ActivePrice" style="flex:1;"><span>￥{{mPrice}}</span></div>
 			</div>
             <div style="height:10rem;overflow: auto; -webkit-overflow-scrolling:touch;">
 				<div class="bottom">
@@ -69,15 +73,26 @@
                         <li v-for="(item,index) in specJson.specValue"  @click="addClass(index,$event)" :class="{act:index==current}" class="KG4">{{item.specName}}</li>
                     </div>					
 				</div>
-			    <!-- <div class="bottom" id="amountModule">无货</div> -->
+                <div class="bottom">
+                    <div class="btn">数量：</div>
+                    <div class="sum">
+                        <div style="display:flex;">
+                            <a class="addition" @click="addUp"><i class="iconfont icon-iconfontadd"></i></a>
+                            <a class="number" id="CurrentNumber">{{buyNum}}</a>
+                            <a class="subtraction"  @click="addDown"><i class="iconfont icon-iconfontmove"></i></a>
+                        </div>
+                    </div>
+                </div>
 		    </div>
+            <div style="text-align: center;width:100%;padding:0 10%;">
+				<button class="button" @click="removeDemo">确定</button>
+			</div>
         </div>
     </div>
 </template>
 <script>
 import Footer from '../../components/Footer'
-import { Swipe, SwipeItem,Indicator } from 'mint-ui'
-
+import { Swipe, SwipeItem,Indicator,Toast} from 'mint-ui'
 export default {
     data () {
         return {
@@ -86,9 +101,11 @@ export default {
             last:'',
             warecontent:'',
             isShow:false,
-            specJson:'', //规格
-            
-            current:0
+            specJson:'',
+            current:0,
+            mPrice:0,
+            mspecName:'',
+            buyNum:1
         }
     },
     mounted(){
@@ -101,7 +118,6 @@ export default {
         Footer
     },
     methods: {
-
         getData() {
             let data={
                 "wareid":this.$route.query.id,
@@ -111,10 +127,13 @@ export default {
             .then(response => {
                 Indicator.close();
                 console.log(response)
-                this.data=response.data.data;
-                this.items=response.data.data.coverList;
-                this.warecontent=response.data.data.warecontent;  
-                this.specJson=response.data.data.specJson;       
+                let data=response.data.data
+                this.data=data;
+                this.items=data.coverList;
+                this.warecontent=data.warecontent;  
+                this.specJson=data.specJson;    
+                this.mPrice=data.specJson.specValue[0].specPrice   
+                this.mspecName=data.specJson.specValue[0].specName     
             })
             .catch(error => {
                 console.log(error);
@@ -122,36 +141,51 @@ export default {
         },
         alertDemo() {
             this.isShow = !this.isShow
+          
         },
         removeDemo(){
             this.isShow = !this.isShow
         },
-        addClass:function(index,event){	
+
+        addClass:function(index){	
             this.current=index;
-            console.log(event);
-            console.log(this.specJson)
-            console.log(event.currentTarget.innerText);
-		},
+            this.mPrice=this.specJson.specValue[index].specPrice
+            this.mspecName=this.specJson.specValue[index].specName
+
+        },
+        addUp(){
+            this.buyNum++
+            console.log(this.buyNum)
+        },
+        addDown(){
+            if(this.buyNum>1){
+                this.buyNum--
+                console.log(this.buyNum)
+            }
+        },
         goback(){
             this.$router.go(-1)
         },
         addcar(){
-            console.log(this.data)
+            console.log(JSON.parse(sessionStorage.getItem("baseUser")))
             let data={
-                // userId:userId,		
-                // wareid:this.$route.query.id, 		 
-                // count:Count,     	
-                // specname:specname,  
-                // price:Price,		 
+                userId:JSON.parse(sessionStorage.getItem("baseUser")).userId,		
+                wareid:this.$route.query.id, 		 
+                count:this.buyNum,     	
+                specname:this.mspecName,  
+                price:this.mPrice,		 
             }	
-        // this.$http
-        //     .post(process.env.API_HOST + "/mall_api/cart/add", data)
-        //     .then(response => {
-               
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     }); 
+            this.$http
+                .post(process.env.API_HOST + "/mall_api/cart/add", data)
+                .then(response => {
+                    console.log(response.data);
+                    if(response.data.code==0 && response.data.success==true){
+                        Toast("添加成功");
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                }); 
         } 
     },
 }
@@ -233,6 +267,7 @@ export default {
             background: #f3cb0a;
             line-height: 2.5rem;
             color: #fff;
+            font-size: 15px;
         }
         .to-buy {
             background: #cc0000;
@@ -311,5 +346,46 @@ export default {
     .act {
         background: #fdcd00;
         color: #fff;
+    }
+    .sum {
+        border: 1px solid #e5e5e5;
+        text-align: center;
+        border-radius: 5px;
+        float: left;
+        .addition {
+            width: 2.3rem;
+            height: 1.5rem;
+        }
+        .number {
+            border-right: 1px solid #e5e5e5;
+            border-left: 1px solid #e5e5e5;
+            width: 2.3rem;
+        }
+        .subtraction {
+            width: 2.3rem;
+            height: 1.5rem;
+        }
+    }
+    .button {
+        background: #F3CB0A;
+        color: #fff;
+        border: 1px solid #F3CB0A;
+        width: 100%;
+        display: block;
+        height: 1.85rem;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-appearance: none;
+        padding: 0 .5rem;
+        margin: 0;
+        font-family: inherit;
+        font-size: .8rem;
+        line-height: 1.75rem;
+        text-align: center;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        border-radius: 2rem;
     }
 </style>

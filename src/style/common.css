@@ -41,10 +41,10 @@ input[type="button"], input[type="submit"], input[type="search"], input[type="re
     outline: none
 }
 
-input,button{
+/* input,button{
     -webkit-appearance: none;
     outline: none
-}
+} */
    
 textarea { -webkit-appearance: none;}   
 
