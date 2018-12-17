@@ -8,13 +8,13 @@
             <div style="margin-top:40px;">
                 <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
                     <i class="iconfont icon-zhanghao"></i>
-                    <input type="text" v-model="input1" placeholder="请输入号码/手机号" style="border:0;width:100%;" refs="input1">
+                    <input type="text" v-model="input1" placeholder="请输入号码/手机号">
                 </div>
             </div>	
             <div style="margin-top:15px;">
                 <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
                     <i class="iconfont icon-mima"></i>
-                    <input type="text" v-model="input2" placeholder="请输入密码"  style="border:0;width:100%;" refs="input2">
+                    <input type="text" v-model="input2" placeholder="请输入密码">
                 </div>
             </div>	
             <div style="position:relative;margin-top:37px;">
@@ -22,8 +22,8 @@
             </div>
             <div style="position:relative;">
                 <div style="width: 275px;margin:0 auto;text-align: right;line-height:25px; ">
-                    <a href="../forget/step1.html" style="font-size:10px;color:#666;">忘记密码</a>
-                    <a href="msglogin.html" style="font-size:10px;color:#666;float:left;">快捷登陆</a>
+                    <!-- <a href="../forget/step1.html" style="font-size:10px;color:#666;">忘记密码</a>
+                    <a href="msglogin.html" style="font-size:10px;color:#666;float:left;">快捷登陆</a> -->
                 </div>
             </div>
         </div>

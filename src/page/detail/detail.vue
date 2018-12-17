@@ -50,11 +50,7 @@
             </ul>
         </div>
         <div class="footer">
-            <router-link :to="{ path: 'buyCar' }">
-                <i class="iconfont icon-gouwuche"></i>
-                <p>购物车</p>
-                <!-- <span class="cart-num" style="display: none;"></span> -->
-            </router-link>
+            <a @click="gocar"><i class="iconfont icon-gouwuche"></i><p>购物车</p></a>
 			<a><i class="iconfont icon-shouye1"></i><p>店铺</p></a>
 			<a @click="addcar" class="add-car">加购物车</a>
 			<a class="to-buy open-popup" style="color:#fff;font-size: 15px;">立刻购买</a>
@@ -166,8 +162,19 @@ export default {
         goback(){
             this.$router.go(-1)
         },
+        gocar(){
+            if(JSON.parse(sessionStorage.getItem("baseUser"))==null){
+                this.$router.push("/login")
+                return false
+            }else{
+                this.$router.push("/buyCar")
+            }
+        },
         addcar(){
-            console.log(JSON.parse(sessionStorage.getItem("baseUser")))
+            if(JSON.parse(sessionStorage.getItem("baseUser"))==null){
+                this.$router.push("/login")
+                return false
+            }
             let data={
                 userId:JSON.parse(sessionStorage.getItem("baseUser")).userId,		
                 wareid:this.$route.query.id, 		 
