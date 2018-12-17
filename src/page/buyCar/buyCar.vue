@@ -157,8 +157,12 @@
         max-height: 100vh; //与屏幕一样高度
         overflow-y: auto;
         overflow-x: hidden;
-        background: #fff;
+       
         padding-bottom:100px;
+        li{
+            margin-top: 5px;
+            background: #fff;
+        }
         .ShopName {
             width: 100%;
             display: flex;
