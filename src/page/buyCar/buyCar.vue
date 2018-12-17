@@ -1,12 +1,13 @@
 <template>
     <div class="wrap"> 
         <Header></Header>
+        
         <ul class="list" v-infinite-scroll="" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
             <li v-for="(item,k,index) in dataList">
                 <div class="ShopName">
                     <div class="left" style="display:flex;">
                         <mt-checklist style="display:flex;"
-                            v-model="value"
+                            v-model="options12"
                             :options="options[index]" 
                             >
                         </mt-checklist>
@@ -17,10 +18,11 @@
                 </div>
                 <div>
                     <div style="display:flex; padding: 5px 10px;" v-for="(list,index) in item">
-                        <!-- <mt-checklist style="display:flex;"
-                            v-model="value"
+                        <mt-checklist style="display:flex;"
+                             v-model="value"
+                            :options="options[index]" 
                             >
-                        </mt-checklist> -->
+                        </mt-checklist>
                         <div class="shopimg">
                             <img :src="list.warePic" style="width:5rem;height:5rem;">
                         </div>
@@ -72,8 +74,14 @@
                     label: '全选',
                     checked:true
                 }],
-                value:true,
-                options :[]
+                value:["选项A"],
+                options :[
+                ],
+                options12:[
+                    [],
+                    [],
+                    []
+                ]
             };
         },
         watch:{
@@ -102,12 +110,13 @@
                 this.$http
                 .post(process.env.API_HOST + "/mall_api/cart/list", parameter)
                 .then(response => {
-                    console.log(response);
+                    // console.log(response);
                     if (response.data.code == 0 && response.data.success == true) {
                         var list=response.data.data.cartWareVOList
+                        console.log(list)
                         this.dataList = list;
                         this.groupData()
-                        console.log(this.options1)
+                        // console.log(this.options1)
                     }
                 })
                 .catch(error => {
@@ -116,32 +125,67 @@
             },
             groupData(){
                 let dataList=this.dataList
-                var dataArr = {}
+                var dataArr = {
+                    // key1:{
+                    //     flag:false,
+                    //     itemArr:[
+                    //         {
+                    //             Iflag:false
+                    //         },
+                    //         {
+                    //             Iflag:false
+                    //         }
+                    //     ]
+                    // }, //{}
+                    // key2:val,
+                    // key3:val
+                };
+                
                 for (var i = 0; i < dataList.length; i++) {
+                    console.log(dataArr[dataList[i].mallAdminId])
+
                     if (dataArr[dataList[i].mallAdminId]) {
-                        dataArr[dataList[i].mallAdminId].push(dataList[i])
+                        // dataArr[dataList[i].mallAdminId]['flag']=true;
+                        dataArr[dataList[i].mallAdminId]['chekArr'].push(dataList[i]['cartId']);
+                        dataArr[dataList[i].mallAdminId]['itemArr'].push(dataList[i]);
+                        dataArr[dataList[i].mallAdminId]['flag'].push(dataList[i]['cartId']);
                     }else{
-                        dataArr[dataList[i].mallAdminId] = [];
-                        dataArr[dataList[i].mallAdminId].push(dataList[i])
+                        dataArr[dataList[i].mallAdminId] = {};
+                        dataArr[dataList[i].mallAdminId]['itemArr']=[];
+                        dataArr[dataList[i].mallAdminId]['chekArr']=[];
+                        dataArr[dataList[i].mallAdminId]['flag']=[];
+
+
+                        // dataArr[dataList[i].mallAdminId]['flag']=true;
+                        dataArr[dataList[i].mallAdminId]['chekArr'].push(dataList[i]['cartId']);
+                        dataArr[dataList[i].mallAdminId]['itemArr'].push(dataList[i]);
+                        dataArr[dataList[i].mallAdminId]['flag'].push(dataList[i]['cartId']);
+
                     }
                 }
+                console.log(dataArr)
+
+                
                 this.dataList=dataArr
                 for (var i in dataArr) {
+                    console.log(dataArr[i])
                     var aa=[{
                         label:i,
                         value:i
                     }]
+
+                    this.options12.push(dataArr[i])
                     this.options.push(aa)
                 }
-                console.log(this.options)
+                console.log(this.options12)
             },
             allCheck(e){
                 console.log(e)
-                if(e==false){
-                    this.value=false
-                }else{
-                    this.value=true
-                }
+                // if(e==false){
+                //     this.value=false
+                // }else{
+                //     this.value=true
+                // }
             }
         }
     };
