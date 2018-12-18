@@ -63,10 +63,8 @@
                 <span class="mint-checkbox-label">全选</span>
             </label>
             <div class="Settlement"><span></span>合计：<span class="FontColr">￥</span><span class="FontColr">{{totalMoney}}</span></div>
-            <div class="SettlementBtn" @click="getSum">去结算</div>
-           
+            <div class="SettlementBtn" @click="goSum">去结算</div>
         </div>
-        <router-view></router-view>
     </div>
 </template>
 <script>
@@ -216,8 +214,8 @@
                     });
                 }
             },
-            getSum(){
-                // this.$router.push("/login")
+            goSum(){
+
             },
 
             addUp(index1,index){

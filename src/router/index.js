@@ -2,14 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/page/home/home'
 import productList from '@/page/productList/productList'
-import buyCar from '@/page/buyCar/buyCar'
 import mine from '@/page/mine/mine'
 import login from '@/page/login/login'
 import search from '@/page/search/search'
 import detail from '@/page/detail/detail'
-
-
-
+import buyCar from '@/page/buyCar/buyCar'
+import getSUm from '@/page/getSum/getSum'
 
 Vue.use(Router)
 export default new Router({
@@ -35,6 +33,14 @@ export default new Router({
             component: buyCar,
             meta:{
                 requireAuth:true //需要登陆
+            }
+        }, 
+        {
+            path: '/getSUm',
+            name: 'getSUm',
+            component: getSUm,
+            meta:{
+                requireAuth:true 
             }
         }, 
         {
