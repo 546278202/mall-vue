@@ -66,7 +66,6 @@
             <div class="SettlementBtn" @click="getSum">去结算</div>
            
         </div>
-        <router-view></router-view>
     </div>
 </template>
 <script>
@@ -84,6 +83,11 @@
         },
 
         mounted() {
+            if(this.$store.state.baseUser.userId==''){
+                this.$router.push("/login")
+                return false
+            }
+            this.$store.commit('changeTitle',"购物车")
             this.loadMore()
         },
         components: {
@@ -93,7 +97,7 @@
         methods: {
             loadMore() {
                 let parameter = {
-                    userId: JSON.parse(sessionStorage.getItem("baseUser")).userId
+                    userId: this.$store.state.baseUser.userId
                 }
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/cart/list", parameter)
@@ -217,15 +221,13 @@
                 }
             },
             getSum(){
-                // this.$router.push("/login")
+                this.$router.push("/getSum")
             },
 
             addUp(index1,index){
                 var list = this.goodsObj[index1]['list']
                 ++this.goodsObj[index1]['list'][index].quantity
-            
-              
-              
+        
             },
             addDown(){
                 if(this.buyNum>1){

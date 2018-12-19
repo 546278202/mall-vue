@@ -77,13 +77,11 @@ export default {
         }
     },
     mounted(){
-        if(sessionStorage.baseUser==undefined){
+        if(this.$store.state.baseUser.userId==''){
             this.$router.push("/login")
-        }else{
-            let baseUser=JSON.parse(sessionStorage.baseUser);
-            let userId=baseUser.userId;
-            this.getData(userId);
+            return false
         }
+        this.getData(this.$store.state.baseUser.userId);
     },
     components:{
         Search,

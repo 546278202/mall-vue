@@ -1,10 +1,10 @@
 <template>
     <section>
-        <header style="line-height:2.5rem;display:flex;background:#fff;">
+        <header>
             <a id="top-back" style="flex:1;padding-left:5px;text-align:left;" @click="goback">
                 <i class="iconfont icon-fanhui" style="font-size:1rem;"></i>
             </a>
-            <a class="shop_car" style="flex:1;">购物车</a>
+            <a class="shop_car" style="flex:1;">{{this.$store.state.title}}</a>
             <a class="Administration" style="flex:1;"></a>
         </header>
     </section>
@@ -17,7 +17,7 @@ export default {
         }
     },
     mounted(){
-    
+
     },
     methods: {
         goback:function(){
@@ -28,6 +28,13 @@ export default {
 }
 </script>
 <style scoped>
+    header{
+        line-height:2.5rem;
+        display:flex;
+        background:#fff;
+        border-bottom: 1px solid #dcdcdc;
+    }
+    
     .searchInput{
         position: relative;
         height: 30px;

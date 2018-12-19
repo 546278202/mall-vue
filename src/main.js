@@ -4,7 +4,6 @@ import Vue from 'vue'
 import store from './store/store'
 import App from './App'
 import router from './router'
-
 /*引入公共样式*/
 import './style/common.css'
 import 'swiper/dist/css/swiper.css'

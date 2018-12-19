@@ -68,8 +68,7 @@ export default {
             .then( (response) => {
                 let res=response.data;
                 if(res.code==0 && res.success==true){
-                    this.$store.state.code=res.code
-                    sessionStorage.baseUser=JSON.stringify(res.data);         	
+                    sessionStorage.baseUser=JSON.stringify(res.data);          	
                     setTimeout(()=>{
                         this.$router.push({path:'/home'});
                     },600)

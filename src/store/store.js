@@ -2,13 +2,18 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-	state: {
-		loginInfo: "0",//当前用户简要信息
-	},
-	mutations: {
-		increment (state) {
-
-		}
-	}
+//定义vuex
+const  store= new Vuex.Store({
+   
+    state:{
+        baseUser:JSON.parse(sessionStorage.getItem("baseUser")),
+        title:null,
+    },
+    mutations:{
+        changeTitle(state,msg){
+			state.title=msg
+		},
+		
+    }
 })
+export default store
