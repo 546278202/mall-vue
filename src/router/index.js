@@ -8,6 +8,7 @@ import search from '@/page/search/search'
 import detail from '@/page/detail/detail'
 import buyCar from '@/page/buyCar/buyCar'
 import getSum from '@/page/buyCar/getSum'
+
 Vue.use(Router)
 export default new Router({
     routes: [
@@ -43,6 +44,7 @@ export default new Router({
             },
             
         }, 
+      
         {
             path: '/mine',
             name: 'mine',

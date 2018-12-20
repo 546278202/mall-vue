@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <Header></Header>
-        <ul class="list" v-infinite-scroll="" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+        <ul class="list" v-infinite-scroll infinite-scroll-disabled="loading" infinite-scroll-distance="10">
             <div class="DefaultAddress">
                 <div class="Edit" style="padding-right: 20px;">
                     <span style="display:flex;align-items: center;">
@@ -9,40 +9,36 @@
                     </span>
                 </div>
                 <div class="MsgTitle">
-                    <div style="width:100%;"><span>{{address.receiverName}}</span><span style="float:right;padding-right: 20px;">{{address.receiverPhone}}</span></div>
-                    <div style="width:100%;"><span>{{address.receiverProvince}}</span><span>-</span><span>{{address.receiverCity}}</span><span>-</span><span>{{address.receiverDistrict}}</span></div>
-                    <div style="width:100%;"><span>{{address.receiverAddress}}</span></div>
+                    <div style="width:100%;">
+                        <span>{{address.receiverName}}</span>
+                        <span style="float:right;padding-right: 20px;">{{address.receiverPhone}}</span>
+                    </div>
+                    <div style="width:100%;">
+                        <span>{{address.receiverProvince}}</span>
+                        <span>-</span>
+                        <span>{{address.receiverCity}}</span>
+                        <span>-</span>
+                        <span>{{address.receiverDistrict}}</span>
+                    </div>
+                    <div style="width:100%;">
+                        <span>{{address.receiverAddress}}</span>
+                    </div>
                 </div>
-                <div class="Edit"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
+                <div class="Edit">
+                    <i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i>
+                </div>
             </div>
-            <div>   
+            <div>
                 <li v-for="(item,index1) in goodsObj">
                     <div class="ShopName">
-                        <div class="left" style="display:flex;">
-                            <label class="mint-checklist-label">
-                                <span class="mint-checkbox">
-                                    <input type="checkbox" class="mint-checkbox-input" name="all" v-on:click="chooseShopGoods(index1)"
-                                        v-model="item.checked" />
-
-                                    <span class="mint-checkbox-core"></span>
-                                </span>
-                                <span class="mint-checkbox-label">{{item.mallAdminId}}</span>
-                            </label>
-                        </div>
+                        <div class="left" style="display:flex;">{{item.mallAdminId}}</div>
                         <div class="right">
                             <i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i>
                         </div>
                     </div>
                     <div style="margin-bottom: 5px;">
-                        <div  v-for="(list,index) in item.list">
+                        <div v-for="(list,index) in item.list">
                             <div style="display:flex; padding: 5px 10px;">
-                                <label class="mint-checklist-label" style="align-items: center;display: flex;margin-right: 10px;">
-                                    <span class="mint-checkbox">
-                                        <input type="checkbox" class="mint-checkbox-input" name="checkbox" v-model="list.checked"
-                                            v-on:click="choose(index1, index)" />
-                                        <span class="mint-checkbox-core"></span>
-                                    </span>
-                                </label>
                                 <div class="shopimg">
                                     <img :src="list.warePic" style="width:5rem;height:5rem;">
                                 </div>
@@ -55,8 +51,9 @@
                                             <div class="addition" @click="addUp(index1, index)">
                                                 <i class="iconfont icon-iconfontadd"></i>
                                             </div>
-                                            <div class="number">{{list.quantity}}
-                                                <input type="text" />
+                                            <div class="number">
+                                                {{list.quantity}}
+                                                <input type="text">
                                             </div>
                                             <div class="subtraction">
                                                 <i class="iconfont icon-iconfontmove"></i>
@@ -66,73 +63,106 @@
                                 </div>
                             </div>
 
+
                             <div class="YuHuiMa" style="height:45px;line-height:45px;display:flex;font-size:0.8rem;border-top: 1px solid #dcdcdc;padding: 0px 10px;justify-content: space-between;">
-                                <div>输入优惠码：</div><div>已优惠￥0.00</div>
+                                <div @click="alerts" style="flex:1;text-align: left;">输入优惠码：</div>
+                                <div>已优惠￥0.00</div>
                             </div>
+
                         </div>
                     </div>
-                    <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;"><div style="line-height: 45px;">发票：</div><div style="flex:1;line-height:45px;text-align:right;">不使用</div></div>
-                    <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;"><div style="line-height: 45px;">买家留言：</div><div style="flex:1;line-height:45px;"><input placeholder="填写内容已和卖家协商确认"></div></div>
+                    <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
+                        <div style="line-height: 45px;">发票：</div>
+                        <div style="flex:1;line-height:45px;text-align:right;">不使用</div>
+                    </div>
+                    <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
+                        <div style="line-height: 45px;">买家留言：</div>
+                        <div style="flex:1;line-height:45px;">
+                            <input placeholder="填写内容已和卖家协商确认">
+                        </div>
+                    </div>
                 </li>
             </div>
             <div class="Postage">
                 <span>商品总额</span>
-                <div class="FontColr" style="flex:1;text-align: right;"><span>￥{{totalMoney}}</span></div>
+                <div class="FontColr" style="flex:1;text-align: right;">￥{{totalMoney}}</div>
             </div>
             <div class="Postage">
                 <span>邮费总额</span>
-                <div class="FontColr" style="flex:1;text-align: right;"><span>00</span></div>
+                <div class="FontColr" style="flex:1;text-align: right;">￥{{totalFare}}</div>
             </div>
             <div class="Postage">
                 <span>优惠总额</span>
-                <div class="FontColr" style="flex:1;text-align: right;"><span>0</span></div>
+                <div class="FontColr" style="flex:1;text-align: right;">￥{{totalpreferential}}</div>
             </div>
             <div class="CartTotalAmount">
                 <div class="AllSelection" style="display: flex;margin-right: 10px;align-items: center;"></div>
-                <div class="Settlement"><span style="font-size:0.6rem;">合计：</span><span class="FontColr">￥000</span></div>
+                <div class="Settlement">
+                    <span style="font-size:0.6rem;">合计:￥{{totalMoney+totalFare-totalpreferential}}</span>
+                </div>
                 <div class="SettlementBtn" @click="onLinePay">在线支付</div>
             </div>
         </ul>
+        <showModel type='alert' @tocancel='cancelfall' :showstate='showa'>
+
+        </showModel>
     </div>
 </template>
 <script>
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
-    import { InfiniteScroll, Checklist } from "mint-ui";
+    import showModel from "../../components/showModel";
+    import { Indicator, Toast, InfiniteScroll } from "mint-ui";
     export default {
+        name: 'demo',
         data() {
             return {
-                address:'',
-                goodsObj: '',
-                totalMoney: 0,
+                address: "",
+                goodsObj: "",
                 loading: false,
-                allChecked: false
+                allChecked: false,
+                totalMoney: 0,
+                totalFare: 0,
+                totalpreferential: 0,
+                mdparr: [],
+                showa: false,
             };
         },
 
         mounted() {
-            if (this.$store.state.baseUser.userId == '') {
-                this.$router.push("/login")
-                return false
+            if (this.$store.state.baseUser.userId == "") {
+                this.$router.push("/login");
+                return false;
             }
-            this.$store.commit('changeTitle', "确认订单")
-            this.loadAddress()
-            this.loadMore()
+            this.$store.commit("changeTitle", "确认订单");
+            this.loadAddress();
+            this.loadMore();
         },
         components: {
             Header,
-            Footer
+            Footer,
+            showModel
         },
         methods: {
+            alerts() {
+               
+                this.showa = true;
+            },
+            cancelfall(){
+                this.showa = false;
+            },
             loadAddress() {
                 let parameter = {
                     userId: this.$store.state.baseUser.userId
-                }
+                };
                 this.$http
-                    .post(process.env.API_HOST + "/mall_api/shipping/get_default_shipping", parameter)
+                    .post(
+                        process.env.API_HOST + "/mall_api/shipping/get_default_shipping",
+                        parameter
+                    )
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
-                            this.address=response.data.data;
+                            this.address = response.data.data;
                         }
                     })
                     .catch(error => {
@@ -142,14 +172,15 @@
             loadMore() {
                 let parameter = {
                     userId: this.$store.state.baseUser.userId
-                }
+                };
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/cart/list", parameter)
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
-
                             this.goodsObj = response.data.data.cartWareVOList;
-                            this.groupData()
+                            this.groupData();
+                            this.calTotalMoney();
+                            this.calTotalFare()
                         }
                     })
                     .catch(error => {
@@ -158,11 +189,11 @@
             },
             // 将数据分组
             groupData() {
-                let arr = this.goodsObj
+                let arr = this.goodsObj;
                 var map = {},
                     dest = [];
                 for (var i = 0; i < arr.length; i++) {
-                    arr[i]["checked"] = false
+                    arr[i]["checked"] = false;
                     var ai = arr[i];
                     if (!map[ai.mallAdminId]) {
                         dest.push({
@@ -181,141 +212,133 @@
                         }
                     }
                 }
-                this.goodsObj = dest
-            },
-            // 全部商品全选
-            chooseAllGoods: function () {
-                var flag = true;
-                if (this.allChecked) {
-                    flag = false;
-                }
-                for (var i = 0, len = this.goodsObj.length; i < len; i++) {
-                    this.goodsObj[i]['checked'] = flag;
-                    var list = this.goodsObj[i]['list'];
-                    for (var k = 0, len1 = list.length; k < len1; k++) {
-                        list[k]['checked'] = flag;
-                    }
-                }
-                this.allChecked = !this.allChecked;
-                this.calTotalMoney()
-            },
-            // 每个店铺全选
-            chooseShopGoods: function (index) {
-                var list = this.goodsObj[index]['list']
-                if (this.goodsObj[index]['checked']) {
-                    for (var i = 0; i < list.length; i++) {
-                        list[i]['checked'] = false;
-                    }
-                } else {
-                    for (var i = 0; i < list.length; i++) {
-                        list[i]['checked'] = true;
-                    }
-                }
-                this.goodsObj[index]['checked'] = !this.goodsObj[index]['checked'];
-                this.isChooseAll();
-                this.calTotalMoney()
-            },
-            // 单个选择
-            choose: function (index1, index) {
-                var list = this.goodsObj[index1]['list'],
-                    len = list.length;
-                if (list[index]['checked']) {
-                    this.goodsObj[index1]['checked'] = false;
-                    this.allChecked = false;
-                    list[index]['checked'] = !list[index]['checked'];
-                } else {
-                    list[index]['checked'] = !list[index]['checked'];
-
-                    // 判断是否选择当前店铺的全选
-                    var flag = true;
-                    for (var i = 0; i < len; i++) {
-                        if (list[i]['checked'] == false) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                    flag == true ? this.goodsObj[index1]['checked'] = true : this.goodsObj[index1]['checked'] = false;
-                }
-                this.isChooseAll();
-                this.calTotalMoney()
+                this.goodsObj = dest;
+                console.log(this.goodsObj);
             },
 
-            // 判断是否选择所有商品的全选
-            isChooseAll: function () {
-                var flag1 = true;
-                for (var i = 0; i < this.goodsObj.length; i++) {
-                    if (this.goodsObj[i]['checked'] == false) {
-                        flag1 = false;
-                        break;
-                    }
-                }
-                flag1 == true ? this.allChecked = true : this.allChecked = false;
-                this.calTotalMoney()
-            },
             // 计算商品总金额
             calTotalMoney: function () {
                 var oThis = this;
                 this.totalMoney = 0;
                 for (var i = 0, len = this.goodsObj.length; i < len; i++) {
-                    var list = this.goodsObj[i]['list'];
+                    var list = this.goodsObj[i]["list"];
                     list.forEach(function (item, index, arr) {
-                        if (list[index]['checked']) {
-                            oThis.totalMoney += parseFloat(item.wareprice) * parseFloat(item.quantity);
-                        }
+                        oThis.totalMoney +=
+                            parseFloat(item.wareprice) * parseFloat(item.quantity);
                     });
                 }
             },
-            getSum() {
-                this.$router.push("/getSum")
+            // 计算每个店铺的运费总额
+            calEveryFare: function (index) {
+                var everyStoreFare = 0,
+                    list = this.goodsObj[index]['list'];
+                list.forEach(function (item, index, arr) {
+                    if (list[index]['checked']) {
+                        everyStoreFare += parseFloat(item.fare) * parseFloat(item.num);
+                    }
+                });
+                return everyStoreFare.toFixed(2);
+            },
+            // 计算商品总邮费
+            // freightTempletType：0包邮，1统一收费，2满多少钱包邮，3案件数收费
+            calTotalFare: function () {
+                var oThis = this;
+                this.totalFare = 0;
+                for (var i = 0, len = this.goodsObj.length; i < len; i++) {
+                    var list = this.goodsObj[i]["list"];
+                    var mdp = 0;
+                    list.forEach(function (item, index, arr) {
+                        var a = 0
+                        if (item.freightTempletType == 0) {
+                            a = parseFloat(item.freightTempletValue)
+                        }
+                        if (item.freightTempletType == 1) {
+                            a = parseFloat(item.freightTempletValue)
+                        }
+                        if (item.freightTempletType == 2) {
+                            var _aa = item.quantity * item.wareprice
+                            var aa = item.freightTempletValue.split(",")[0] // 超过当前值包邮
+                            var bb = item.freightTempletValue.split(",")[1]
+                            if (_aa > aa) {
+                                a = 0
+                            } else {
+                                a = 10
+                            }
+                        }
+                        mdp += a
+                    });
+                    this.mdparr.push(mdp)
+                    this.totalFare += mdp
+                }
+                // console.log(this.totalFare)
+                console.log(this.mdparr)
+
             },
 
             addUp(index1, index) {
-                var list = this.goodsObj[index1]['list']
-                ++this.goodsObj[index1]['list'][index].quantity
-
+                var list = this.goodsObj[index1]["list"];
+                ++this.goodsObj[index1]["list"][index].quantity;
             },
             addDown() {
                 if (this.buyNum > 1) {
-                    this.buyNum--
-                    console.log(this.buyNum)
+                    this.buyNum--;
+                    console.log(this.buyNum);
                 }
             },
-            onLinePay(){
-                console.log(this.goodsObj)
-                var goodsObj=this.goodsObj
+
+            onLinePay() {
+                Indicator.open("加载中...");
+                console.log(this.goodsObj);
+                var goodsObj = this.goodsObj;
                 var wareListParent = [];
-                for(var i=0;i<goodsObj.length;i++){
+                for (var i = 0; i < goodsObj.length; i++) {
                     var wareList = [];
-                   
-                    for(var j=0;j<goodsObj[i].list.length;j++){
-                        console.log(goodsObj[i].list[j])
-                        var a=goodsObj[i].list[j]
-                        
-                        var List = { "priceSum": '', "cartId":a.cartId, "quantity":a.quantity , "wareid":a.wareid , "wareprice":a.wareprice , "specName":a.specname, "cCode": '', "orderRemark":'' , "invoiceInfo":'' , "distributionValue":'' , "mallAdminId":a.mallAdminId , "sameWareSumPostCharge": "" }
+
+                    for (var j = 0; j < goodsObj[i].list.length; j++) {
+                        console.log(goodsObj[i].list[j]);
+                        var a = goodsObj[i].list[j];
+                        console.log(this.mdparr)
+                        var List = {
+                            priceSum: a.quantity * a.wareprice,
+                            cartId: a.cartId,
+                            quantity: a.quantity,
+                            wareid: a.wareid,
+                            wareprice: a.wareprice,
+                            specName: a.specname,
+                            cCode: "",
+                            orderRemark: "",
+                            invoiceInfo: "",
+                            distributionValue: "",
+                            mallAdminId: a.mallAdminId,
+                            sameWareSumPostCharge: this.mdparr[i]
+                        };
                         wareList.push(List);
                     }
                     wareListParent.push(wareList);
                 }
-                var data = { 
-                    "shippId": this.address.shipId, 
-                    "userId": this.$store.state.baseUser.userId, 
-                    "wareList": wareListParent, 
-                }
+                var data = {
+                    shippId: this.address.shipId,
+                    userId: this.$store.state.baseUser.userId,
+                    wareList: wareListParent
+                };
                 data = JSON.stringify(data);
-                var parameter = { "orders": data }
-                console.log(parameter)
-                // this.$http
-                //     .post(process.env.API_HOST + "mall_api/order/create_order", parameter)
-                //     .then(response => {
-                //         if (response.data.code == 0 && response.data.success == true) {
-                //             console.log(response)
-                //         }
-                //     })
-                //     .catch(error => {
-                //         console.log(error);
-                //     });
-               
-            }
+                var parameter = { orders: data };
+                console.log(parameter);
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            console.log(response)
+                            Indicator.close();
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                        Toast("下单失败");
+                        console.log(error);
+                    });
+            },
+
         }
     };
 </script>
@@ -347,6 +370,7 @@
             padding: 0 10px;
             overflow: hidden;
             border-bottom: 1px solid #e8e8e8;
+
             .right {
                 flex: 1;
                 text-align: right;
@@ -406,9 +430,6 @@
         }
     }
 
-    
-
-   
     .DefaultAddress {
         display: flex;
         width: 100%;
@@ -416,11 +437,13 @@
         padding: 0px 10px;
         padding-right: 5px;
         background: #fff;
+
         .Edit {
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .MsgTitle {
             text-align: left;
             width: 80%;
@@ -428,6 +451,7 @@
             flex: 1;
         }
     }
+
     .RemarksList input {
         background-color: #fff;
         width: 100%;
@@ -441,6 +465,7 @@
         -webkit-appearance: none;
         outline: 0;
     }
+
     .Postage {
         width: 100%;
         display: flex;
@@ -450,22 +475,26 @@
         padding: 0 10px;
         overflow: hidden;
         background: #fff;
+
         .FontColr {
             color: #cc0000;
         }
     }
+
     .CartTotalAmount {
         margin: 0 auto;
         height: 2.5rem;
-        background: hsla(0,0%,100%,.95);
+        background: hsla(0, 0%, 100%, 0.95);
         color: #333;
         font-size: 14px;
         bottom: 0;
         padding-left: 10px;
         display: flex;
+
         .AllSelection {
             flex: 1;
         }
+
         .Settlement {
             flex: 1;
             font-weight: 700;
@@ -473,6 +502,7 @@
             line-height: 2.5rem;
             font-size: 0.75rem;
         }
+
         .SettlementBtn {
             flex: 1;
             background: #e4393c;
@@ -481,18 +511,34 @@
             text-align: center;
             line-height: 2.5rem;
         }
-    }    
-</style>
-<style lang="scss">
-    .mint-checklist-label {
-        padding: 0;
     }
 
-    .mint-cell-wrapper {
-        padding: 0 0;
+    .zk-box {
+        display: flex;
+        line-height: 0.65rem;
+        font-size: 0.26rem;
+        color: #333;
+        padding: 4.5rem 0;
     }
 
-    .mint-checklist-title {
-        margin: 0;
+    .zk-flex {
+        flex: 1;
+    }
+
+    .zk-pd {
+        padding: 0.5rem 0.1rem;
+    }
+
+    .zk-btn {
+        display: block;
+        line-height: 0.88rem;
+        text-align: Center;
+        color: #fff;
+        border-radius: 0.12rem;
+        background: #488BF1;
+    }
+
+    .zk-blue {
+        background: #488BF1;
     }
 </style>

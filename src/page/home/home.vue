@@ -31,8 +31,7 @@
 <script>
     import Search from "../../components/Search";
     import Footer from "../../components/Footer";
-    import { Swipe, SwipeItem } from "mint-ui";
-    import { Indicator } from "mint-ui";
+    import { Swipe, SwipeItem,Indicator } from "mint-ui";
 	import { getNowFormatDate } from "../../config/mUtils";
     export default {
         data() {
