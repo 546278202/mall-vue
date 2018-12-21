@@ -103,15 +103,22 @@
                 <div class="SettlementBtn" @click="onLinePay">在线支付</div>
             </div>
         </ul>
+        <!-- 优惠卷 -->
         <showModel type='alert' @tocancel='cancelfall' :showstate='showa'>
 
         </showModel>
+        <!-- 支付框 -->
+        <payModel type='alert' @tocancel='cancelpaymodel' :showstate='payM'>
+
+        </payModel>
+        
     </div>
 </template>
 <script>
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
     import showModel from "../../components/showModel";
+    import payModel from "./payModel";
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
     export default {
         name: 'demo',
@@ -126,6 +133,7 @@
                 totalpreferential: 0,
                 mdparr: [],
                 showa: false,
+                payM:false,
             };
         },
 
@@ -141,15 +149,21 @@
         components: {
             Header,
             Footer,
-            showModel
+            showModel,
+            payModel
         },
         methods: {
             alerts() {
-               
                 this.showa = true;
             },
             cancelfall(){
                 this.showa = false;
+            },
+            alertpaymodel() {
+                this.payM = true;
+            },
+            cancelpaymodel(){
+                this.payM = false;
             },
             loadAddress() {
                 let parameter = {
@@ -293,11 +307,8 @@
                 var wareListParent = [];
                 for (var i = 0; i < goodsObj.length; i++) {
                     var wareList = [];
-
                     for (var j = 0; j < goodsObj[i].list.length; j++) {
-                        console.log(goodsObj[i].list[j]);
                         var a = goodsObj[i].list[j];
-                        console.log(this.mdparr)
                         var List = {
                             priceSum: a.quantity * a.wareprice,
                             cartId: a.cartId,
@@ -330,6 +341,7 @@
                         if (response.data.code == 0 && response.data.success == true) {
                             console.log(response)
                             Indicator.close();
+                            alertpaymodel();
                         }
                     })
                     .catch(error => {
@@ -338,6 +350,8 @@
                         console.log(error);
                     });
             },
+
+
 
         }
     };

@@ -53,7 +53,12 @@
                 </div>
             </li>
         </ul>
-        <div class="CartTotalAmount">
+        <!-- 购物车为空 -->
+        <div class="nolist" v-if="goodsObj.length<1">
+            <div class="item"><img src="//gw.alicdn.com/tfscom/TB1xdQSJFXXXXcuXXXXy7S8WFXX-176-176.png" style="width:60px;height:60px;"/></div>
+            <div class="txt">购物车空空如也，去逛逛吧~</div>
+        </div>  
+        <div class="CartTotalAmount" v-if="goodsObj.length>0">
             <label class="mint-checklist-label" style="align-items: center;display: flex;">
                 <span class="mint-checkbox">
                     <input type="checkbox" class="mint-checkbox-input" name="checkbox" @click="chooseAllGoods($event)"
@@ -64,7 +69,6 @@
             </label>
             <div class="Settlement"><span></span>合计：<span class="FontColr">￥</span><span class="FontColr">{{totalMoney}}</span></div>
             <div class="SettlementBtn" @click="getSum">去结算</div>
-           
         </div>
     </div>
 </template>
@@ -244,19 +248,15 @@
         display: flex;
         flex-direction: column;
     }
-
     .list {
-        max-height: 100vh; //与屏幕一样高度
+        max-height: 100vh;
         overflow-y: auto;
         overflow-x: hidden;
-
         padding-bottom: 100px;
-
         li {
             margin-top: 5px;
             background: #fff;
         }
-
         .ShopName {
             width: 100%;
             display: flex;
@@ -266,7 +266,6 @@
             padding: 0 10px;
             overflow: hidden;
             border-bottom: 1px solid #e8e8e8;
-
             .right {
                 flex: 1;
                 text-align: right;
@@ -367,8 +366,26 @@
     .FontColr {
         color: #cc0000;
     }
-</style>
-<style lang="scss">
+    
+    .nolist{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        .item{
+            width:110px;
+            height:110px;
+            background: #ccc;
+            border-radius: 100%;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .txt{
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    }
     .mint-checklist-label {
         padding: 0;
     }
@@ -380,4 +397,5 @@
     .mint-checklist-title {
         margin: 0;
     }
+       
 </style>

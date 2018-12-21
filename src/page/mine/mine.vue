@@ -67,8 +67,7 @@
 <script>
 import Search from '../../components/Search'
 import Footer from '../../components/Footer'
-import { InfiniteScroll } from 'mint-ui';
-import { Indicator } from 'mint-ui';
+import {Indicator,InfiniteScroll } from 'mint-ui';
 export default {
     data () {
         return {
