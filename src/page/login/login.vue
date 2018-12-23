@@ -6,13 +6,13 @@
                 <img src="../../images/login1.png" style="height:74px;">
             </div>
             <div style="margin-top:40px;">
-                <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
+                <div class="item">
                     <i class="iconfont icon-zhanghao"></i>
                     <input type="text" v-model="input1" placeholder="请输入号码/手机号">
                 </div>
             </div>	
             <div style="margin-top:15px;">
-                <div style="position:relative;width: 275px;margin:0 auto;overflow: hidden;height: 40px;padding-left: 30px;background:#fff;border: 1px solid #ccc;font-size:14px;line-height:40px;border-radius: 20px;">
+                <div class="item">
                     <i class="iconfont icon-mima"></i>
                     <input type="text" v-model="input2" placeholder="请输入密码">
                 </div>
@@ -31,7 +31,7 @@
 </template>
 <script>
 import md5 from 'js-md5';
-import { Toast } from 'mint-ui'
+import { Indicator,Toast } from 'mint-ui'
 export default {
     data () {
         return {
@@ -64,21 +64,24 @@ export default {
                 return false
             }
             console.log(data)
+            Indicator.open("加载中...");
             this.$http.post(process.env.API_HOST + "/mall_api/user/login", data)
             .then( (response) => {
                 let res=response.data;
                 if(res.code==0 && res.success==true){
-                    sessionStorage.baseUser=JSON.stringify(res.data);          	
+                    sessionStorage.baseUser=JSON.stringify(res.data);
+                    this.$store.commit('changeLogin',JSON.stringify(res.data));   
                     setTimeout(()=>{
                         this.$router.push({path:'/home'});
-                    },600)
-                   
+                    },500)
+                    Indicator.close();
                 }else{
                     Toast(res.msg);
                 }
             
             })
             .catch( (error) => {
+                Indicator.close();
                 console.log(error);
             })    
         } 
@@ -89,6 +92,20 @@ export default {
 <style lang="scss" scoped>
     #app {
         background: #F3CB0A;
+    }
+    .item{
+        position:relative;
+        width: 275px;
+        margin:0 auto;
+        overflow: hidden;
+        height: 40px;
+        padding-left: 30px;
+        background:#fff;
+        border: 1px solid #ccc;
+        font-size:14px;
+        line-height:40px;
+        border-radius: 20px;
+        text-align:left;
     }
     .login-content {
         background: #fff;

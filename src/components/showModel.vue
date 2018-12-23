@@ -21,11 +21,7 @@
         methods: {
             tocancel: function () {
                 this.$emit("tocancel");
-            },
-            took: function () {
-                this.$emit("took");
             }
-           
         }
     };
 </script>

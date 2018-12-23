@@ -11,6 +11,7 @@ import getSum from '@/page/buyCar/getSum'
 
 Vue.use(Router)
 export default new Router({
+    
     routes: [
         {
             path: '/',
@@ -31,10 +32,8 @@ export default new Router({
             path: '/buyCar',
             name: 'buyCar',
             component: buyCar,
-            meta:{
-                requireAuth:true //需要登陆
-            },
-        }, 
+            meta:{auth:true} // 设置当前路由需要校验  不需要校验的路由就不用写了
+        },
         {
             path: '/getSUm',
             name: 'getSUm',
@@ -70,3 +69,4 @@ export default new Router({
   
     ]
 })
+

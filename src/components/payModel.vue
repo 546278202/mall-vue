@@ -3,38 +3,38 @@
         <div class="bj-wrap" style="display: block;"></div>
         <div class="alert-wrap" style="height: 65%; display: block;">
 			<div style="height:2.5rem;line-height: 2.5rem;text-align: center;display:flex;position:relative;">
-                <span  style="width:40px;padding:0 10px;position:absolute;left:0;top:0;" @click="cancelpaymodel">
-                    <img src="../../images/delete.png" style="width:14px;">
+                <span  style="width:40px;padding:0 10px;position:absolute;left:0;top:0;" @click="tocancel">
+                    <img src="../images/delete.png" style="width:14px;">
                 </span><span style="flex:1;text-align: center;">确认支付</span>
             </div>
-			<div style="height:3.75rem ;line-height:3.75rem ;text-align: center;color:#333;font-size: 30px;"><span>￥</span><span>798</span></div>
+			<div style="height:3.75rem ;line-height:3.75rem ;text-align: center;color:#333;font-size: 30px;"><span>￥{{paynum}}</span></div>
 			<div class="AllPayList">
 				<div class="PayList">
-					<span style="width:50px;"><img src="../../images/zhifubao.png" style="width:20px;"></span>
+					<span style="width:50px;"><img src="../images/zhifubao.png" style="width:20px;"></span>
 					<div class="mint-cell-title">
                         <label class="mint-radiolist-label">
                             <span>支付宝</span>
                             <span class="mint-radio is-right">
-                                <input type="radio" name="radio" class="mint-radio-input"  v-model="checkedValue" value="0" @change="getval"> 
+                                <input type="radio" name="radio" class="mint-radio-input"  v-model="checkedValue" value="0"> 
                                 <span class="mint-radio-core"></span>
                             </span> 
                         </label>
                     </div>
 				</div>
 				<div class="PayList">
-					<span style="width:50px;"><img src="../../images/weixin.png" style="width:20px;"></span>
+					<span style="width:50px;"><img src="../images/weixin.png" style="width:20px;"></span>
                     <div class="mint-cell-title">
                         <label class="mint-radiolist-label">
                             <span>微信</span>
                             <span class="mint-radio is-right">
-                                <input type="radio" name="radio" class="mint-radio-input"  v-model="checkedValue" value="1" @change="getval"> 
+                                <input type="radio" name="radio" class="mint-radio-input"  v-model="checkedValue" value="1" > 
                                 <span class="mint-radio-core"></span>
                             </span> 
                         </label>
 				    </div>
 				</div>
 				<div style="width: 80%;margin: 0 auto;margin-top:10px;margin-bottom:1.5rem;">
-					<button class="button">确定</button>
+					<button class="button" @click='getpaycode'>确定</button>
 				</div>
 			</div>
 		</div>
@@ -42,25 +42,23 @@
 </template>
 <script>
     export default {
-        name: "eject",
-        props: ["type", "payshowstate"],
+        props: ["type", "payshowstate", "paynum"],
         data () {
             return {
                 checkedValue:0,  
             }
         },
+        mounted() {
+           
+        },
         methods: {
-            cancelpaymodel: function () {
-                console.log("ss")
+            //向父组件传值
+            tocancel() {
                 this.$emit("cancelpaymodel");
             },
-            took: function () {
-                this.$emit("took");
-            },
-            getval(){
-                console.log(this.checkedValue)
+            getpaycode(){
+                this.$emit('transferUser',this.checkedValue);
             }
-           
         }
 
     };

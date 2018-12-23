@@ -54,7 +54,7 @@
             </li>
         </ul>
         <!-- 购物车为空 -->
-        <div class="nolist" v-if="goodsObj.length<1">
+        <div class="nolist" v-if="goodsObj.length==0">
             <div class="item"><img src="//gw.alicdn.com/tfscom/TB1xdQSJFXXXXcuXXXXy7S8WFXX-176-176.png" style="width:60px;height:60px;"/></div>
             <div class="txt">购物车空空如也，去逛逛吧~</div>
         </div>  
@@ -87,6 +87,7 @@
         },
 
         mounted() {
+            console.log(this.$store.state.baseUser.userId)
             if(this.$store.state.baseUser.userId==''){
                 this.$router.push("/login")
                 return false

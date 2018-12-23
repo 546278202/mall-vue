@@ -25,8 +25,6 @@
                 </div>
             </ul>
         </div>
-        <!-- <router-view></router-view> -->
-        <Footer></Footer>
     </div>
 </template>
 <script>
@@ -65,7 +63,6 @@
 
         components: {
             Search,
-            Footer
         },
         methods: {
 

@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div>
-                <li v-for="(item,index1) in goodsObj">
+                <li v-for="(item,index1) in goodsObj" :key="index1">
                     <div class="ShopName">
                         <div class="left" style="display:flex;">{{item.mallAdminId}}</div>
                         <div class="right">
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div style="margin-bottom: 5px;">
-                        <div v-for="(list,index) in item.list">
+                        <div v-for="(list,index) in item.list" :key="index">
                             <div style="display:flex; padding: 5px 10px;">
                                 <div class="shopimg">
                                     <img :src="list.warePic" style="width:5rem;height:5rem;">
@@ -108,8 +108,11 @@
 
         </showModel>
         <!-- 支付框 -->
-        <payModel type='alert' @tocancel='cancelpaymodel' :showstate='payM'>
-
+        <payModel type='alertpaymodel' 
+            @cancelpaymodel='cancelpaymodel' 
+            :payshowstate='payM' 
+            @transferUser='getpaycode' 
+            :paynum='totalMoney+totalFare-totalpreferential'>
         </payModel>
         
     </div>
@@ -118,7 +121,7 @@
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
     import showModel from "../../components/showModel";
-    import payModel from "./payModel";
+    import payModel from "../../components/payModel";
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
     export default {
         name: 'demo',
@@ -164,6 +167,9 @@
             },
             cancelpaymodel(){
                 this.payM = false;
+            },
+            getpaycode(msg){
+                console.log(msg)
             },
             loadAddress() {
                 let parameter = {
@@ -301,54 +307,56 @@
             },
 
             onLinePay() {
-                Indicator.open("加载中...");
-                console.log(this.goodsObj);
-                var goodsObj = this.goodsObj;
-                var wareListParent = [];
-                for (var i = 0; i < goodsObj.length; i++) {
-                    var wareList = [];
-                    for (var j = 0; j < goodsObj[i].list.length; j++) {
-                        var a = goodsObj[i].list[j];
-                        var List = {
-                            priceSum: a.quantity * a.wareprice,
-                            cartId: a.cartId,
-                            quantity: a.quantity,
-                            wareid: a.wareid,
-                            wareprice: a.wareprice,
-                            specName: a.specname,
-                            cCode: "",
-                            orderRemark: "",
-                            invoiceInfo: "",
-                            distributionValue: "",
-                            mallAdminId: a.mallAdminId,
-                            sameWareSumPostCharge: this.mdparr[i]
-                        };
-                        wareList.push(List);
-                    }
-                    wareListParent.push(wareList);
-                }
-                var data = {
-                    shippId: this.address.shipId,
-                    userId: this.$store.state.baseUser.userId,
-                    wareList: wareListParent
-                };
-                data = JSON.stringify(data);
-                var parameter = { orders: data };
-                console.log(parameter);
-                this.$http
-                    .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
-                    .then(response => {
-                        if (response.data.code == 0 && response.data.success == true) {
-                            console.log(response)
-                            Indicator.close();
-                            alertpaymodel();
-                        }
-                    })
-                    .catch(error => {
-                        Indicator.close();
-                        Toast("下单失败");
-                        console.log(error);
-                    });
+                this.alertpaymodel();
+                console.log("ss")
+                // Indicator.open("加载中...");
+                // console.log(this.goodsObj);
+                // var goodsObj = this.goodsObj;
+                // var wareListParent = [];
+                // for (var i = 0; i < goodsObj.length; i++) {
+                //     var wareList = [];
+                //     for (var j = 0; j < goodsObj[i].list.length; j++) {
+                //         var a = goodsObj[i].list[j];
+                //         var List = {
+                //             priceSum: a.quantity * a.wareprice,
+                //             cartId: a.cartId,
+                //             quantity: a.quantity,
+                //             wareid: a.wareid,
+                //             wareprice: a.wareprice,
+                //             specName: a.specname,
+                //             cCode: "",
+                //             orderRemark: "",
+                //             invoiceInfo: "",
+                //             distributionValue: "",
+                //             mallAdminId: a.mallAdminId,
+                //             sameWareSumPostCharge: this.mdparr[i]
+                //         };
+                //         wareList.push(List);
+                //     }
+                //     wareListParent.push(wareList);
+                // }
+                // var data = {
+                //     shippId: this.address.shipId,
+                //     userId: this.$store.state.baseUser.userId,
+                //     wareList: wareListParent
+                // };
+                // data = JSON.stringify(data);
+                // var parameter = { orders: data };
+                // console.log(parameter);
+                // this.$http
+                //     .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
+                //     .then(response => {
+                //         if (response.data.code == 0 && response.data.success == true) {
+                //             console.log(response)
+                //             Indicator.close();
+                //             alertpaymodel();
+                //         }
+                //     })
+                //     .catch(error => {
+                //         Indicator.close();
+                //         Toast("下单失败");
+                //         console.log(error);
+                //     });
             },
 
 
