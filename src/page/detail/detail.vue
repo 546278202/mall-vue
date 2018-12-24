@@ -54,9 +54,15 @@
 			<a><i class="iconfont icon-shouye1"></i><p>店铺</p></a>
 			<a @click="addcar" class="add-car">加购物车</a>
 			<a class="to-buy open-popup" style="color:#fff;font-size: 15px;">立刻购买</a>
-		</div>
-
-        <div class="go-buy-wrap" v-show="isShow"></div>
+        </div>
+        <!-- 弹出层 -->
+        <model type='alertpaymodel' 
+            @cancelpaymodel='cancelpaymodel' 
+            :payshowstate='payM' 
+            @transferUser='getpaycode' 
+            :specJson='data.specJson'>
+        </model>
+        <!-- <div class="go-buy-wrap" v-show="isShow"></div>
         <div class="go-buy" v-show="isShow">
             <div class="alert-price" style="position:relative;overflow:hidden;">
 				<div style="width:45px;height:45px;padding:10px;box-sizing: border-box;"  @click="removeDemo"><img src="../../images/delete.png" style="width:100%;height:100%;display: block;"></div>
@@ -74,7 +80,7 @@
                     <div class="sum">
                         <div style="display:flex;">
                             <a class="addition" @click="addUp"><i class="iconfont icon-iconfontadd"></i></a>
-                            <a class="number" id="CurrentNumber">{{buyNum}}</a>
+                            <a class="number">{{buyNum}}</a>
                             <a class="subtraction"  @click="addDown"><i class="iconfont icon-iconfontmove"></i></a>
                         </div>
                     </div>
@@ -83,11 +89,12 @@
             <div style="text-align: center;width:100%;padding:0 10%;">
 				<button class="button" @click="removeDemo">确定</button>
 			</div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
 import Footer from '../../components/Footer'
+import model from './children/model'
 import { Swipe, SwipeItem,Indicator,Toast} from 'mint-ui'
 export default {
     data () {
@@ -101,7 +108,8 @@ export default {
             current:0,
             mPrice:0,
             mspecName:'',
-            buyNum:1
+            buyNum:1,
+            payM:false,
         }
     },
     mounted(){
@@ -111,7 +119,8 @@ export default {
     },
     
     components:{
-        Footer
+        Footer,
+        model
     },
     methods: {
         getData() {
@@ -136,8 +145,13 @@ export default {
             }); 
         },
         alertDemo() {
-            this.isShow = !this.isShow
-          
+            this.alertpaymodel();          
+        },
+        alertpaymodel(){
+            this.payM=true
+        },
+        cancelpaymodel(){
+            this.payM = false;
         },
         removeDemo(){
             this.isShow = !this.isShow
@@ -149,16 +163,7 @@ export default {
             this.mspecName=this.specJson.specValue[index].specName
 
         },
-        addUp(){
-            this.buyNum++
-            console.log(this.buyNum)
-        },
-        addDown(){
-            if(this.buyNum>1){
-                this.buyNum--
-                console.log(this.buyNum)
-            }
-        },
+       
         goback(){
             this.$router.go(-1)
         },
@@ -193,7 +198,9 @@ export default {
                 .catch(error => {
                     console.log(error);
                 }); 
-        } 
+        }, 
+
+        
     },
 }
 </script>
@@ -373,26 +380,5 @@ export default {
             height: 1.5rem;
         }
     }
-    .button {
-        background: #F3CB0A;
-        color: #fff;
-        border: 1px solid #F3CB0A;
-        width: 100%;
-        display: block;
-        height: 1.85rem;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        -webkit-appearance: none;
-        padding: 0 .5rem;
-        margin: 0;
-        font-family: inherit;
-        font-size: .8rem;
-        line-height: 1.75rem;
-        text-align: center;
-        text-decoration: none;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: pointer;
-        border-radius: 2rem;
-    }
+   
 </style>

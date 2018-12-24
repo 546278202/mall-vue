@@ -30,10 +30,10 @@
 	  	   	</div>     
 		</div>
         <div class="my-Order">
-			<a class="myList" href="../order/order.html?tabCode=">
+			<router-link class="myList" :to="{path:'/order' , query:{tabCode:''}}">
 				<div class="left">我的订单</div>
 				<div class="right"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
-			</a>
+			</router-link>
 			<div class="stateList">
 				<a href="../order/order.html?tabCode=0">
 					<img src="../../images/state1.png">

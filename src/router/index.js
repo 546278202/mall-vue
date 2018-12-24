@@ -8,6 +8,7 @@ import search from '@/page/search/search'
 import detail from '@/page/detail/detail'
 import buyCar from '@/page/buyCar/buyCar'
 import getSum from '@/page/buyCar/getSum'
+import order from '@/page/order/order'
 
 Vue.use(Router)
 export default new Router({
@@ -38,16 +39,15 @@ export default new Router({
             path: '/getSUm',
             name: 'getSUm',
             component: getSum,
-            meta:{
-                requireAuth:true 
-            },
+            meta:{auth:true} // 设置当前路由需要校验  不需要校验的路由就不用写了
             
         }, 
       
         {
             path: '/mine',
             name: 'mine',
-            component: mine
+            component: mine,
+            meta:{auth:true} // 设置当前路由需要校验  不需要校验的路由就不用写了
         },
         {
             path: '/login',
@@ -65,6 +65,12 @@ export default new Router({
             path: '/detail',
             name: 'detail',
             component: detail
+        },
+        //订单
+        {
+            path: '/order',
+            name: 'order',
+            component: order
         },
   
     ]
