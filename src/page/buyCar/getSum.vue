@@ -14,10 +14,8 @@
                         <span style="float:right;padding-right: 20px;">{{address.receiverPhone}}</span>
                     </div>
                     <div style="width:100%;">
-                        <span>{{address.receiverProvince}}</span>
-                        <span>-</span>
-                        <span>{{address.receiverCity}}</span>
-                        <span>-</span>
+                        <span>{{address.receiverProvince}}-</span>
+                        <span>{{address.receiverCity}}-</span>
                         <span>{{address.receiverDistrict}}</span>
                     </div>
                     <div style="width:100%;">
@@ -365,12 +363,12 @@
                 let waresName=''
                 let price=''
                 let ip=''
-                
+
                 if(msg=="0"){
                     this.ZhiFuBao(oid,waresName,shifukuan)
                 }
                 if(msg==1){
-                    this.ZhiFuBao(oid,waresName,shifukuan)
+                    this.WeiXin(ordersInfoIds,waresName,price,ip)
                 }
             },
 
