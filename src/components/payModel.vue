@@ -5,7 +5,8 @@
 			<div style="height:2.5rem;line-height: 2.5rem;text-align: center;display:flex;position:relative;">
                 <span  style="width:40px;padding:0 10px;position:absolute;left:0;top:0;" @click="tocancel">
                     <img src="../images/delete.png" style="width:14px;">
-                </span><span style="flex:1;text-align: center;">确认支付</span>
+                </span>
+                <span style="flex:1;text-align: center;">确认支付</span>
             </div>
 			<div style="height:3.75rem ;line-height:3.75rem ;text-align: center;color:#333;font-size: 30px;"><span>￥{{paynum}}</span></div>
 			<div class="AllPayList">
@@ -58,6 +59,7 @@
             },
             getpaycode(){
                 this.$emit('transferUser',this.checkedValue);
+                
             }
         }
 

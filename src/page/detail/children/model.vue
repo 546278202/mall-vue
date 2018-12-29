@@ -2,20 +2,17 @@
     <div v-show="payshowstate">
         <div class="bj-wrap" style="display: block;"></div>
         <div class="alert-wrap" style="height: 50%; display: block;">
-			<div style="height:2.5rem;line-height: 2.5rem;text-align: center;display:flex;position:relative;">
-                <span  style="width:40px;padding:0 10px;position:absolute;left:0;top:0;" @click="tocancel">
-                    <img src="../../../images/delete.png" style="width:14px;">
-                </span>
-            </div>
-            <div >￥{{currentprice}}</div>
-
+            <span  style="width:45px;height:45px;line-height:45px;position:absolute;left:0;top:0px;" @click="tocancel">
+                <img src="../../../images/delete.png" style="width:14px;">
+            </span>
+            <div class="alert-price">￥{{currentprice}}</div>
             <div style="height:10rem;overflow: auto; -webkit-overflow-scrolling:touch;">
-				<div class="bottom">
-					<div class="btn">{{specJson.specName}}</div>
-					<div class="ColorWrap" style="overflow: hidden;" >
+                <div class="bottom">
+                    <div class="btn">{{specJson.specName}}</div>
+                    <div class="ColorWrap" style="overflow: hidden;" >
                         <li v-for="(item,index) in specJson.specValue"  @click="addClass(index,item)" :class="{active:index==currentIndex}" class="KG4">{{item.specName}}</li>
-                    </div>					
-				</div>
+                    </div>
+                </div>
                 <div class="bottom">
                     <div class="btn">数量：</div>
                     <div class="sum">
@@ -26,13 +23,12 @@
                         </div>
                     </div>
                 </div>
-		    </div>
-			
-				<div style="width: 80%;margin: 0 auto;margin-top:10px;margin-bottom:1.5rem;">
-					<button class="button" @click='getpaycode'>确定</button>
-				</div>
-		
-		</div>
+            </div>
+                
+            <div style="width: 80%;margin: 0 auto;margin-top:10px;margin-bottom:1.5rem;">
+                <button class="button" @click='getpaycode'>确定</button>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -42,12 +38,18 @@
             return {
                 checkedValue:0,  
                 currentIndex:0,
-                currentprice:this.specJson.specValue[0].specPrice,
+                currentprice:'',
                 buyNum:1,
             }
         },
+        watch: {
+            specJson: function(newVal,oldVal){
+                this.currentprice=newVal.specValue[0].specPrice
+                console.log(newVal)
+            }
+        },
         mounted() {
-           
+            
         },
         methods: {
             addClass(index,item){
@@ -98,6 +100,13 @@
         -moz-animation: myfirst 0.3s;	/* Firefox */
         -webkit-animation: myfirst 0.3s;	/* Safari 和 Chrome */
         -o-animation: myfirst 0.3s;	/* Opera */
+    }
+    .alert-price {
+        height: 75px;
+        line-height: 75px;
+        text-align: center;
+        color: #cc0000;
+        font-size: 30px;
     }
     .bottom {
         line-height: 1.5rem;

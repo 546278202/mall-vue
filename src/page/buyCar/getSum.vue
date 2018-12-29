@@ -63,7 +63,6 @@
                                 </div>
                             </div>
 
-
                             <div class="YuHuiMa" style="height:45px;line-height:45px;display:flex;font-size:0.8rem;border-top: 1px solid #dcdcdc;padding: 0px 10px;justify-content: space-between;">
                                 <div @click="alerts" style="flex:1;text-align: left;">输入优惠码：</div>
                                 <div>已优惠￥0.00</div>
@@ -111,7 +110,7 @@
         <payModel type='alertpaymodel' 
             @cancelpaymodel='cancelpaymodel' 
             :payshowstate='payM' 
-            @transferUser='getpaycode' 
+            @transferUser='gotopay' 
             :paynum='totalMoney+totalFare-totalpreferential'>
         </payModel>
         
@@ -137,6 +136,7 @@
                 mdparr: [],
                 showa: false,
                 payM:false,
+                advancePaymentOrder:''//预支付订单
             };
         },
 
@@ -168,9 +168,7 @@
             cancelpaymodel(){
                 this.payM = false;
             },
-            getpaycode(msg){
-                console.log(msg)
-            },
+            
             loadAddress() {
                 let parameter = {
                     userId: this.$store.state.baseUser.userId
@@ -290,9 +288,6 @@
                     this.mdparr.push(mdp)
                     this.totalFare += mdp
                 }
-                // console.log(this.totalFare)
-                console.log(this.mdparr)
-
             },
 
             addUp(index1, index) {
@@ -305,62 +300,134 @@
                     console.log(this.buyNum);
                 }
             },
-
+            // 在线结算
             onLinePay() {
-                this.alertpaymodel();
-                console.log("ss")
-                // Indicator.open("加载中...");
-                // console.log(this.goodsObj);
-                // var goodsObj = this.goodsObj;
-                // var wareListParent = [];
-                // for (var i = 0; i < goodsObj.length; i++) {
-                //     var wareList = [];
-                //     for (var j = 0; j < goodsObj[i].list.length; j++) {
-                //         var a = goodsObj[i].list[j];
-                //         var List = {
-                //             priceSum: a.quantity * a.wareprice,
-                //             cartId: a.cartId,
-                //             quantity: a.quantity,
-                //             wareid: a.wareid,
-                //             wareprice: a.wareprice,
-                //             specName: a.specname,
-                //             cCode: "",
-                //             orderRemark: "",
-                //             invoiceInfo: "",
-                //             distributionValue: "",
-                //             mallAdminId: a.mallAdminId,
-                //             sameWareSumPostCharge: this.mdparr[i]
-                //         };
-                //         wareList.push(List);
-                //     }
-                //     wareListParent.push(wareList);
-                // }
-                // var data = {
-                //     shippId: this.address.shipId,
-                //     userId: this.$store.state.baseUser.userId,
-                //     wareList: wareListParent
-                // };
-                // data = JSON.stringify(data);
-                // var parameter = { orders: data };
-                // console.log(parameter);
-                // this.$http
-                //     .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
-                //     .then(response => {
-                //         if (response.data.code == 0 && response.data.success == true) {
-                //             console.log(response)
-                //             Indicator.close();
-                //             alertpaymodel();
-                //         }
-                //     })
-                //     .catch(error => {
-                //         Indicator.close();
-                //         Toast("下单失败");
-                //         console.log(error);
-                //     });
+                var goodsObj = this.goodsObj;
+                var wareListParent = [];
+                for (var i = 0; i < goodsObj.length; i++) {
+                    var wareList = [];
+                    for (var j = 0; j < goodsObj[i].list.length; j++) {
+                        var a = goodsObj[i].list[j];
+                        var List = {
+                            priceSum: a.quantity * a.wareprice,
+                            cartId: a.cartId,
+                            quantity: a.quantity,
+                            wareid: a.wareid,
+                            wareprice: a.wareprice,
+                            specName: a.specname,
+                            cCode: "",
+                            orderRemark: "",
+                            invoiceInfo: "",
+                            distributionValue: "",
+                            mallAdminId: a.mallAdminId,
+                            sameWareSumPostCharge: this.mdparr[i]
+                        };
+                        wareList.push(List);
+                    }
+                    wareListParent.push(wareList);
+                }
+                var data = {
+                    shippId: this.address.shipId,
+                    userId: this.$store.state.baseUser.userId,
+                    wareList: wareListParent
+                };
+                data = JSON.stringify(data);
+                var parameter = { orders: data };
+                console.log(parameter);
+                Indicator.open("加载中...");
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            console.log(response.data)
+                            // 预支付订单
+                            this.advancePaymentOrder=response.data.data;
+                            Indicator.close();
+                            this.alertpaymodel();
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                        Toast("下单失败");
+                        console.log(error);
+                    });
+            },
+            
+            // 跳转 0支付宝,1微信
+            gotopay(msg){
+                // 支付宝参数
+                let shifukuan=this.totalMoney+this.totalFare-this.totalpreferential
+                let waresName=this.advancePaymentOrder.orderInfoVoList[0].orderDetailEntityList[0].wareName
+                let oid=this.advancePaymentOrder.orderInfoVoList[0].oid
+
+                // 微信参数
+                let ordersInfoIds=''
+                let waresName=''
+                let price=''
+                let ip=''
+                
+                if(msg=="0"){
+                    this.ZhiFuBao(oid,waresName,shifukuan)
+                }
+                if(msg==1){
+                    this.ZhiFuBao(oid,waresName,shifukuan)
+                }
             },
 
+            // 调用支付宝
+            ZhiFuBao(a,b,c) {
+                let parameter = {
+                    "oid": a,
+                    "wareName": b,
+                    "price": c
+                }
+                this.$http
+                    .get(process.env.API_HOST + "/mall_api/pay/payH5",{
+                        params: parameter
+                    })
+                    .then(response => {
+                        console.log(response)
+                        if(response.status == 200 & response.statusText == "OK") {
+                            window.location.href=response.request.responseURL
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                        console.log(error);
+                    });      
+            },
 
+            WeiXin(ordersInfoIds,waresName,price,ip) {
+                let parameter= {
+                    "ordersInfoIds": ordersInfoId,
+                    "waresName": waresName,
+                    "price": allprice * 100,
+                    "ip": ip,
+                    "tradeType": "MWEB",
+                }
+                this.$http
+                    .get(process.env.API_HOST + "/mall_api/pay/wxprepay",{
+                        params: parameter
+                    })
+                    .then(response => {
+                        console.log(response)
+                        if(response.status == 200 & response.statusText == "OK") {
 
+                            // window.location.href=response.request.responseURL
+                            // if (res.code == 0) {
+                            //     var urlStr = res.data.mwebUrl;
+                            //     var s1 = urlStr.split("amp;")[0];
+                            //     var s2 = urlStr.split("amp;")[1];
+                            //     var mwebUrl = s1 + s2;
+                            //     window.location.href = mwebUrl;
+                            // }
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                        console.log(error);
+                    });      
+                        }
         }
     };
 </script>
@@ -375,9 +442,7 @@
         max-height: 100vh; //与屏幕一样高度
         overflow-y: auto;
         overflow-x: hidden;
-
         padding-bottom: 100px;
-
         li {
             margin-top: 5px;
             background: #fff;

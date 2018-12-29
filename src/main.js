@@ -13,28 +13,37 @@ import 'mint-ui/lib/style.css'
 Vue.use(MintUI)
 import axios from 'axios'
 import qs from 'qs'
+import { Indicator } from 'mint-ui'
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
-	if (config.method != 'get') {
+	if (config.method == 'post') {
 		config.data = qs.stringify(config.data);
 	}
-	config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-	let token = window.sessionStorage.getItem("TOKEN");
-	if (token) {
-		config.headers.common['Authorization'] = "Bearer " + token;
+	if (config.method == 'get') {
+
 	}
-	return config;
-}, function (error) {
+	config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+	Indicator.open('加载中...')
+	return config
+}), function (error) {
+	Indicator.close()
 	return Promise.reject(error)
-})
+}
+axios.interceptors.response.use(function (config) {
+	Indicator.close()
+	return config
+}), function (error) {
+	Indicator.close()
+	return Promise.reject(error)
+}
+
 
 router.beforeEach((to, from, next) => {
-
 	if (to.matched.some(m => m.meta.auth)) {
 		console.log(store.state.baseUser)
 		// 对路由进行验证     
-		if (store.state.baseUser!=null) { // 已经登陆       
+		if (store.state.baseUser != null) { // 已经登陆       
 			next()   // 正常跳转到你设置好的页面     
 		}
 		else {

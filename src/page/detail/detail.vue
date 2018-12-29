@@ -24,7 +24,7 @@
                         <a class="Postage">包邮</a>
                             <a class="Monthly-sales" style="text-align: right;">月销量0件</a>
                             <a class="Coupon" style="display: flex;justify-content: center;"></a>
-                        <a class="Price"><span>￥</span><span id="Price">0.2</span></a>
+                        <a class="Price"><span>￥0.2</span></a>
                     </div>
                 </div>
 
@@ -60,36 +60,10 @@
             @cancelpaymodel='cancelpaymodel' 
             :payshowstate='payM' 
             @transferUser='getpaycode' 
-            :specJson='data.specJson'>
+            :specJson='specJson'
+
+            >
         </model>
-        <!-- <div class="go-buy-wrap" v-show="isShow"></div>
-        <div class="go-buy" v-show="isShow">
-            <div class="alert-price" style="position:relative;overflow:hidden;">
-				<div style="width:45px;height:45px;padding:10px;box-sizing: border-box;"  @click="removeDemo"><img src="../../images/delete.png" style="width:100%;height:100%;display: block;"></div>
-				<div class="ActivePrice" style="flex:1;"><span>￥{{mPrice}}</span></div>
-			</div>
-            <div style="height:10rem;overflow: auto; -webkit-overflow-scrolling:touch;">
-				<div class="bottom">
-					<div class="btn">{{specJson.specName}}</div>
-					<div class="ColorWrap" style="overflow: hidden;" >
-                        <li v-for="(item,index) in specJson.specValue"  @click="addClass(index,$event)" :class="{act:index==current}" class="KG4">{{item.specName}}</li>
-                    </div>					
-				</div>
-                <div class="bottom">
-                    <div class="btn">数量：</div>
-                    <div class="sum">
-                        <div style="display:flex;">
-                            <a class="addition" @click="addUp"><i class="iconfont icon-iconfontadd"></i></a>
-                            <a class="number">{{buyNum}}</a>
-                            <a class="subtraction"  @click="addDown"><i class="iconfont icon-iconfontmove"></i></a>
-                        </div>
-                    </div>
-                </div>
-		    </div>
-            <div style="text-align: center;width:100%;padding:0 10%;">
-				<button class="button" @click="removeDemo">确定</button>
-			</div>
-        </div> -->
     </div>
 </template>
 <script>
@@ -131,7 +105,6 @@ export default {
             .post(process.env.API_HOST + "/mall_api/shop/get_ware_info", data)
             .then(response => {
                 Indicator.close();
-                console.log(response)
                 let data=response.data.data
                 this.data=data;
                 this.items=data.coverList;
@@ -161,9 +134,8 @@ export default {
             this.current=index;
             this.mPrice=this.specJson.specValue[index].specPrice
             this.mspecName=this.specJson.specValue[index].specName
-
         },
-       
+
         goback(){
             this.$router.go(-1)
         },
