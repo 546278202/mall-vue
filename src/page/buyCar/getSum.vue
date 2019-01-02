@@ -359,16 +359,19 @@
                 let oid=this.advancePaymentOrder.orderInfoVoList[0].oid
 
                 // 微信参数
-                let ordersInfoIds=''
-                let waresName=''
-                let price=''
-                let ip=''
-
+                let data=this.advancePaymentOrder.orderInfoVoList;
+                let ordersInfoIdArr=[]
+                for (var i = 0; i < data.length; i++) {
+                    ordersInfoIdArr.push(data[i].ordersInfoId)
+                }
+                let ordersInfoIds = ordersInfoIdArr.toString()
+                let ip=returnCitySN["cip"];
+        
                 if(msg=="0"){
                     this.ZhiFuBao(oid,waresName,shifukuan)
                 }
                 if(msg==1){
-                    this.WeiXin(ordersInfoIds,waresName,price,ip)
+                    this.WeiXin(ordersInfoIds,waresName,shifukuan,ip)
                 }
             },
 
@@ -379,12 +382,12 @@
                     "wareName": b,
                     "price": c
                 }
+                debugger
                 this.$http
                     .get(process.env.API_HOST + "/mall_api/pay/payH5",{
                         params: parameter
                     })
                     .then(response => {
-                        console.log(response)
                         if(response.status == 200 & response.statusText == "OK") {
                             window.location.href=response.request.responseURL
                         }
@@ -395,11 +398,11 @@
                     });      
             },
 
-            WeiXin(ordersInfoIds,waresName,price,ip) {
+            WeiXin(ordersInfoIds,waresName,shifukuan,ip) {
                 let parameter= {
-                    "ordersInfoIds": ordersInfoId,
+                    "ordersInfoIds": ordersInfoIds,
                     "waresName": waresName,
-                    "price": allprice * 100,
+                    "price": shifukuan * 100,
                     "ip": ip,
                     "tradeType": "MWEB",
                 }
@@ -408,24 +411,19 @@
                         params: parameter
                     })
                     .then(response => {
-                        console.log(response)
                         if(response.status == 200 & response.statusText == "OK") {
-
-                            // window.location.href=response.request.responseURL
-                            // if (res.code == 0) {
-                            //     var urlStr = res.data.mwebUrl;
-                            //     var s1 = urlStr.split("amp;")[0];
-                            //     var s2 = urlStr.split("amp;")[1];
-                            //     var mwebUrl = s1 + s2;
-                            //     window.location.href = mwebUrl;
-                            // }
+                                var urlStr = response.data.data.mwebUrl;
+                                var s1 = urlStr.split("amp;")[0];
+                                var s2 = urlStr.split("amp;")[1];
+                                var mwebUrl = s1 + s2;
+                                window.location.href = mwebUrl;
                         }
                     })
                     .catch(error => {
                         Indicator.close();
                         console.log(error);
                     });      
-                        }
+            }
         }
     };
 </script>

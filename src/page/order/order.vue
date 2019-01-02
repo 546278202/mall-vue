@@ -44,9 +44,9 @@
 <script>
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
+    import BScroll from 'better-scroll';
     import { Indicator,InfiniteScroll, Checklist } from "mint-ui";
     import { getNowFormatDate } from "../../config/mUtils";
-
     export default {
         data() {
             return {
@@ -62,7 +62,6 @@
                 loading: false
             };
         },
-
         mounted() {
             if (this.$store.state.baseUser.userId == "") {
                 this.$router.push("/login");
