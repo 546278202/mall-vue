@@ -29,7 +29,9 @@ export default {
 </script>
 <style scoped>
     header{
-        line-height:2.5rem;
+        height:50px;
+        box-sizing: border-box;
+        line-height:50px;
         display:flex;
         background:#fff;
         border-bottom: 1px solid #dcdcdc;

@@ -106,6 +106,9 @@ export default {
         line-height:40px;
         border-radius: 20px;
         text-align:left;
+        input{
+            width: 100%;
+        }
     }
     .login-content {
         background: #fff;
