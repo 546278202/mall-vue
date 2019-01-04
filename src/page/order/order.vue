@@ -1,14 +1,14 @@
 <template>
-	<div>
-		<Header></Header>
-		<div class="wrap" :style="styleObj1">
-			<div class="content">
-				<div class="nav_type">
-					<a v-for="(item,index) in items" :key="index" type="2" @click="tabNav(index)" :class='currentIndex==item.tab? "font-red":""'>{{item.text}}</a>
-				</div>
+	<div class="rules">
+		<div class="nav_type">
+			<a v-for="(item,index) in items" :key="index" type="2" @click="tabNav(index)" :class='currentIndex==item.tab? "font-red":""'>{{item.text}}</a>
+		</div>
+		<p class="drop-down" v-if="dropDown">松手刷新数据...</p>
+		<div class="bscroll" ref="bscroll" :style="styleObj1">
+			<div class="bscroll-container">
 				<ul>
 					<li v-for="(item,index) in goodsObj">
-						<div class="order-one" style="margin-top: 5px;">
+						<div class="order-one">
 							<div class="content1"></div>
 							<div class="content2">
 								<div style="display:flex;border-top:1px solid #eee;padding: 10px;" v-for="(item,index) in item.orderDetailEntityList">
@@ -38,16 +38,16 @@
 							</div>
 						</div>
 					</li>
-					<div v-show="flag"  style="display: flex;justify-content: center;font-size: 14px;color:#999;height: 45px;align-items: center;">
-						<div style="margin-right:10px;">{{txtsmg}}</div>
-						<mt-spinner :size="18" type="fading-circle" v-show="loadingState" ></mt-spinner>
+					<div style="display: flex;justify-content: center;font-size: 14px;color:#666;height: 45px;align-items: center;">
+						<!-- <mt-spinner :size="18" type="fading-circle" v-show="loadingState" ></mt-spinner> -->
+						<div style="margin-left:10px;">{{txtsmg}}</div>
 					</div>
 				</ul>
 			</div>
 		</div>
 	</div>
-
 </template>
+
 <script>
 	import Header from "../../components/Header";
 	import BScroll from 'better-scroll'
@@ -64,57 +64,31 @@
 					{ tab: '3', text: "已完成" },
 				],
 				currentIndex: this.$route.query.tabCode,
-				pageNum:1,
-				pageSize:20,
-				goodsObj:[],
-				loading: false,
-				flag:false,
-				loadingState:false,
+				goodsObj: [],
+				dropDown: false,
+				pageNum: 1,
+				pageSize: 20,
+				styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
 				txtsmg:"",
-				styleObj1:{"height":'',"width": "100%","overflow": "hidden",'font-size':'40px'},
+				flag:'',
 				stop:true
 			}
 		},
 		//获取屏幕高度
 		beforeMount(height) {
-			var height=50
+			var height = 50
 			var h = document.documentElement.clientHeight || document.body.clientHeight;
-			this.styleObj1["height"]=h-height+"px"
+			this.styleObj1["height"] = h - height + "px"
 		},
 		mounted() {
-			this.$store.commit("changeTitle", "我的订单");
-			this.loadMore();
-			var oScroll = new BScroll(".wrap", {
-				scrollY: true,
-    			click: true,
-				probeType: 2,
-				//下拉刷新：可以配置顶部下拉的距离（threshold） 来决定刷新时机以及回弹停留的距离（stop）
-				//这个配置用于做上拉加载功能，默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启上拉加载
-				pullUpLoad: {
-					threshold: 10
-				},
-				mouseWheel: {    // pc端同样能滑动
-					speed: 20,
-					invert: false
-				},
-				useTransition: false  // 防止iphone微信滑动卡顿
-			});
-			oScroll.on("pullingUp",  ()=> {
-				if(this.stop==false){
-					return false;
-				}
-				this.pageNum++
-				this.loadMore();
-				oScroll.finishPullUp();	
-				oScroll.refresh()
-			});
-			oScroll.refresh();			
+			this.scrollFn()
+			this.loadMore()
 		},
-		components: {
-			Header,
-		},
-		created() {
-
+		watch:{
+			goodsObj(val){
+				console.log(val)
+				this.scroll.refresh()
+			}
 		},
 		methods: {
 			// 切换导航
@@ -125,7 +99,6 @@
 				this.loadMore()
 			},
 			loadMore() {
-			
 				let parameter = {
 					userId: this.$store.state.baseUser.userId,
 					ordersStatus: this.currentIndex,
@@ -141,26 +114,15 @@
 					)
 					.then(response => {
 						if (response.data.code == 0 && response.data.success == true) {
-							var aa=response.data.data.list
-							this.txtsmg="努力加载中"
-							this.flag=true
-							this.loadingState=true
-							if(aa.length==0){
-								this.txtsmg="暂无数据"
-								this.flag=true
-								this.stop=false
-								this.loadingState=false
-							}
+							var aa = response.data.data.list
+							this.txtsmg="上拉加载更多"
 							if(aa.length<this.pageSize && aa.length>0){
 								this.txtsmg="已经加载完毕"
-								this.flag=true
 								this.stop=false
-								this.loadingState=false
 							}
-							for(var i=0;i<aa.length;i++){
+							for (var i = 0; i < aa.length; i++) {
 								this.goodsObj.push(aa[i])
 							}
-							console.log(this.goodsObj)
 							Indicator.close();
 						}
 					})
@@ -168,58 +130,104 @@
 						Indicator.close();
 					});
 			},
-
-			
-
+			scrollFn() {
+				this.$nextTick(() => {
+					if (!this.scroll) {
+						this.scroll = new BScroll(this.$refs.bscroll, {
+								scrollY: true,
+								click: true,
+								probeType: 2,
+								pullUpLoad: {
+									threshold: 10
+								},
+								mouseWheel: {    // pc端同样能滑动
+									speed: 20,
+									invert: false
+								},
+								useTransition: false  // 防止iphone微信滑动卡顿
+						});
+					} else {
+						// this.scroll.refresh();
+					}
+					this.scroll.on('scroll', (pos) => {
+						//如果下拉超过50px 就显示下拉刷新的文字
+						if (pos.y > 50) {
+							this.dropDown = true
+						} else {
+							this.dropDown = false
+						}
+					})
+					//touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
+					this.scroll.on('touchEnd', (pos) => {
+						// 下拉动作
+						if (pos.y > 50) {
+							this.goodsObj.length=0
+							this.pageNum=1
+							this.loadMore()
+							this.dropDown = false
+							this.txtsmg=""
+						}
+						//上拉加载 总高度>下拉的高度+10 触发加载更多
+						if (this.scroll.maxScrollY > pos.y + 10) {
+							if(this.stop==false){
+								return false
+							}
+							this.txtsmg="上拉加载更多"
+							this.pageNum++
+							this.loadMore()
+						}
+					})
+				});
+			}
 		}
 	}
 </script>
 
+
 <style lang="scss" scoped>
-	.content {
-		width: 100%;
-		height: auto;
-	}
 	.nav_type {
 		width: 100%;
-		height: 2.5rem;
+		height:50px;
 		display: flex;
 		background: #fff;
-		line-height: 2.5rem;
-		font-size: 0.7rem;
-		a {	
-			cursor: pointer;
-			flex: 1;
-			text-align: center;
+		line-height:50px;
+		font-size: 14px;
+		a{
+			flex:1;
 		}
 	}
-
+	.drop-down {
+		position: absolute;
+		top: 50px;
+		lefT: 0px;
+		width: 100%;
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		font-size: 14px;
+		color: #666;
+	}
+	ul{padding-top:5px;}
 	li {
-		margin-top: 5px;
+		margin-bottom: 5px;
 		background: #fff;
 	}
-
 	.font-red {
 		color: #cc0000;
 	}
-
 	.content2 {
 		width: 100%;
 		background: #fff;
 		font-size: 0.7rem;
-
 		.img {
 			display: block;
 		}
-
 		.a1 {
 			margin-right: 10px;
 		}
-
 		.b2 {
 			flex: 1;
 			text-align: left;
-
 			.txt {
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -228,25 +236,21 @@
 				-webkit-box-orient: vertical;
 				height: 2rem;
 			}
-
 			.ShopSize {
 				font-size: 12px;
 				padding-top: 5px;
 				margin-bottom: 15px;
 				color: #999;
 			}
-
 			.NumPrice {
 				text-align: right;
 				color: #999;
 			}
-
 			.font-red {
 				color: #cc0000;
 			}
 		}
 	}
-
 	.content3 {
 		padding: 0 10px;
 		width: 100%;
@@ -258,10 +262,8 @@
 		border-top: 1px solid #d3d3d3;
 		text-align: right;
 		flex-direction: row-reverse;
-
 		.payment {
 			margin-left: 20px;
-
 			span {
 				border: 1px solid #cc0000;
 				color: #cc0000;
@@ -269,10 +271,8 @@
 				border-radius: 6px;
 			}
 		}
-
 		.delete_order {
 			margin-left: 20px;
-
 			span {
 				border: 1px solid #3d4145;
 				color: #3d4145;

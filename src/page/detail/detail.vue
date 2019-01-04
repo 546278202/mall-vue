@@ -1,53 +1,52 @@
 <template>    
-    <div>
-        <div class="page-infinite-wrapper">
-            <ul infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                <header style="height:2.5rem;line-height:2.5rem;display:flex;background:#fff;box-sizing: border-box;">
-                    <a @click="goback" style="flex:1;padding-left:5px;text-align: left;"><i class="iconfont icon-fanhui" style="font-size:1rem;"></i></a> 
-                    <a class="shop_car" style="flex:1;text-align: center;">商品详情</a>	    
-                    <a style="flex:1;"></a>	    		  	   
-                </header>
-                <mt-swipe :auto="4000" style="height:200px;">
-                    <mt-swipe-item v-for="item in items" :key="item">
-                        <img v-bind:src="item" style="width: 100%;height: 100%;">
-                    </mt-swipe-item>
-                </mt-swipe>
-                <div class="shop-msg">
-                    <div class="txt1" style="display:flex;">
-                        <div class="ShopName" style="flex:1;">京觅 西州蜜哈密瓜 1个装 约1.5-2kg 新鲜水果</div> 
-                        <div id="Collection" class="Collection">
-                            <div id="isFont" style="height:1.5rem;"><i class="iconfont icon-pinglunxingxingtianchong" style="font-size: 1rem;"></i></div>
-                            <p id="isFontText" style="font-size:12px;">收藏</p>
-                        </div>	
+    <div class="rules">
+        <div class="bscroll" ref="bscroll" :style="styleObj1">
+            <div class="bscroll-container">
+        <!-- <Header></Header>
+        <div class="bscroll" ref="bscroll" :style="styleObj1"> -->
+            <!-- <div class="bscroll-container"> -->
+                <ul>
+                    <mt-swipe :auto="4000" style="height:200px;">
+                        <mt-swipe-item v-for="item in items" :key="item">
+                            <img v-bind:src="item" style="width: 100%;height: 100%;">
+                        </mt-swipe-item>
+                    </mt-swipe>
+                    <div class="shop-msg">
+                        <div class="txt1" style="display:flex;">
+                            <div class="ShopName" style="flex:1;">京觅 西州蜜哈密瓜 1个装 约1.5-2kg 新鲜水果</div> 
+                            <div class="Collection">
+                                <div style="height:1.5rem;"><i class="iconfont icon-pinglunxingxingtianchong" style="font-size: 1rem;"></i></div>
+                                <p  style="font-size:12px;">收藏</p>
+                            </div>	
+                        </div>
+                        <div class="txt2">
+                            <a class="Postage">包邮</a>
+                                <a class="Monthly-sales" style="text-align: right;">月销量0件</a>
+                                <a class="Coupon" style="display: flex;justify-content: center;"></a>
+                            <a class="Price"><span>￥0.2</span></a>
+                        </div>
                     </div>
-                    <div class="txt2">
-                        <a class="Postage">包邮</a>
-                            <a class="Monthly-sales" style="text-align: right;">月销量0件</a>
-                            <a class="Coupon" style="display: flex;justify-content: center;"></a>
-                        <a class="Price"><span>￥0.2</span></a>
-                    </div>
-                </div>
 
-                <div class="shop-msg">
-                    <div class="Voucher"  @click="alertDemo">
-                        <a class="one">已选</a>
-                        <a style="font-size: 0.6rem;color:#999;">{{mspecName+" , "+buyNum}}</a>
-                        <a class="go-Voucher"><i class="iconfont icon-xiangyou"></i></a>
+                    <div class="shop-msg">
+                        <div class="Voucher"  @click="alertDemo">
+                            <a class="one">已选</a>
+                            <a style="font-size: 0.6rem;color:#999;">{{mspecName+" , "+buyNum}}</a>
+                            <a class="go-Voucher"><i class="iconfont icon-xiangyou"></i></a>
+                        </div>
+                        <div class="Voucher">
+                            <a class="one">服务</a>
+                            <a style="font-size: 0.6rem;color:#999;">坏果包赔</a>
+                            <a class="go-Voucher"></a>
+                        </div>
                     </div>
-                    <div class="Voucher">
-                        <a class="one">服务</a>
-                        <a style="font-size: 0.6rem;color:#999;">坏果包赔</a>
-                        <a class="go-Voucher"></a>
+                    <div class="CommentModule" style="background: #fff;margin-bottom: 5px;text-align: left;">
+                        <div style="height: 2.5rem;line-height: 2.5rem;padding: 0 10px;border-bottom: 1px solid #dcdcdc;font-size: 15px;text-align: center;">评论（1）</div>
+                        <div class="DiscussList"><li style="padding: 10px;background:#fff;margin-bottom: 5px;"><div style="display:flex;height: 2.5rem;line-height: 2.5rem;"><div style="display: flex;margin-right:20px;align-items: center; width:40px;border-radius: 20px;overflow: hidden;color: #f3cb0a;"><i class="iconfont icon-wode-" style="font-size: 2rem ;"></i></div><div style="flex:1;font-size:15px;color:#333;">xxxx</div><div style="flex:1;text-align: right;font-size:12px;color: #999;">2018-09-06 14:33:53</div></div><div style="font-size:15px;color:#333;margin-bottom:5px;">事实上</div><div style="font-size:12px;color:#999;">1.5kg</div></li></div>	
+                        <div style="text-align: center;padding:10px;" id="GetEvaluateList"><a style="color: #cc0000;border: 1px solid #e5e5e5;border-radius: 15px;padding: 3px 10px;font-size: 15px;">更多评价</a></div>
                     </div>
-                </div>
-                <div class="CommentModule" style="background: #fff;margin-bottom: 5px;text-align: left;">
-                    <div id="AllList" style="height: 2.5rem;line-height: 2.5rem;padding: 0 10px;border-bottom: 1px solid #dcdcdc;font-size: 15px;text-align: center;">评论（1）</div>
-                    <div class="DiscussList"><li style="padding: 10px;background:#fff;margin-bottom: 5px;"><div style="display:flex;height: 2.5rem;line-height: 2.5rem;"><div style="display: flex;margin-right:20px;align-items: center; width:40px;border-radius: 20px;overflow: hidden;color: #f3cb0a;"><i class="iconfont icon-wode-" style="font-size: 2rem ;"></i></div><div style="flex:1;font-size:15px;color:#333;">xxxx</div><div style="flex:1;text-align: right;font-size:12px;color: #999;">2018-09-06 14:33:53</div></div><div style="font-size:15px;color:#333;margin-bottom:5px;">事实上</div><div style="font-size:12px;color:#999;">1.5kg</div></li></div>	
-                    <div style="text-align: center;padding:10px;" id="GetEvaluateList"><a style="color: #cc0000;border: 1px solid #e5e5e5;border-radius: 15px;padding: 3px 10px;font-size: 15px;">更多评价</a></div>
-                </div>
-                <div class="shop-detail" style="background:#fff;padding:0 10px;" v-html="warecontent"></div>
-                
-            </ul>
+                    <div class="shop-detail" style="background:#fff;padding:0 10px;" v-html="warecontent"></div>
+                </ul>
+            </div>
         </div>
         <div class="footer">
             <a @click="gocar"><i class="iconfont icon-gouwuche"></i><p>购物车</p></a>
@@ -61,13 +60,14 @@
             :payshowstate='payM' 
             @transferUser='getpaycode' 
             :specJson='specJson'
-
             >
         </model>
     </div>
 </template>
 <script>
+import Header from '../../components/Header'
 import Footer from '../../components/Footer'
+import BScroll from 'better-scroll'
 import model from './children/model'
 import { Swipe, SwipeItem,Indicator,Toast} from 'mint-ui'
 export default {
@@ -84,15 +84,22 @@ export default {
             mspecName:'',
             buyNum:1,
             payM:false,
+            styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
         }
     },
     mounted(){
         Indicator.open('加载中...'),
+        this.$store.commit('changeTitle',"购物车")
         this.getData(),
         Indicator.close()
     },
-    
+    beforeMount(height) {
+        var height = 50+45
+        var h = document.documentElement.clientHeight || document.body.clientHeight;
+        this.styleObj1["height"] = h - height + "px"
+    },
     components:{
+        Header,
         Footer,
         model
     },
@@ -171,8 +178,6 @@ export default {
                     console.log(error);
                 }); 
         }, 
-
-        
     },
 }
 </script>
@@ -316,7 +321,6 @@ export default {
             font-size: 0.7rem;
             float: left;
         }
-       
     }
     .KG4 {
         background: #dcdcdc;
