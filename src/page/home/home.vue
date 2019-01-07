@@ -67,8 +67,6 @@
            
             loadMore() {
                 let parameter = {
-                    userId: this.$store.state.baseUser.userId,
-                    ordersStatus: this.currentIndex,
                     time: getNowFormatDate(),
                     pageNum: this.pageNum,
                     pageSize: this.pageSize

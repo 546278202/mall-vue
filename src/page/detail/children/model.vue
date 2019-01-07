@@ -45,28 +45,35 @@
         watch: {
             specJson: function(newVal,oldVal){
                 this.currentprice=newVal.specValue[0].specPrice
-                console.log(newVal)
+                // console.log(newVal)
             }
         },
         mounted() {
             
         },
+      
         methods: {
             addClass(index,item){
+                this.checkedValue=item.specName
                 this.currentIndex=index
                 this.currentprice=item.specPrice
             },
+
             //向父组件传值
             tocancel() {
                 this.$emit("cancelpaymodel");
             },
+
+            //点击确定
             getpaycode(){
-                this.$emit('transferUser',this.checkedValue);
+                this.$emit('surBtn',this.checkedValue,this.buyNum,this.currentprice);
             },
+
             addUp(){
                 this.buyNum++
                 console.log(this.buyNum)
             },
+
             addDown(){
                 if(this.buyNum>1){
                     this.buyNum--
