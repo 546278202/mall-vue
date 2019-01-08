@@ -15,17 +15,16 @@
 					</div>
 				</div>	 
 			   	<div id="UserName" style="height:3.5rem;font-weight: bold;text-align: center;color: #333333;font-size: 15px;line-height:2.5rem;">{{dataList.nickName}}</div>
-			   	<div style="height:2.5rem;text-align:center;color:#333333; display:flex;">
-			   		<a href="../collection/collection.html" style="flex:1;">
+                   <div style="height:2.5rem;text-align:center;color:#333333; display:flex;">
+                    <router-link style="flex:1;" :to="{path:'/collection'}">
 			   			<p style="font-size:12px;color:#333;">我的收藏</p>
 			   			<p id="collectionCount" style="color:#f3cb0a;font-size: 18px;">{{dataList.collectionCount}}</p>
-			   		</a>
+			   		</router-link>
 					<a style="flex:1;"></a>
-			   		
-			   		<a href="../collection/record.html" style="flex:1;">
+                    <router-link style="flex:1;" :to="{path:'/record'}">
 						<p style="font-size:12px;color:#333;">足迹</p>
 			   			<p id="lookPathCount" style="color:#f3cb0a;font-size: 18px;">{{dataList.lookPathCount}}</p>
-			   		</a>
+			   		</router-link>
 			   	</div>
 	  	   	</div>     
 		</div>
@@ -35,30 +34,31 @@
 				<div class="right"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
 			</router-link>
 			<div class="stateList">
-				<a href="../order/order.html?tabCode=0">
+                <router-link class="myList" :to="{path:'/order' , query:{tabCode:'0'}}">
 					<img src="../../images/state1.png">
-					<p>待付款</p>
+					<div class="txt">待付款</div>
 					<div class="tableState" v-if="dataList.orderStatus0>0">{{dataList.orderStatus0}}</div>
-				</a>
-				<a href="../order/order.html?tabCode=1">
+                </router-link>
+                <router-link class="myList" :to="{path:'/order' , query:{tabCode:'1'}}">
 					<img src="../../images/state2.png">
-					<p>待发货</p>
+					<div class="txt">待发货</div>
 					<div class="tableState" v-if="dataList.orderStatus1>0">{{dataList.orderStatus1}}</div>
-				</a>
-				<a href="../order/order.html?tabCode=2">
+                </router-link>
+                <router-link class="myList" :to="{path:'/order' , query:{tabCode:'2'}}">
 					<img src="../../images/state3.png">
-					<p>待收货</p>
+					<div class="txt">待收货</div>
 					<div class="tableState" v-if="dataList.orderStatus2>0">{{dataList.orderStatus2}}</div>
-				</a>
-				<a href="../discuss/commentlist.html">
+                </router-link>
+                <router-link class="myList" :to="{path:'/afterSaleList' , query:{tabCode:'2'}}">
 					<img src="../../images/state4.png">
-					<p>待评价</p>
-					<div class="tableState" v-if="dataList.orderStatus3>0">{{dataList.orderStatus3}}</div>
-				</a>
-				<a href="../aftersale/salelist.html">
+					<div class="txt">待评价</div>
+					<div class="tableState" v-if="dataList.orderStatus2>0">{{dataList.orderStatus2}}</div>
+                </router-link>
+                 <router-link class="myList" :to="{path:'/afterSaleList' , query:{tabCode:'2'}}">
 					<img src="../../images/state5.png">
-					<p>售后</p>
-				</a>
+					<div class="txt">售后</div>
+					<div class="tableState" v-if="dataList.orderStatus2>0">{{dataList.orderStatus2}}</div>
+                </router-link>
 			</div>
 	  	</div>
         <Footer></Footer>
@@ -174,6 +174,9 @@ export default {
             line-height: 40px;
             padding: 0 10px;
             font-size: 15px;
+            .txt{
+                height: 25px;
+            }
             .left {
                 flex: 1;
                 text-align: left;
@@ -193,8 +196,11 @@ export default {
                 text-align: center;
                 color: #666;
                 position: relative;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
                 img {
-                    height: 30px;
+                    width: 25px;
                 }
             }
         }

@@ -3,6 +3,7 @@
         <a v-for="(item,index) in items" :key="index" @click="routerLink(item)" :class="{ act : active == item.path} ">
             <div><i class="iconfont" :class="item.icon"></i> </div>
             <div>{{item.text}}</div>
+            <span class="cart-num" v-if="item.active==2 && CarNum>0">{{CarNum}}</span>
         </a>
     </div>
 </template>
@@ -18,7 +19,8 @@
                     { path: "/productList",text: "分类",icon: "icon-shouye1", active: 1},
                     { path: "/buyCar", text: "购物车", icon: "icon-shouye1", active: 2 },
                     { path: "/mine", text: "我的", icon: "icon-shouye1", active: 3 }
-                ]
+                ],
+                CarNum:""//购物车数量
             };
         },
         mounted() {
@@ -27,13 +29,30 @@
             } else {
                 this.active = window.location.hash.split('?')[0].split('#')[1];
             }
+            this.getCarNum()
         },
         methods: {
             routerLink(item) {
                 this.$router.push(item.path);
                 if (item.active == 2) return false;
                 this.active = item.path;
-            }
+            },
+            //获取购物车数量
+            getCarNum(){
+                let parameter={
+                    userId:this.$store.state.baseUser.userId,
+                }
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/cart/select_cart_count", parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            this.CarNum=response.data.data
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
         }
     };
 </script>
@@ -57,5 +76,21 @@
 
     .act {
         color: #f5d53b !important;
+    }
+    .cart-num {
+        position: absolute;
+        top: 0;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        font-size: 10px;
+        font-weight: 500!important;
+        text-align: center;
+        color: #fff;
+        background-color: #f23030;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        border-radius: 8px;
+        overflow: hidden;
     }
 </style>

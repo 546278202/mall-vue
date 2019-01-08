@@ -7,7 +7,7 @@
             
             <ul v-else infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list" style="height: 100%;background: #fff;"> 
                 <router-link class="list_one" href="../shopdetail/shopdetail.html?wareid=91" v-for="(item,index) in dataList" :key="index" :to="{path:'/detail' , query:{id:item.wareid}}">
-                    <div class="left"><img v-bind:src='item.warePic' style="width:100%;height:100%;"></div>
+                    <div class="left"><img :src='item.warePic' style="width:100%;height:100%;"></div>
                     <div class="right">
                         <div class="txt">{{item.warename}}</div>
                         <div class="money">￥{{item.wareprice}}</div>

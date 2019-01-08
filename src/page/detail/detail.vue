@@ -68,9 +68,10 @@
             </div>
         </div>
         <div class="footer">
-            <a @click="gocar">
+            <a @click="gocar" style="position: relative;">
                 <i class="iconfont icon-gouwuche"></i>
                 <p>购物车</p>
+                <span class="tableState" v-if="CarNum>0">{{CarNum}}</span>
             </a>
             <a>
                 <i class="iconfont icon-shouye1"></i>
@@ -104,12 +105,14 @@
                 buyNum: 1,
                 payM: false,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
+                CarNum:'',//购物车数量
             }
         },
         mounted() {
             this.$store.commit('changeTitle', "购物车")
             this.getData(),
-                this.scrollFn()
+            this.scrollFn(),
+            this.getCarNum()
         },
         //获取屏幕高度
         beforeMount(height) {
@@ -244,7 +247,7 @@
                         "quantity":this.buyNum,
                         "wareid":this.$route.query.id,
                         "wareprice":this.mPrice,
-                        "specname":this.mspecName+","+this.buyNum,
+                        "specname":this.mspecName,
                         "warePic":this.data.warePic,
                         "mallname":this.data.mallname,
                         "warename":this.data.warename,
@@ -260,10 +263,26 @@
                     sessionStorage.setItem("nowbuylist", JSON.stringify(data));
                     this.$router.push({path:'/nowbuy'});
             },
+            //获取购物车数量
+            getCarNum(){
+                let parameter={
+                    userId:this.$store.state.baseUser.userId,
+                }
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/cart/select_cart_count", parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            this.CarNum=response.data.data
+
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
         },
     }
 </script>
-
 <style lang="scss" scoped>
     .shop-msg {
         background: #fff;
@@ -463,5 +482,22 @@
             width: 2.3rem;
             height: 1.5rem;
         }
+    }
+    .tableState{
+        position: absolute;
+        top: -5px;
+        right:25px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        font-size: 10px;
+        font-weight: 500 !important;
+        text-align: center;
+        color: #fff;
+        background-color: #f23030;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        border-radius: 8px;
+        overflow: hidden;
     }
 </style>

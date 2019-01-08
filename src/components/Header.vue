@@ -35,6 +35,7 @@ export default {
         display:flex;
         background:#fff;
         border-bottom: 1px solid #dcdcdc;
+        font-size: 18px;
     }
     
     .searchInput{

@@ -10,6 +10,10 @@ import buyCar from '@/page/buyCar/buyCar'
 import getSum from '@/page/buyCar/getSum'
 import nowbuy from '@/page/buyCar/nowbuy'
 import order from '@/page/order/order'
+import afterSaleList from '@/page/saleService/afterSaleList'
+import afterSaleDetail from '@/page/saleService/afterSaleDetail'
+import collection from '@/page/collection/collection'
+import record from '@/page/collection/record'
 
 Vue.use(Router)
 export default new Router({
@@ -79,6 +83,30 @@ export default new Router({
             path: '/order',
             name: 'order',
             component: order
+        },
+        //售后服务
+        {
+            path: '/afterSaleList',
+            name: 'afterSaleList',
+            component: afterSaleList
+        },
+        //售后服务
+        {
+            path: '/afterSaleDetail',
+            name: 'afterSaleDetail',
+            component: afterSaleDetail
+        },
+        // 商品收藏
+        {
+            path: '/collection',
+            name: 'collection',
+            component: collection
+        },
+        //浏览记录
+        {
+            path: '/record',
+            name: 'record',
+            component: record
         },
   
     ]

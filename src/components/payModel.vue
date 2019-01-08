@@ -1,7 +1,7 @@
 <template>
     <div v-show="payshowstate">
-        <div class="bj-wrap" style="display: block;"></div>
-        <div class="alert-wrap" style="height: 65%; display: block;">
+        <div class="bj-wrap"></div>
+        <div class="alert-wrap">
 			<div style="height:2.5rem;line-height: 2.5rem;text-align: center;display:flex;position:relative;">
                 <span  style="width:40px;padding:0 10px;position:absolute;left:0;top:0;" @click="tocancel">
                     <img src="../images/delete.png" style="width:14px;">
@@ -83,7 +83,11 @@
         width: 100%;
         background: #fff;
         z-index: 999;
-        height: 65%;
+        height: 50%;
+        animation: myfirst 0.3s;
+        -moz-animation: myfirst 0.3s;	/* Firefox */
+        -webkit-animation: myfirst 0.3s;	/* Safari 和 Chrome */
+        -o-animation: myfirst 0.3s;	/* Opera */
     }
     .PayList {
         height: 2.5rem;

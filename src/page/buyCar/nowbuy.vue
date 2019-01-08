@@ -251,11 +251,10 @@
             // 在线结算
             onLinePay() {
                 var goodsObj = this.goodsObj;
-                var parentwareList=[]
+                var wareList=[]
                 for (var j = 0; j < goodsObj.length; j++) {
                     var a = goodsObj[j];
-                    var wareList=[];
-                    var List = {
+                    var List = [{
                         "priceSum": a.quantity * a.wareprice,
                         "cartId": a.cartId,
                         "quantity": a.quantity,
@@ -268,12 +267,10 @@
                         "distributionValue": "",
                         "mallAdminId": a.mallAdminId,
                         "sameWareSumPostCharge":0,
-                    };
+                    }];
                     wareList.push(List);
-                   
                 }
-                parentwareList.push(wareList)
-                var data = { "shippId": this.address.shipId, "userId": this.$store.state.baseUser.userId, "wareList": parentwareList, }
+                var data = { "shippId": this.address.shipId, "userId": this.$store.state.baseUser.userId, "wareList": wareList, }
                 var parameter = { "orders": JSON.stringify(data)}
 
 
