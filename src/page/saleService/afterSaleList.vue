@@ -17,9 +17,9 @@
                         </div>
                         <div class="content2" >
                             <div style="display:flex;">
-                                <a class="a1" href="" style="margin-right:10px;">
+                                <a class="a1" style="margin-right:10px;">
                                     <img src="http://47.93.4.157:8082/covers/9/20180716/20180716_260.png" style="height:5rem;width:5rem;"></a>
-                                <a class="b2" href="">
+                                <a class="b2">
                                     <div class="txt">
                                         <sapn >{{item.wareName}}</sapn>
                                     </div>
