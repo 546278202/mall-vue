@@ -31,10 +31,11 @@
 							<div style="background:#fff;text-align:right;font-size: 0.8rem;padding: 10px;border-top: 1px solid #eee;">
 								<a style="margin-left:20px;">合计：{{item.wareTotalPrice}}</a>
 							</div>
-							<div class="content3">
+							<!-- 订单状态:0待付款,1待发货,2待收货,3已完成/待评价,4售后',5取消订单  -->
+							<div class="content3" >
 								<a class="payment"><span>立即付款</span></a>
 								<a class="delete_order"><span>删除订单</span></a>
-								<div style="flex:1;text-align:left;color:#cc0000;">待付款</div>
+								<div class="paystate" v-if="item.ordersStatus==0">待付款</div>
 							</div>
 						</div>
 					</li>
@@ -83,10 +84,10 @@
 		mounted() {
 			this.scrollFn()
 			this.loadMore()
+			console.log(this.goodsObj)
 		},
 		watch:{
 			goodsObj(val){
-				console.log(val)
 				this.scroll.refresh()
 			}
 		},
@@ -280,5 +281,11 @@
 				border-radius: 6px;
 			}
 		}
+		.paystate{
+			flex:1;
+			text-align:left;
+			color:#cc0000;
+		}
+		
 	}
 </style>
