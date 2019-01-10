@@ -103,6 +103,7 @@
                 this.$nextTick(() => {
                     if (!this.scroll) {
                         this.scroll = new BScroll(this.$refs.bscroll, {
+                            swipeTime: 2000,
                             scrollY: true,
                             click: true,
                             probeType: 2,
@@ -115,9 +116,7 @@
                             },
                             useTransition: false  // 防止iphone微信滑动卡顿
                         });
-                    } else {
-    
-                    }
+                    } 
                     //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
                     this.scroll.on('touchEnd', (pos) => {
                         if (this.scroll.maxScrollY > pos.y + 10) {

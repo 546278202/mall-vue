@@ -12,11 +12,16 @@
                     <div class="shop-msg">
                         <div class="txt1" style="display:flex;">
                             <div class="ShopName" style="flex:1;">京觅 西州蜜哈密瓜 1个装 约1.5-2kg 新鲜水果</div>
-                            <div class="Collection">
-                                <div style="height:1.5rem;">
+                            <div class="Collection" @click="clickCollection" >
+                                <div style="height:1.5rem;" v-if="isCollection==0">
                                     <i class="iconfont icon-pinglunxingxingtianchong" style="font-size: 1rem;"></i>
                                 </div>
-                                <p style="font-size:12px;">收藏</p>
+                                <div style="height:1.5rem;color:#f3cb0a;" v-else>
+                                    <i class="iconfont icon-pinglunxingxingtianchong" style="font-size: 1rem;"></i>
+                                </div>
+                                <p style="font-size:12px;" v-if="isCollection==0">收藏</p>
+                                <p style="font-size:12px;" v-else>已收藏</p>
+
                             </div>
                         </div>
                         <div class="txt2">
@@ -41,28 +46,9 @@
                             <a class="go-Voucher"></a>
                         </div>
                     </div>
-                    <div class="CommentModule" style="background: #fff;margin-bottom: 5px;text-align: left;">
-                        <div style="height: 2.5rem;line-height: 2.5rem;padding: 0 10px;border-bottom: 1px solid #dcdcdc;font-size: 15px;text-align: center;">评论（1）</div>
-                        <div class="DiscussList">
-                            <li style="padding: 10px;background:#fff;margin-bottom: 5px;">
-                                <div style="display:flex;height: 2.5rem;line-height: 2.5rem;">
-                                    <div style="display: flex;margin-right:20px;align-items: center; width:40px;border-radius: 20px;overflow: hidden;color: #f3cb0a;">
-                                        <i class="iconfont icon-wode-" style="font-size: 2rem ;"></i>
-                                    </div>
-                                    <div style="flex:1;font-size:15px;color:#333;">xxxx</div>
-                                    <div style="flex:1;text-align: right;font-size:12px;color: #999;">
-                                        2018-09-06
-                                        14:33:53
-                                    </div>
-                                </div>
-                                <div style="font-size:15px;color:#333;margin-bottom:5px;">事实上</div>
-                                <div style="font-size:12px;color:#999;">1.5kg</div>
-                            </li>
-                        </div>
-                        <div style="text-align: center;padding:10px;" id="GetEvaluateList">
-                            <a style="color: #cc0000;border: 1px solid #e5e5e5;border-radius: 15px;padding: 3px 10px;font-size: 15px;">更多评价</a>
-                        </div>
-                    </div>
+                    <!-- 评论组件 -->
+                    <discuss :wareid="this.$route.query.id">
+                    </discuss>
                     <div class="shop-detail" style="background:#fff;padding:0 10px;" v-html="warecontent"></div>
                 </ul>
             </div>
@@ -89,6 +75,8 @@
     import Footer from '../../components/Footer'
     import BScroll from 'better-scroll'
     import model from './children/model'
+    import discuss from './children/discuss'
+
     import { Swipe, SwipeItem, Indicator, Toast } from 'mint-ui'
     export default {
         data() {
@@ -106,6 +94,7 @@
                 payM: false,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 CarNum:'',//购物车数量
+                isCollection:""  //0未收藏 1已收藏
             }
         },
         mounted() {
@@ -114,6 +103,10 @@
             this.scrollFn(),
             this.getCarNum()
         },
+        watch: {
+           
+        },
+      
         //获取屏幕高度
         beforeMount(height) {
             var height = 50 + 45
@@ -123,7 +116,8 @@
         components: {
             Header,
             Footer,
-            model
+            model,
+            discuss
         },
         methods: {
             getData() {
@@ -141,6 +135,7 @@
                         this.specJson = data.specJson;
                         this.mPrice = data.specJson.specValue[0].specPrice
                         this.mspecName = data.specJson.specValue[0].specName
+                        this.isCollection=data.isCollection
                     })
                     .catch(error => {
                         console.log(error);
@@ -232,6 +227,7 @@
                         console.log(response.data);
                         if (response.data.code == 0 && response.data.success == true) {
                             Toast("添加成功");
+                            this.getCarNum()
                         }
                     })
                     .catch(error => {
@@ -280,7 +276,53 @@
                         console.log(error);
                     });
             },
-        },
+            // 收藏商品
+            clickCollection(){
+                this.$nextTick(function(){
+                    if(this.isCollection==0){
+                        this.getCollection()
+                    }else{
+                        this.cancelCollection()
+                    }
+                })
+            },
+            // 商品收藏
+            getCollection(){
+                let parameter={
+                    userId:this.$store.state.baseUser.userId,
+                    wareId:this.$route.query.id
+                }
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/collection/add", parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            Toast("收藏成功");
+                            this.isCollection=1
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+            //商品取消收藏
+            cancelCollection(){
+                let parameter={
+                    userId:this.$store.state.baseUser.userId,
+                    wareId:this.$route.query.id
+                }
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/collection/del_collection", parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            Toast("已取消收藏");
+                            this.isCollection=0
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>

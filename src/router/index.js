@@ -14,7 +14,7 @@ import afterSaleList from '@/page/saleService/afterSaleList'
 import afterSaleDetail from '@/page/saleService/afterSaleDetail'
 import collection from '@/page/collection/collection'
 import record from '@/page/collection/record'
-
+import discuss from '@/page/discuss/discuss'
 Vue.use(Router)
 export default new Router({
     
@@ -107,6 +107,12 @@ export default new Router({
             path: '/record',
             name: 'record',
             component: record
+        },
+        //评论列表
+        {
+            path: '/discuss',
+            name: 'discuss',
+            component: discuss
         },
   
     ]

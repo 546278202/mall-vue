@@ -8,7 +8,7 @@
                     <li v-for="(item,index) in goodsObj" :key="index">
                         <router-link :to="{path:'/detail' , query:{id:item.cWareid}}">
                             <div class="ListImg" style="height:130px;overflow:hidden;">
-                                <img v-bind:src="item.warePic" style="display:block;margin:0 auto;width:100%;">
+                                <img v-bind:src="item.warePic" style="display:block;margin:0 auto;height:100%;">
                             </div>
                             <div class="txt">{{item.cWarename}}</div>
                             <div style="color: #cc0000;">￥{{item.cWareprice}}</div>

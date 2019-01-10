@@ -16,9 +16,9 @@
                 active: '/home',
                 items: [
                     { path: "/home", text: "首页", icon: "icon-shouye1", active: 0 },
-                    { path: "/productList",text: "分类",icon: "icon-shouye1", active: 1},
-                    { path: "/buyCar", text: "购物车", icon: "icon-shouye1", active: 2 },
-                    { path: "/mine", text: "我的", icon: "icon-shouye1", active: 3 }
+                    { path: "/productList",text: "分类",icon: "icon-classify_icon", active: 1},
+                    { path: "/buyCar", text: "购物车", icon: "icon-gouwuche", active: 2 },
+                    { path: "/mine", text: "我的", icon: "icon-wode", active: 3 }
                 ],
                 CarNum:""//购物车数量
             };
