@@ -32,10 +32,22 @@
 								<a style="margin-left:20px;">合计：{{item.wareTotalPrice}}</a>
 							</div>
 							<!-- 订单状态:0待付款,1待发货,2待收货,3已完成/待评价,4售后',5取消订单  -->
-							<div class="content3" >
-								<a class="payment"><span>立即付款</span></a>
-								<a class="delete_order"><span>删除订单</span></a>
+							<div class="content3" @click="stateClick(index,$event)" ref="menuStateList">
+								<!-- 状态0 -->
+								<a v-if="item.ordersStatus==0" class="payment" ><span data-index="0">立即付款</span></a>
+								<!-- 状态1 -->
+								<a v-if="item.ordersStatus==1" class="payment" ><span data-index="1">催促发货</span></a>
+								<!-- 状态2 -->
+								<a v-if="item.ordersStatus==2" class="cancel" ><span data-index="2">查看物流</span></a>
+								<a v-if="item.ordersStatus==2" class="cancel" ><span data-index="3">确认收货</span></a>
+								<!-- 状态3 -->
+								<a v-if="item.ordersStatus==3" class="delete_order" ><span >删除订单</span></a>
+
 								<div class="paystate" v-if="item.ordersStatus==0">待付款</div>
+								<div class="paystate" v-if="item.ordersStatus==1">待发货</div>
+								<div class="paystate" v-if="item.ordersStatus==2">待收货</div>
+								<div class="paystate" v-if="item.ordersStatus==3">已完成</div>
+
 							</div>
 						</div>
 					</li>
@@ -46,6 +58,13 @@
 				</ul>
 			</div>
 		</div>
+		<!-- 支付框 -->
+		<payModel type='alertpaymodel' 
+			@cancelpaymodel='cancelpaymodel' 
+			:payshowstate='payM' 
+			@transferUser='gotopay' 
+			:paynum='totalMoney+totalFare-totalpreferential'>
+	 	</payModel>
 	</div>
 </template>
 
@@ -54,6 +73,7 @@
 	import BScroll from 'better-scroll'
 	import { Indicator, InfiniteScroll, Spinner } from "mint-ui";
 	import { getNowFormatDate } from "../../config/mUtils"
+    import payModel from "../../components/payModel";
 	export default {
 		data() {
 			return {
@@ -72,7 +92,8 @@
 				styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
 				txtsmg:"",
 				flag:'',
-				stop:true
+				stop:true,
+				payM:false,//支付框状态
 			}
 		},
 		//获取屏幕高度
@@ -91,7 +112,17 @@
 				this.scroll.refresh()
 			}
 		},
+		components: {
+            payModel
+        },
 		methods: {
+			// 付款弹框
+			alertpaymodel() {
+                this.payM = true;
+            },
+            cancelpaymodel(){
+                this.payM = false;
+            },
 			// 切换导航
 			tabNav(index) {
 				this.goodsObj=[]
@@ -179,7 +210,35 @@
 						}
 					})
 				});
+			},
+			// 点击状态按钮
+			stateClick(index,e){
+				console.log(e)
+				let _index=e.target.dataset.index
+				// let aa=e.target.innerText
+				console.log(_index)
+				
+				var x=''
+				switch (_index){
+					case "0":
+						console.log(this.goodsObj[index])
+						this.alertpaymodel()
+						break;
+					case 1:
+						x="Today it's Sunday";
+						break;
+					default:
+						x="Looking forward to the Weekend";
+				}
+								
+
+				// console.log(this.$refs.menuStateList[index].children)
+			},
+			// 立即付款
+			getDomList(){
+				console.log("付款")
 			}
+			
 		}
 	}
 </script>
