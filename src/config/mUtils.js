@@ -27,3 +27,15 @@ export const getNowFormatDate = () => {
         date.getSeconds();
         return currentdate;
 }
+/**
+ * 时间日期转换为毫秒
+ * 如果格式是:yyyy/mm/dd hh:mm:ss可以直接转换。var oldTime = (new Date("2018/07/09 14:13:11")).getTime(); 得到毫秒数  
+    * 如果日期格式是:yyyy-mm-dd hh:mm:ss需要转化格式
+    * var startDate ='2018-07-09 14:13:11';
+    * startDate= startDate.replace(new RegExp("-","gm"),"/");
+    * var startDateM = (new Date(startDate)).getTime(); //得到毫秒数
+ */
+export const getMillisecond = (startDate) => {
+    startDate.replace(new RegExp("-","gm"),"/");
+    return new Date(startDate).getTime(); 
+}

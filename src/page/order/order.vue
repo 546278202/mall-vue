@@ -34,7 +34,8 @@
 							<!-- 订单状态:0待付款,1待发货,2待收货,3已完成/待评价,4售后',5取消订单  -->
 							<div class="content3" @click="stateClick(index,$event)" ref="menuStateList">
 								<!-- 状态0 -->
-								<a v-if="item.ordersStatus==0" class="payment" ><span data-index="0">立即付款</span></a>
+								<a v-if="item.ordersStatus==0 && item.invalidTime>timestamp" class="payment" ><span data-index="0">立即付款</span></a>
+								<a v-if="item.ordersStatus==0 && item.invalidTime<timestamp" class="delete_order" ><span data-index="1">删除订单</span></a>								
 								<!-- 状态1 -->
 								<a v-if="item.ordersStatus==1" class="payment" ><span data-index="1">催促发货</span></a>
 								<!-- 状态2 -->
@@ -63,7 +64,7 @@
 			@cancelpaymodel='cancelpaymodel' 
 			:payshowstate='payM' 
 			@transferUser='gotopay' 
-			:paynum='totalMoney+totalFare-totalpreferential'>
+			:paynum='paynum'>
 	 	</payModel>
 	</div>
 </template>
@@ -72,7 +73,7 @@
 	import Header from "../../components/Header";
 	import BScroll from 'better-scroll'
 	import { Indicator, InfiniteScroll, Spinner } from "mint-ui";
-	import { getNowFormatDate } from "../../config/mUtils"
+	import { getNowFormatDate, getMillisecond} from "../../config/mUtils"
     import payModel from "../../components/payModel";
 	export default {
 		data() {
@@ -93,7 +94,9 @@
 				txtsmg:"",
 				flag:'',
 				stop:true,
-				payM:false,//支付框状态
+				payM:false,	//支付框状态
+				paynum:'',	//支付金额
+				timestamp :'', //当前毫秒值 
 			}
 		},
 		//获取屏幕高度
@@ -103,9 +106,9 @@
 			this.styleObj1["height"] = h - height + "px"
 		},
 		mounted() {
+			this.timestamp=Date.parse(new Date())
 			this.scrollFn()
-			this.loadMore()
-			console.log(this.goodsObj)
+			this.loadMore()	
 		},
 		watch:{
 			goodsObj(val){
@@ -118,7 +121,8 @@
 		methods: {
 			// 付款弹框
 			alertpaymodel() {
-                this.payM = true;
+				this.payM = true;
+				
             },
             cancelpaymodel(){
                 this.payM = false;
@@ -152,9 +156,11 @@
 								this.txtsmg="已经加载完毕"
 								this.stop=false
 							}
-							for (var i = 0; i < aa.length; i++) {
+							for (var i = 0; i < aa.length; i++) {	
+								aa[i].invalidTime=getMillisecond(aa[i].invalidTime)
 								this.goodsObj.push(aa[i])
 							}
+							console.log(this.goodsObj)
 							Indicator.close();
 						}
 					})
@@ -211,33 +217,55 @@
 					})
 				});
 			},
+			// 删除订单
+			DeleteOrder(orderNo){
+				let parameter = {orderNo:orderNo};
+				// Indicator.open("加载中...");
+				this.$http
+					.post(process.env.API_HOST + "/mall_api/order/del_order",parameter)
+					.then(response => {
+						if (response.data.code == 0 && response.data.success == true) {
+							console.log(response.data.msg)
+						}
+					})
+					.catch(error => {
+						Indicator.close();
+					});
+			},
 			// 点击状态按钮
 			stateClick(index,e){
-				console.log(e)
+				var orderNo=this.goodsObj[index].oid
 				let _index=e.target.dataset.index
-				// let aa=e.target.innerText
 				console.log(_index)
-				
 				var x=''
 				switch (_index){
 					case "0":
-						console.log(this.goodsObj[index])
+						this.goodsObj[index].wareTotalPrice
+						this.paynum=this.goodsObj[index].wareTotalPrice-this.goodsObj[index].wareTotalPrice
 						this.alertpaymodel()
 						break;
-					case 1:
-						x="Today it's Sunday";
+					case "1":
+						this.goodsObj[index].wareTotalPrice
+						this.DeleteOrder(orderNo)
 						break;
 					default:
 						x="Looking forward to the Weekend";
 				}
-								
-
-				// console.log(this.$refs.menuStateList[index].children)
 			},
-			// 立即付款
-			getDomList(){
-				console.log("付款")
-			}
+			
+
+			// 支付前获取优惠金额
+			// youHuiPrice(orderNo){
+			// 	var parameter={"orderNo":orderNo};
+			// 		this.$http
+			// 		.post(process.env.API_HOST + "/mall_aYouHuiPricepi/common/couponPrice",parameter)
+			// 		.then(response => {
+			// 			if (response.data.code == 0 && response.data.success == true) {
+			// 				console.log(response)	
+			// 				// var couponSum=dataList.couponSum;
+			// 			}	
+			// 		})			
+        	// }
 			
 		}
 	}

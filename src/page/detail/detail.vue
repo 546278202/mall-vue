@@ -13,14 +13,14 @@
                         <div class="txt1" style="display:flex;">
                             <div class="ShopName" style="flex:1;">京觅 西州蜜哈密瓜 1个装 约1.5-2kg 新鲜水果</div>
                             <div class="Collection" @click="clickCollection" >
-                                <div style="height:1.5rem;" v-if="isCollection==0">
+                                <div style="height:1.5rem;color:#f3cb0a;" v-if="isCollection==0">
                                     <i class="iconfont icon-pinglunxingxingtianchong" style="font-size: 1rem;"></i>
                                 </div>
-                                <div style="height:1.5rem;color:#f3cb0a;" v-else>
+                                <div style="height:1.5rem;" v-else>
                                     <i class="iconfont icon-pinglunxingxingtianchong" style="font-size: 1rem;"></i>
                                 </div>
-                                <p style="font-size:12px;" v-if="isCollection==0">收藏</p>
-                                <p style="font-size:12px;" v-else>已收藏</p>
+                                <!-- <p style="font-size:12px;" v-if="isCollection==0">已收藏</p>
+                                <p style="font-size:12px;" v-else>收藏</p> -->
 
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                 payM: false,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 CarNum:'',//购物车数量
-                isCollection:""  //0未收藏 1已收藏
+                isCollection:"" 
             }
         },
         mounted() {
@@ -276,11 +276,11 @@
                         console.log(error);
                     });
             },
-            // 收藏商品
+            // 点击收藏
             clickCollection(){
                 this.$nextTick(function(){
-                    if(this.isCollection==0){
-                        this.getCollection()
+                    if(this.isCollection==1){
+                        this.getCollection()                        
                     }else{
                         this.cancelCollection()
                     }
@@ -297,14 +297,14 @@
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             Toast("收藏成功");
-                            this.isCollection=1
+                            this.isCollection=0
                         }
                     })
                     .catch(error => {
                         console.log(error);
                     });
             },
-            //商品取消收藏
+            //取消收藏
             cancelCollection(){
                 let parameter={
                     userId:this.$store.state.baseUser.userId,
@@ -315,7 +315,7 @@
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             Toast("已取消收藏");
-                            this.isCollection=0
+                            this.isCollection=1
                         }
                     })
                     .catch(error => {
