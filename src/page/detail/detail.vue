@@ -1,5 +1,5 @@
 <template>
-    <div class="rules">
+    <div>
         <Header></Header>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
@@ -19,8 +19,8 @@
                                 <div style="height:1.5rem;" v-else>
                                     <i class="iconfont icon-pinglunxingxingtianchong" style="font-size: 1rem;"></i>
                                 </div>
-                                <!-- <p style="font-size:12px;" v-if="isCollection==0">已收藏</p>
-                                <p style="font-size:12px;" v-else>收藏</p> -->
+                                <p style="font-size:12px;" v-if="isCollection==0">已收藏</p>
+                                <p style="font-size:12px;" v-else>收藏</p>
 
                             </div>
                         </div>
@@ -67,7 +67,7 @@
             <a class="to-buy open-popup" style="color:#fff;font-size: 15px;" @click="nowbuy">立刻购买</a>
         </div>
         <!-- 弹出层 -->
-        <model type="alertpaymodel" @cancelpaymodel="cancelpaymodel" :payshowstate="payM" @surBtn="surBtn" :specJson="specJson"></model>
+        <model ref="mychild" type="alertpaymodel" @cancelpaymodel="cancelpaymodel" :payshowstate="payM" @surBtn="surBtn" :specJson="specJson"></model>
     </div>
 </template>
 <script>
@@ -175,9 +175,12 @@
             },
             alertDemo() {
                 this.alertpaymodel();
+               
             },
             alertpaymodel() {
                 this.payM = true
+                this.$refs.mychild.scrollFn();
+               
             },
             cancelpaymodel() {
                 this.payM = false;

@@ -1,117 +1,117 @@
 <template>
-    <div class="wrap">
-        <Header></Header>
-        <ul class="list" v-infinite-scroll infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-            <div class="DefaultAddress">
-                <div class="Edit" style="padding-right: 20px;">
-                    <span style="display:flex;align-items: center;">
-                        <img src="../../images/Location.png" style="height:30px;">
-                    </span>
-                </div>
-                <div class="MsgTitle">
-                    <div style="width:100%;">
-                        <span>{{address.receiverName}}</span>
-                        <span style="float:right;padding-right: 20px;">{{address.receiverPhone}}</span>
-                    </div>
-                    <div style="width:100%;">
-                        <span>{{address.receiverProvince}}-</span>
-                        <span>{{address.receiverCity}}-</span>
-                        <span>{{address.receiverDistrict}}</span>
-                    </div>
-                    <div style="width:100%;">
-                        <span>{{address.receiverAddress}}</span>
-                    </div>
-                </div>
-                <div class="Edit">
-                    <i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i>
-                </div>
-            </div>
-            <div>
-                <li v-for="(item,index1) in goodsObj" :key="index1">
-                    <div class="ShopName">
-                        <div class="left" style="display:flex;">{{item.mallAdminId}}</div>
-                        <div class="right">
+    <div >
+        <div class="bscroll" ref="bscroll" :style="styleObj1">
+            <div class="bscroll-container">
+                <ul>
+                    <Header></Header>
+                    <div class="DefaultAddress">
+                        <div class="Edit" style="padding-right: 20px;">
+                            <span style="display:flex;align-items: center;">
+                                <img src="../../images/Location.png" style="height:30px;">
+                            </span>
+                        </div>
+                        <div class="MsgTitle">
+                            <div style="width:100%;">
+                                <span>{{address.receiverName}}</span>
+                                <span style="float:right;padding-right: 20px;">{{address.receiverPhone}}</span>
+                            </div>
+                            <div style="width:100%;">
+                                <span>{{address.receiverProvince}}-</span>
+                                <span>{{address.receiverCity}}-</span>
+                                <span>{{address.receiverDistrict}}</span>
+                            </div>
+                            <div style="width:100%;">
+                                <span>{{address.receiverAddress}}</span>
+                            </div>
+                        </div>
+                        <div class="Edit">
                             <i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i>
                         </div>
                     </div>
-                    <div style="margin-bottom: 5px;">
-                        <div v-for="(list,index) in item.list" :key="index">
-                            <div style="display:flex; padding: 5px 10px;">
-                                <div class="shopimg">
-                                    <img :src="list.warePic" style="width:5rem;height:5rem;">
+                    <div>
+                        <li v-for="(item,index1) in goodsObj" :key="index1">
+                            <div class="ShopName">
+                                <div class="left" style="display:flex;">{{item.mallAdminId}}</div>
+                                <div class="right">
+                                    <i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i>
                                 </div>
-                                <div style="flex:1;">
-                                    <div class="titletxt">{{list.warename}}</div>
-                                    <div class="shopsize">{{list.specname}}</div>
-                                    <div style="width:100%;display:flex;justify-content: space-between;">
-                                        <div class="shopprice">￥{{list.wareprice}}</div>
-                                        <div class="quantity">
-                                            <div class="addition" @click="addUp(index1, index)">
-                                                <i class="iconfont icon-iconfontadd"></i>
-                                            </div>
-                                            <div class="number">
-                                                {{list.quantity}}
-                                                <input type="text">
-                                            </div>
-                                            <div class="subtraction">
-                                                <i class="iconfont icon-iconfontmove"></i>
+                            </div>
+                            <div style="margin-bottom: 5px;">
+                                <div v-for="(list,index) in item.list" :key="index">
+                                    <div style="display:flex; padding: 5px 10px;">
+                                        <div class="shopimg">
+                                            <img :src="list.warePic" style="width:5rem;height:5rem;">
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div class="titletxt">{{list.warename}}</div>
+                                            <div class="shopsize">{{list.specname}}</div>
+                                            <div style="width:100%;display:flex;justify-content: space-between;">
+                                                <div class="shopprice">￥{{list.wareprice}}</div>
+                                                <div class="quantity">
+                                                    <div class="addition" @click="addUp(index1, index)">
+                                                        <i class="iconfont icon-iconfontadd"></i>
+                                                    </div>
+                                                    <div class="number">
+                                                        {{list.quantity}}
+                                                        <input type="text">
+                                                    </div>
+                                                    <div class="subtraction">
+                                                        <i class="iconfont icon-iconfontmove"></i>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="YuHuiMa" style="height:45px;line-height:45px;display:flex;font-size:0.8rem;border-top: 1px solid #dcdcdc;padding: 0px 10px;justify-content: space-between;">
+                                        <div @click="alerts" style="flex:1;text-align: left;">输入优惠码：</div>
+                                        <div>已优惠￥0.00</div>
+                                    </div>
+
                                 </div>
                             </div>
-
-                            <div class="YuHuiMa" style="height:45px;line-height:45px;display:flex;font-size:0.8rem;border-top: 1px solid #dcdcdc;padding: 0px 10px;justify-content: space-between;">
-                                <div @click="alerts" style="flex:1;text-align: left;">输入优惠码：</div>
-                                <div>已优惠￥0.00</div>
+                            <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
+                                <div style="line-height: 45px;">发票：</div>
+                                <div style="flex:1;line-height:45px;text-align:right;">不使用</div>
                             </div>
-
+                            <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
+                                <div style="line-height: 45px;">买家留言：</div>
+                                <div style="flex:1;line-height:45px;">
+                                    <input placeholder="填写内容已和卖家协商确认">
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                    <div class="Postage">
+                        <span>商品总额</span>
+                        <div class="FontColr" style="flex:1;text-align: right;">￥{{totalMoney}}</div>
+                    </div>
+                    <div class="Postage">
+                        <span>邮费总额</span>
+                        <div class="FontColr" style="flex:1;text-align: right;">￥{{totalFare}}</div>
+                    </div>
+                    <div class="Postage">
+                        <span>优惠总额</span>
+                        <div class="FontColr" style="flex:1;text-align: right;">￥{{totalpreferential}}</div>
+                    </div>
+                    <div class="CartTotalAmount">
+                        <div class="AllSelection" style="display: flex;margin-right: 10px;align-items: center;"></div>
+                        <div class="Settlement">
+                            <span style="font-size:0.6rem;">合计:￥{{totalMoney+totalFare-totalpreferential}}</span>
                         </div>
+                        <div class="SettlementBtn" @click="onLinePay">在线支付</div>
                     </div>
-                    <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
-                        <div style="line-height: 45px;">发票：</div>
-                        <div style="flex:1;line-height:45px;text-align:right;">不使用</div>
-                    </div>
-                    <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
-                        <div style="line-height: 45px;">买家留言：</div>
-                        <div style="flex:1;line-height:45px;">
-                            <input placeholder="填写内容已和卖家协商确认">
-                        </div>
-                    </div>
-                </li>
+                </ul>
             </div>
-            <div class="Postage">
-                <span>商品总额</span>
-                <div class="FontColr" style="flex:1;text-align: right;">￥{{totalMoney}}</div>
-            </div>
-            <div class="Postage">
-                <span>邮费总额</span>
-                <div class="FontColr" style="flex:1;text-align: right;">￥{{totalFare}}</div>
-            </div>
-            <div class="Postage">
-                <span>优惠总额</span>
-                <div class="FontColr" style="flex:1;text-align: right;">￥{{totalpreferential}}</div>
-            </div>
-            <div class="CartTotalAmount">
-                <div class="AllSelection" style="display: flex;margin-right: 10px;align-items: center;"></div>
-                <div class="Settlement">
-                    <span style="font-size:0.6rem;">合计:￥{{totalMoney+totalFare-totalpreferential}}</span>
-                </div>
-                <div class="SettlementBtn" @click="onLinePay">在线支付</div>
-            </div>
-        </ul>
+        </div>
         <!-- 优惠卷 -->
         <showModel type='alert' @tocancel='cancelfall' :showstate='showa'>
 
         </showModel>
         <!-- 支付框 -->
-        <payModel type='alertpaymodel' 
-            @cancelpaymodel='cancelpaymodel' 
-            :payshowstate='payM' 
-            @transferUser='gotopay' 
+        <payModel type='alertpaymodel' @cancelpaymodel='cancelpaymodel' :payshowstate='payM' @transferUser='gotopay'
             :paynum='totalMoney+totalFare-totalpreferential'>
         </payModel>
-        
     </div>
 </template>
 <script>
@@ -119,6 +119,7 @@
     import Footer from "../../components/Footer";
     import showModel from "../../components/showModel";
     import payModel from "../../components/payModel";
+    import BScroll from 'better-scroll'
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
     export default {
         name: 'demo',
@@ -133,8 +134,9 @@
                 totalpreferential: 0,
                 mdparr: [],
                 showa: false,
-                payM:false,
-                advancePaymentOrder:''//预支付订单
+                payM: false,
+                advancePaymentOrder: '',//预支付订单
+                styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
             };
         },
 
@@ -146,6 +148,14 @@
             this.$store.commit("changeTitle", "确认订单");
             this.loadAddress();
             this.loadMore();
+            this.scrollFn();
+
+        },
+        //获取屏幕高度
+        beforeMount(height) {
+            var height =0
+            var h = document.documentElement.clientHeight || document.body.clientHeight;
+            this.styleObj1["height"] = h - height + "px"
         },
         components: {
             Header,
@@ -154,19 +164,46 @@
             payModel
         },
         methods: {
+            scrollFn() {
+                this.$nextTick(() => {
+                    if (!this.scroll) {
+                        this.scroll = new BScroll(this.$refs.bscroll, {
+                            swipeTime: 2000,
+                            scrollY: true,
+                            click: true,
+                            probeType: 2,
+                            pullUpLoad: {
+                                threshold: 10
+                            },
+                            mouseWheel: {    // pc端同样能滑动
+                                speed: 20,
+                                invert: false
+                            },
+                            useTransition: false  // 防止iphone微信滑动卡顿
+                        });
+                    } 
+                });
+            },
             alerts() {
                 this.showa = true;
             },
-            cancelfall(){
-                this.showa = false;
+            cancelfall() {
+                this.showa = false
             },
             alertpaymodel() {
                 this.payM = true;
             },
-            cancelpaymodel(){
+            cancelpaymodel() {
                 this.payM = false;
+                if (this.goodsObj.length > 1) {
+                    this.$router.push("/order?tabCode=0")
+                } else {
+                    this.$router.push("/order?tabCode=0")
+                    // window.location.href = 'orderdetail.html?orderNo=' + orderNo
+                   
+                }
             },
-            
+
             loadAddress() {
                 let parameter = {
                     userId: this.$store.state.baseUser.userId
@@ -339,7 +376,7 @@
                         if (response.data.code == 0 && response.data.success == true) {
                             console.log(response.data)
                             // 预支付订单
-                            this.advancePaymentOrder=response.data.data;
+                            this.advancePaymentOrder = response.data.data;
                             Indicator.close();
                             this.alertpaymodel();
                         }
@@ -350,33 +387,33 @@
                         console.log(error);
                     });
             },
-            
+
             // 跳转 0支付宝,1微信
-            gotopay(msg){
+            gotopay(msg) {
                 // 支付宝参数
-                let shifukuan=this.totalMoney+this.totalFare-this.totalpreferential
-                let waresName=this.advancePaymentOrder.orderInfoVoList[0].orderDetailEntityList[0].wareName
-                let oid=this.advancePaymentOrder.orderInfoVoList[0].oid
+                let shifukuan = this.totalMoney + this.totalFare - this.totalpreferential
+                let waresName = this.advancePaymentOrder.orderInfoVoList[0].orderDetailEntityList[0].wareName
+                let oid = this.advancePaymentOrder.orderInfoVoList[0].oid
 
                 // 微信参数
-                let data=this.advancePaymentOrder.orderInfoVoList;
-                let ordersInfoIdArr=[]
+                let data = this.advancePaymentOrder.orderInfoVoList;
+                let ordersInfoIdArr = []
                 for (var i = 0; i < data.length; i++) {
                     ordersInfoIdArr.push(data[i].ordersInfoId)
                 }
                 let ordersInfoIds = ordersInfoIdArr.toString()
-                let ip=returnCitySN["cip"];
-        
-                if(msg=="0"){
-                    this.ZhiFuBao(oid,waresName,shifukuan)
+                let ip = returnCitySN["cip"];
+
+                if (msg == "0") {
+                    this.ZhiFuBao(oid, waresName, shifukuan)
                 }
-                if(msg==1){
-                    this.WeiXin(ordersInfoIds,waresName,shifukuan,ip)
+                if (msg == 1) {
+                    this.WeiXin(ordersInfoIds, waresName, shifukuan, ip)
                 }
             },
 
             // 调用支付宝
-            ZhiFuBao(a,b,c) {
+            ZhiFuBao(a, b, c) {
                 let parameter = {
                     "oid": a,
                     "wareName": b,
@@ -384,22 +421,22 @@
                 }
                 debugger
                 this.$http
-                    .get(process.env.API_HOST + "/mall_api/pay/payH5",{
+                    .get(process.env.API_HOST + "/mall_api/pay/payH5", {
                         params: parameter
                     })
                     .then(response => {
-                        if(response.status == 200 & response.statusText == "OK") {
-                            window.location.href=response.request.responseURL
+                        if (response.status == 200 & response.statusText == "OK") {
+                            window.location.href = response.request.responseURL
                         }
                     })
                     .catch(error => {
                         Indicator.close();
                         console.log(error);
-                    });      
+                    });
             },
 
-            WeiXin(ordersInfoIds,waresName,shifukuan,ip) {
-                let parameter= {
+            WeiXin(ordersInfoIds, waresName, shifukuan, ip) {
+                let parameter = {
                     "ordersInfoIds": ordersInfoIds,
                     "waresName": waresName,
                     "price": shifukuan * 100,
@@ -407,22 +444,22 @@
                     "tradeType": "MWEB",
                 }
                 this.$http
-                    .get(process.env.API_HOST + "/mall_api/pay/wxprepay",{
+                    .get(process.env.API_HOST + "/mall_api/pay/wxprepay", {
                         params: parameter
                     })
                     .then(response => {
-                        if(response.status == 200 & response.statusText == "OK") {
-                                var urlStr = response.data.data.mwebUrl;
-                                var s1 = urlStr.split("amp;")[0];
-                                var s2 = urlStr.split("amp;")[1];
-                                var mwebUrl = s1 + s2;
-                                window.location.href = mwebUrl;
+                        if (response.status == 200 & response.statusText == "OK") {
+                            var urlStr = response.data.data.mwebUrl;
+                            var s1 = urlStr.split("amp;")[0];
+                            var s2 = urlStr.split("amp;")[1];
+                            var mwebUrl = s1 + s2;
+                            window.location.href = mwebUrl;
                         }
                     })
                     .catch(error => {
                         Indicator.close();
                         console.log(error);
-                    });      
+                    });
             }
         }
     };
@@ -434,11 +471,8 @@
         flex-direction: column;
     }
 
-    .list {
-        max-height: 100vh; //与屏幕一样高度
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding-bottom: 100px;
+    ul{
+        padding-bottom:3rem;
         li {
             margin-top: 5px;
             background: #fff;

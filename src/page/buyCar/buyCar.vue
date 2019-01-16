@@ -43,7 +43,7 @@
                                     <div class="number">{{list.quantity}}
                                         <input type="text" />
                                     </div>
-                                    <div class="subtraction">
+                                    <div class="subtraction" @click="addDown(index1, index)">
                                         <i class="iconfont icon-iconfontmove"></i>
                                     </div>
                                 </div>
@@ -61,13 +61,13 @@
         <div class="CartTotalAmount" v-if="goodsObj.length>0">
             <label class="mint-checklist-label" style="align-items: center;display: flex;">
                 <span class="mint-checkbox">
-                    <input type="checkbox" class="mint-checkbox-input" name="checkbox" @click="chooseAllGoods($event)"
+                    <input type="checkbox" class="mint-checkbox-input" style="cursor:pointer;" name="checkbox" @click="chooseAllGoods($event)"
                         v-model="allChecked">
                     <span class="mint-checkbox-core"></span>
                 </span>
                 <span class="mint-checkbox-label">全选</span>
             </label>
-            <div class="Settlement"><span></span>合计：<span class="FontColr">￥</span><span class="FontColr">{{totalMoney}}</span></div>
+            <div class="Settlement"><span>合计：</span><span class="FontColr">￥{{totalMoney}}</span></div>
             <div class="SettlementBtn" @click="getSum">去结算</div>
         </div>
     </div>
@@ -146,45 +146,50 @@
             // 全部商品全选
             chooseAllGoods: function () {
                 var flag = true;
-                if (this.allChecked) {
-                    flag = false;
-                }
-                for (var i = 0, len = this.goodsObj.length; i < len; i++) {
-                    this.goodsObj[i]['checked'] = flag;
-                    var list = this.goodsObj[i]['list'];
-                    for (var k = 0, len1 = list.length; k < len1; k++) {
-                        list[k]['checked'] = flag;
+                setTimeout(()=>{
+                    if (this.allChecked==false) {
+                        flag = false;
                     }
-                }
-                this.allChecked = !this.allChecked;
-                this.calTotalMoney()
+                    for (var i = 0, len = this.goodsObj.length; i < len; i++) {
+                        this.goodsObj[i]['checked'] = flag;
+                        var list = this.goodsObj[i]['list'];
+                        for (var k = 0, len1 = list.length; k < len1; k++) {
+                            list[k]['checked'] = flag;
+                        }
+                    }
+                    this.calTotalMoney()
+                },10)
             },
             // 每个店铺全选
             chooseShopGoods: function (index) {
                 var list = this.goodsObj[index]['list']
-                if (this.goodsObj[index]['checked']) {
-                    for (var i = 0; i < list.length; i++) {
-                        list[i]['checked'] = false;
+                setTimeout(()=>{
+                    if (this.goodsObj[index].checked==false) {
+                        for (var i = 0; i < list.length; i++) {
+                            list[i]['checked'] = false;
+                        }
+                    } else {
+                        for (var i = 0; i < list.length; i++) {
+                            list[i]['checked'] = true;
+                        }
                     }
-                } else {
-                    for (var i = 0; i < list.length; i++) {
-                        list[i]['checked'] = true;
-                    }
-                }
-                this.goodsObj[index]['checked'] = !this.goodsObj[index]['checked'];
-                this.isChooseAll();
-                this.calTotalMoney()
+                    this.isChooseAll();
+                    this.calTotalMoney()
+                },10)
+                
+                // this.goodsObj[index]['checked'] = !this.goodsObj[index]['checked'];
+                
             },
             // 单个选择
             choose: function (index1, index) {
-                var list = this.goodsObj[index1]['list'],
-                    len = list.length;
-                if (list[index]['checked']) {
+                var list = this.goodsObj[index1]['list']
+                var len = list.length;
+                if (list[index]['checked'] ==false) {
                     this.goodsObj[index1]['checked'] = false;
                     this.allChecked = false;
-                    list[index]['checked'] = !list[index]['checked'];
+                    list[index]['checked'] = false;
                 } else {
-                    list[index]['checked'] = !list[index]['checked'];
+                    list[index]['checked'] = true;
 
                     // 判断是否选择当前店铺的全选
                     var flag = true;
@@ -225,19 +230,22 @@
                     });
                 }
             },
+            // 结算
             getSum(){
                 this.$router.push("/getSum")
             },
-
+            // 增加数量
             addUp(index1,index){
                 var list = this.goodsObj[index1]['list']
                 ++this.goodsObj[index1]['list'][index].quantity
-        
+                this.calTotalMoney()
             },
-            addDown(){
-                if(this.buyNum>1){
-                    this.buyNum--
-                    console.log(this.buyNum)
+            // 减少数量
+            addDown(index1,index){
+                if(this.goodsObj[index1]['list'][index].quantity>1){
+                    var list = this.goodsObj[index1]['list']
+                    --this.goodsObj[index1]['list'][index].quantity
+                    this.calTotalMoney()
                 }
             },
         }
@@ -388,6 +396,7 @@
         }
     }
     .mint-checklist-label {
+        cursor:pointer; 
         padding: 0;
     }
 

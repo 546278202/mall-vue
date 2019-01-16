@@ -10,6 +10,7 @@ import buyCar from '@/page/buyCar/buyCar'
 import getSum from '@/page/buyCar/getSum'
 import nowbuy from '@/page/buyCar/nowbuy'
 import order from '@/page/order/order'
+import orderDetail from '@/page/order/children/orderDetail'
 import afterSaleList from '@/page/saleService/afterSaleList'
 import afterSaleDetail from '@/page/saleService/afterSaleDetail'
 import collection from '@/page/collection/collection'
@@ -82,8 +83,15 @@ export default new Router({
         {
             path: '/order',
             name: 'order',
-            component: order
+            component: order,
+            children: [{
+                path: 'orderDetail', //订单详情页
+                component: orderDetail,
+                component: orderDetail
+
+            }]
         },
+      
         //售后服务
         {
             path: '/afterSaleList',

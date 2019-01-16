@@ -5,7 +5,8 @@
                 <i class="iconfont icon-fanhui" style="font-size:1rem;"></i>
             </a>
             <a class="shop_car" style="flex:1;">{{this.$store.state.title}}</a>
-            <a class="Administration" style="flex:1;"></a>
+            <slot name='logo'> <a class="" style="flex:1;"></a></slot>
+           
         </header>
     </section>
 </template>

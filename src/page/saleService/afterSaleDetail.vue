@@ -96,8 +96,6 @@
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             this.goodsObj=response.data.data
-
-                            console.log(this.goodsObj)
                             this.txtsmg = "上拉加载更多"
                         }
                     })

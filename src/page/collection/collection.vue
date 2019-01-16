@@ -1,11 +1,30 @@
 <template>
     <div class="rules">
-        <Header></Header>
+        <Header>
+            <a slot='logo' class="administration"  @click="administration">管理</a>
+        </Header>
         <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
+                    <div v-if="goodsObj.length>0 && flag==true" style="height:45px;line-height:45px;color: #333;font-size: 14px;background: #fff;padding:0 5px;margin-bottom:5px;">
+                        <label class="mint-checklist-label" style="align-items: center;display: flex;width:100%;">
+                            <span class="mint-checkbox">
+                                <input type="checkbox" class="mint-checkbox-input" style="cursor:pointer;" name="checkbox" @click="chooseAllGoods($event)"
+                                    v-model="allChecked">
+                                <span class="mint-checkbox-core"></span>
+                            </span>
+                            <span class="mint-checkbox-label">全选</span>
+                        </label>
+                    </div>
                     <li v-for="(item,index) in goodsObj" :key="index">
+                        <label class="mint-checklist-label" v-show="flag">
+                            <span class="mint-checkbox">
+                                <input type="checkbox" class="mint-checkbox-input" name="checkbox" v-model="item.checked"
+                                    v-on:click="choose(index)" />
+                                <span class="mint-checkbox-core"></span>
+                            </span>
+                        </label>
                         <router-link :to="{path:'/detail' , query:{id:item.cWareid}}">
                             <div class="ListImg" style="height:130px;overflow:hidden;">
                                 <img v-bind:src="item.warePic" style="display:block;margin:0 auto;height:100%;">
@@ -14,19 +33,20 @@
                             <div style="color: #cc0000;">￥{{item.cWareprice}}</div>
                         </router-link>   
                     </li>
-                    <div style="display: flex;justify-content: center;font-size: 14px;color:#666;height: 45px;align-items: center;">
+                    <div style="display: flex;width:100%;justify-content: center;font-size: 14px;color:#666;height: 45px;align-items: center;">
                         <!-- <mt-spinner :size="18" type="fading-circle" v-show="loadingState" ></mt-spinner> -->
                         <div style="margin-left:10px;">{{txtsmg}}</div>
                     </div>
                 </ul>
             </div>
         </div>
+        <div v-show="flag" class="yesBtn" @click="deleteData">删除</div>
     </div>
 </template>
 <script>
     import Header from "../../components/Header";
     import BScroll from 'better-scroll'
-    import { Indicator, InfiniteScroll, Spinner } from "mint-ui";
+    import { Indicator, InfiniteScroll, Spinner,Checklist,Toast } from "mint-ui";
     import { getNowFormatDate } from "../../config/mUtils"
     export default {
         data() {
@@ -37,7 +57,8 @@
                 pageSize: 20,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 txtsmg: "",
-                flag: '',
+                flag: false,
+                allChecked:false,//全选
                 stop: true
             }
         },
@@ -48,7 +69,7 @@
             this.styleObj1["height"] = h - height + "px"
         },
         components: {
-            Header,
+            Header
         },
         mounted() {
             this.$store.commit('changeTitle', "我的收藏")
@@ -76,7 +97,6 @@
                     )
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
-                            console.log(response)
                             var aa = response.data.data.list
                             this.txtsmg = "上拉加载更多"
                             if (aa.length < this.pageSize && aa.length > 0) {
@@ -84,6 +104,7 @@
                                 this.stop = false
                             }
                             for (var i = 0; i < aa.length; i++) {
+                                aa[i]['checked'] = this.flag;
                                 this.goodsObj.push(aa[i])
                             }
                             Indicator.close();
@@ -141,6 +162,88 @@
                         }
                     })
                 });
+            },
+            // 管理状态
+            administration(){
+                if(this.flag==true){
+                    this.flag=false
+                }else{
+                    this.flag=true
+                }
+            },
+            //全选
+            chooseAllGoods: function () {
+                setTimeout(()=>{
+                    var list=this.goodsObj
+                    if (this.allChecked==false) {
+                        console.log(list)
+                        for (var i = 0; i < list.length; i++) {
+                            console.log(i)
+                            list[i].checked =false;
+                        }
+                    }else{
+                        for (var i = 0; i < list.length; i++) {
+                            list[i].checked =true;
+                        }
+                    }
+                },10)
+            },
+            // 单个选择
+            choose: function (index) {
+                if (this.goodsObj[index].checked ==false) {
+                    this.goodsObj[index].checked = false;
+                    this.allChecked = false;
+                } else {
+                    this.goodsObj[index].checked= true
+                }
+                this.isChooseAll()
+            },
+            // 判断是否选择所有商品的全选
+            isChooseAll: function () {
+                var flag1 = true;
+                setTimeout(()=>{
+                    for (var i = 0; i < this.goodsObj.length; i++) {
+                        console.log(this.goodsObj[i]['checked'])
+                        if (this.goodsObj[i]['checked'] == false) {
+                            flag1 = false;
+                            break;
+                        }
+                    }
+                    flag1 == true ? this.allChecked = true : this.allChecked = false;
+                },10)
+              
+            },
+            //删除商品
+            deleteData(){
+                let list=this.goodsObj
+                let idsarr=[];
+                for(let i=0;i<list.length;i++){
+                    if(list[i].checked==true){
+                        idsarr.push(list[i].collectionId)
+                    }
+                }
+              
+                let ids=idsarr.toString();
+                let parameter={
+                    "ids":ids
+                }
+                this.$http
+                    .post(
+                        process.env.API_HOST + "/mall_api/collection/del_by_ids",
+                        parameter
+                    )
+                    .then(response => {
+                        console.log(response)
+                        if (response.data.code == 0 && response.data.success == true) {
+                            this.loadMore()
+                            Toast(response.data.msg);
+                           
+                            Indicator.close();
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                    });
             }
         }
     }
@@ -165,6 +268,7 @@
         overflow: hidden;
     }
 
+   
     li {
         position: relative;
         width: 50%;
@@ -175,6 +279,7 @@
         font-size: 0.7rem;
         background: #fff;
         text-align: left;
+        margin-bottom:5px;
         .txt {
             height: 2rem;
             margin: 5px 0;
@@ -185,7 +290,9 @@
             -webkit-box-orient: vertical;
         }
     }
-
+    li:nth-child(odd){
+       border-right: 5px #f5f5f5 solid;
+    }
     .b2 {
         .TitleTxt {
             overflow: hidden;
@@ -203,5 +310,31 @@
             font-size: 0.9rem;
             text-align: left
         }
+    }
+    .administration{
+        flex:1;
+        text-align: right;
+        padding-right: 10px;
+    }
+    .mint-checklist-label{
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        padding: 5px;
+    }
+    .yesBtn{
+        background: rgb(243, 203, 10); 
+        font-size: 15px; 
+        color: rgb(255, 255, 255); 
+        position: absolute; 
+        bottom: 0px; 
+        left: 0px; 
+        width: 100%; 
+        height: 45px; 
+        line-height: 45px; 
+        text-align: center; 
+        cursor: pointer; 
+        display: block;
     }
 </style>

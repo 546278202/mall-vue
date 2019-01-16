@@ -1,5 +1,7 @@
 <template>
 	<div class="rules">
+		<router-view></router-view>
+		
 		<div class="nav_type">
 			<a v-for="(item,index) in items" :key="index" type="2" @click="tabNav(index)" :class='currentIndex==item.tab? "font-red":""'>{{item.text}}</a>
 		</div>
@@ -8,7 +10,7 @@
 			<div class="bscroll-container">
 				<ul>
 					<li v-for="(item,index) in goodsObj">
-						<div class="order-one">
+							<router-link :to="{path:'/order/orderDetail' , query:{id:item.oid}}">
 							<div class="content1"></div>
 							<div class="content2">
 								<div style="display:flex;border-top:1px solid #eee;padding: 10px;" v-for="(item,index) in item.orderDetailEntityList">
@@ -48,14 +50,15 @@
 								<div class="paystate" v-if="item.ordersStatus==1">待发货</div>
 								<div class="paystate" v-if="item.ordersStatus==2">待收货</div>
 								<div class="paystate" v-if="item.ordersStatus==3">已完成</div>
-
 							</div>
-						</div>
+						</router-link>
 					</li>
 					<div style="display: flex;justify-content: center;font-size: 14px;color:#666;height: 45px;align-items: center;">
 						<!-- <mt-spinner :size="18" type="fading-circle" v-show="loadingState" ></mt-spinner> -->
 						<div style="margin-left:10px;">{{txtsmg}}</div>
 					</div>
+					
+					
 				</ul>
 			</div>
 		</div>
@@ -65,7 +68,7 @@
 			:payshowstate='payM' 
 			@transferUser='gotopay' 
 			:paynum='paynum'>
-	 	</payModel>
+		</payModel>
 	</div>
 </template>
 
