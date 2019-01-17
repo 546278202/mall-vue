@@ -105,10 +105,12 @@
 
         </showModel>
         <!-- 支付框 -->
-        <payModel type='alertpaymodel' 
+        <payModel 
+            type='alertpaymodel' 
+            ref="mychild"
             @cancelpaymodel='cancelpaymodel' 
             :payshowstate='payM' 
-            @transferUser='gotopay' 
+            @transferUser='transferUser' 
             :paynum='totalMoney+totalFare-totalpreferential'>
         </payModel>
         
@@ -272,9 +274,6 @@
                 }
                 var data = { "shippId": this.address.shipId, "userId": this.$store.state.baseUser.userId, "wareList": wareList, }
                 var parameter = { "orders": JSON.stringify(data)}
-
-
-                Indicator.open("加载中...");
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
                     .then(response => {
@@ -282,7 +281,6 @@
                             console.log(response.data)
                             // 预支付订单
                             this.advancePaymentOrder=response.data.data;
-                            Indicator.close();
                             this.alertpaymodel();
                         }
                     })
@@ -294,7 +292,7 @@
             },
             
             // 跳转 0支付宝,1微信
-            gotopay(msg){
+            transferUser(msg){
                 // 支付宝参数
                 let shifukuan=this.totalMoney+this.totalFare-this.totalpreferential
                 let waresName=this.advancePaymentOrder.orderInfoVoList[0].orderDetailEntityList[0].wareName
@@ -309,63 +307,13 @@
                 let ordersInfoIds = ordersInfoIdArr.toString()
                 let ip=returnCitySN["cip"];
         
-                if(msg=="0"){
-                    this.ZhiFuBao(oid,waresName,shifukuan)
+                if (msg == "0") {
+                    this.$refs.mychild.ZhiFuBao(oid, waresName, shifukuan)
                 }
-                if(msg==1){
-                    this.WeiXin(ordersInfoIds,waresName,shifukuan,ip)
+                if (msg == 1) {
+                    this.$refs.mychild.WeiXin(ordersInfoIds, waresName, shifukuan, ip)
                 }
             },
-
-            // 调用支付宝
-            ZhiFuBao(a,b,c) {
-                let parameter = {
-                    "oid": a,
-                    "wareName": b,
-                    "price": c
-                }
-                debugger
-                this.$http
-                    .get(process.env.API_HOST + "/mall_api/pay/payH5",{
-                        params: parameter
-                    })
-                    .then(response => {
-                        if(response.status == 200 & response.statusText == "OK") {
-                            window.location.href=response.request.responseURL
-                        }
-                    })
-                    .catch(error => {
-                        Indicator.close();
-                        console.log(error);
-                    });      
-            },
-
-            WeiXin(ordersInfoIds,waresName,shifukuan,ip) {
-                let parameter= {
-                    "ordersInfoIds": ordersInfoIds,
-                    "waresName": waresName,
-                    "price": shifukuan * 100,
-                    "ip": ip,
-                    "tradeType": "MWEB",
-                }
-                this.$http
-                    .get(process.env.API_HOST + "/mall_api/pay/wxprepay",{
-                        params: parameter
-                    })
-                    .then(response => {
-                        if(response.status == 200 & response.statusText == "OK") {
-                                var urlStr = response.data.data.mwebUrl;
-                                var s1 = urlStr.split("amp;")[0];
-                                var s2 = urlStr.split("amp;")[1];
-                                var mwebUrl = s1 + s2;
-                                window.location.href = mwebUrl;
-                        }
-                    })
-                    .catch(error => {
-                        Indicator.close();
-                        console.log(error);
-                    });      
-            }
         }
     };
 </script>

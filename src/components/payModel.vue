@@ -58,8 +58,54 @@
                 this.$emit("cancelpaymodel");
             },
             getpaycode(){
-                this.$emit('transferUser',this.checkedValue);
-                
+                this.$emit('transferUser',this.checkedValue);   
+            },
+            // 调用支付宝
+            ZhiFuBao(a, b, c) {
+                let parameter = {
+                    "oid": a,
+                    "wareName": b,
+                    "price": c
+                }
+                this.$http
+                    .get(process.env.API_HOST + "/mall_api/pay/payH5", {
+                        params: parameter
+                    })
+                    .then(response => {
+                        if (response.status == 200 & response.statusText == "OK") {
+                            window.location.href = response.request.responseURL
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                        console.log(error);
+                    });
+            },
+            WeiXin(ordersInfoIds, waresName, shifukuan, ip) {
+                let parameter = {
+                    "ordersInfoIds": ordersInfoIds,
+                    "waresName": waresName,
+                    "price": shifukuan * 100,
+                    "ip": ip,
+                    "tradeType": "MWEB",
+                }
+                this.$http
+                    .get(process.env.API_HOST + "/mall_api/pay/wxprepay", {
+                        params: parameter
+                    })
+                    .then(response => {
+                        if (response.status == 200 & response.statusText == "OK") {
+                            var urlStr = response.data.data.mwebUrl;
+                            var s1 = urlStr.split("amp;")[0];
+                            var s2 = urlStr.split("amp;")[1];
+                            var mwebUrl = s1 + s2;
+                            window.location.href = mwebUrl;
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                        console.log(error);
+                    });
             }
         }
 

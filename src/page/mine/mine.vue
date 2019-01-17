@@ -88,7 +88,7 @@ export default {
     },
     methods: {
         getData(userId) {
-            Indicator.open('加载中...')
+            // Indicator.open('加载中...')
             let data={ "userId":userId}
             this.$http.post(process.env.API_HOST + "/mall_api/common/get_home_info", data)
             .then( (response) => {

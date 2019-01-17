@@ -84,14 +84,20 @@ export default new Router({
             path: '/order',
             name: 'order',
             component: order,
-            children: [{
-                path: 'orderDetail', //订单详情页
-                component: orderDetail,
-                component: orderDetail
+            // children: [{
+            //     path: 'orderDetail', 
+            //     component: orderDetail,
+            //     component: orderDetail
 
-            }]
+            // }]
         },
-      
+        //订单详情页
+        {
+            path: '/order/orderDetail',
+            name: 'orderDetail',
+            component: orderDetail
+          
+        },
         //售后服务
         {
             path: '/afterSaleList',
