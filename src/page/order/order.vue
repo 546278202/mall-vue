@@ -9,8 +9,7 @@
 		<div class="bscroll" ref="bscroll" :style="styleObj1">
 			<div class="bscroll-container">
 				<ul>
-					<li v-for="(item,index) in goodsObj">
-							<router-link :to="{path:'/order/orderDetail' , query:{id:item.oid}}">
+					<li v-for="(item,index) in goodsObj" @click="itemClick(index)">
 							<div class="content1"></div>
 							<div class="content2">
 								<div style="display:flex;border-top:1px solid #eee;padding: 10px;" v-for="(item,index) in item.orderDetailEntityList">
@@ -34,7 +33,7 @@
 								<a style="margin-left:20px;">合计：{{item.wareTotalPrice}}</a>
 							</div>
 							<!-- 订单状态:0待付款,1待发货,2待收货,3已完成/待评价,4售后',5取消订单  -->
-							<div class="content3" @click="stateClick(index,$event)" ref="menuStateList">
+							<div class="content3" @click.stop="stateClick(index,$event)" ref="menuStateList">
 								<!-- 状态0 -->
 								<a v-if="item.ordersStatus==0 && item.invalidTime>timestamp" class="payment" ><span data-index="0">立即付款</span></a>
 								<a v-if="item.ordersStatus==0 && item.invalidTime<timestamp" class="delete_order" ><span data-index="1">删除订单</span></a>								
@@ -51,7 +50,6 @@
 								<div class="paystate" v-if="item.ordersStatus==2">待收货</div>
 								<div class="paystate" v-if="item.ordersStatus==3">已完成</div>
 							</div>
-						</router-link>
 					</li>
 					<div style="display: flex;justify-content: center;font-size: 14px;color:#666;height: 45px;align-items: center;">
 						<!-- <mt-spinner :size="18" type="fading-circle" v-show="loadingState" ></mt-spinner> -->
@@ -75,7 +73,7 @@
 <script>
 	import Header from "../../components/Header";
 	import BScroll from 'better-scroll'
-	import { Indicator, InfiniteScroll, Spinner } from "mint-ui";
+	import { Indicator, InfiniteScroll, Spinner,Toast} from "mint-ui";
 	import { getNowFormatDate, getMillisecond} from "../../config/mUtils"
     import payModel from "../../components/payModel";
 	export default {
@@ -221,14 +219,16 @@
 				});
 			},
 			// 删除订单
-			DeleteOrder(orderNo){
+			DeleteOrder(index,orderNo){
 				let parameter = {orderNo:orderNo};
-				// Indicator.open("加载中...");
 				this.$http
 					.post(process.env.API_HOST + "/mall_api/order/del_order",parameter)
 					.then(response => {
 						if (response.data.code == 0 && response.data.success == true) {
-							console.log(response.data.msg)
+							this.goodsObj.splice(index,1)
+							Toast(response.data.msg);
+						}else{
+							Toast(response.data.msg);
 						}
 					})
 					.catch(error => {
@@ -249,14 +249,17 @@
 						break;
 					case "1":
 						this.goodsObj[index].wareTotalPrice
-						this.DeleteOrder(orderNo)
+						this.DeleteOrder(index,orderNo)
 						break;
 					default:
 						x="Looking forward to the Weekend";
 				}
 			},
 			
-
+			itemClick(index){
+				let oid=this.goodsObj[index].oid
+                this.$router.push("/order/orderDetail?id="+oid);
+			}
 			// 支付前获取优惠金额
 			// youHuiPrice(orderNo){
 			// 	var parameter={"orderNo":orderNo};

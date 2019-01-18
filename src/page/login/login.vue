@@ -64,7 +64,6 @@ export default {
                 return false
             }
             console.log(data)
-            Indicator.open("加载中...");
             this.$http.post(process.env.API_HOST + "/mall_api/user/login", data)
             .then( (response) => {
                 let res=response.data;
@@ -73,7 +72,7 @@ export default {
                     this.$store.commit('changeLogin',JSON.stringify(res.data));   
                     setTimeout(()=>{
                         this.$router.push({path:'/home'});
-                    },500)
+                    },600)
                     Indicator.close();
                 }else{
                     Toast(res.msg);

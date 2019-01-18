@@ -8,7 +8,7 @@ const  store= new Vuex.Store({
     state:{
         baseUser:JSON.parse(sessionStorage.getItem("baseUser")),
         title:null,
-        k:0
+        searchModel:0
     },
     mutations:{
         changeLogin(state,data){
@@ -16,9 +16,10 @@ const  store= new Vuex.Store({
         },
         changeTitle(state,msg){
 			state.title=msg
-		},
-		k(state,msg){
-			state.k=msg
+        },
+
+		getsearchModel(state,msg){
+			state.searchModel=msg
 		},
     }
 })

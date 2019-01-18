@@ -1,6 +1,6 @@
 <template>
     <div class="rules">
-        <Search></Search>
+        <Search @ee="cc"></Search>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
@@ -28,13 +28,15 @@
             </div>
         </div>
         <Footer></Footer>
+        <searchModel ></searchModel>
     </div>
 </template>
 <script>
     import Search from "../../components/Search";
     import Footer from "../../components/Footer";
+    import searchModel from "../../components/searchModel";
     import BScroll from 'better-scroll'
-    import { Indicator, InfiniteScroll, Spinner } from "mint-ui";
+    import { Indicator, InfiniteScroll, Spinner ,Popup } from "mint-ui";
     import { getNowFormatDate } from "../../config/mUtils"
     export default {
         data() {
@@ -45,9 +47,11 @@
                 pageSize: 20,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 txtsmg: "",
-                stop: true
+                stop: true,
             }
         },
+        
+       
         //获取屏幕高度
         beforeMount(height) {
             var height = 50+45
@@ -61,10 +65,13 @@
        
         components: {
             Search,
-            Footer
+            Footer,
+            searchModel
         },
         methods: {
-           
+            cc: function (str) {
+                alert(str)
+            },
             loadMore() {
                 let parameter = {
                     time: getNowFormatDate(),
