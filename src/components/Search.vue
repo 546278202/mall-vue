@@ -29,8 +29,9 @@ export default {
         goBack() {
             this.$route.go(-1)
         },
+        // 子调用父
         clickSearch(){
-            this.$emit('ee', 'cc12345')
+            this.$emit('SearchModel')
         },
       
     },    

@@ -1,100 +1,236 @@
-<template>    
-    <div style="overflow:hidden;">
-        <Search></Search>
-        <div class="page-infinite-wrapper" style="font-size:14px;">
-          
-            <div style="font-size:14px;height:45px;line-height:45px;" v-if="dataList.length<1" >暂无数据</div>
-            
-            <ul v-else infinite-scroll-disabled="loading" infinite-scroll-distance="50" class="page-infinite-list" style="height: 100%;background: #fff;"> 
-                <router-link class="list_one" href="../shopdetail/shopdetail.html?wareid=91" v-for="(item,index) in dataList" :key="index" :to="{path:'/detail' , query:{id:item.wareid}}">
-                    <div class="left"><img :src='item.warePic' style="width:100%;height:100%;"></div>
-                    <div class="right">
-                        <div class="txt">{{item.warename}}</div>
-                        <div class="money">￥{{item.wareprice}}</div>
-                        <div class="number">月销量{{item.waresellnumber}}件</div>
-                    </div>
-                </router-link>
-            </ul>
+<template>
+    <div class="rules">
+        <router-view></router-view>
+        <div class="nav_type">
+            <a v-for="(item,index) in items" :key="index" type="2" @click="tabNav(index)" :class='currentIndex==item.tab? "font-red":""'>{{item.text}}</a>
         </div>
+        <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
+        <div class="bscroll" ref="bscroll" :style="styleObj1">
+            <div class="bscroll-container">
+                <ul>
+                    <router-link class="list_one" v-for="(item,index) in goodsObj"
+                        :key="index" :to="{path:'/detail' , query:{id:item.wareid}}">
+                        <div class="left"><img :src='item.warePic' style="width:100%;height:100%;"></div>
+                        <div class="right">
+                            <div class="txt">{{item.warename}}</div>
+                            <div class="money">￥{{item.wareprice}}</div>
+                            <div class="number">月销量{{item.waresellnumber}}件</div>
+                        </div>
+                    </router-link>
+                    <div style="display: flex;justify-content: center;font-size: 14px;color:#666;height: 45px;align-items: center;">
+                        <div style="margin-left:10px;">{{txtsmg}}</div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+
     </div>
 </template>
+
 <script>
-import Search from '../../components/Search'
-import Footer from '../../components/Footer'
-import { InfiniteScroll } from 'mint-ui';
-import { getNowFormatDate } from "../../config/mUtils";
+    import Header from "../../components/Header";
+    import BScroll from 'better-scroll'
+    import { Indicator, InfiniteScroll, Spinner, Toast } from "mint-ui";
+    import { getNowFormatDate, getMillisecond } from "../../config/mUtils"
+    import payModel from "../../components/payModel";
+    export default {
+        data() {
+            return {
+                items: [
+                    { tab: '', text: "全部订单" },
+                    { tab: '0', text: "待付款" },
+                    { tab: '1', text: "代发货" },
+                    { tab: '2', text: "待收货" },
+                    { tab: '3', text: "已完成" },
+                ],
+                currentIndex: this.$route.query.tabCode,
+                goodsObj: [],
+                dropDown: false,
+                pageNum: 1,
+                pageSize: 20,
+                styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
+                txtsmg: "",
+                flag: '',
+                stop: true,
+                payM: false,	//支付框状态
+                paynum: '',	//支付金额
+                timestamp: '', //当前毫秒值 
+            }
+        },
+        //获取屏幕高度
+        beforeMount(height) {
+            var height = 50
+            var h = document.documentElement.clientHeight || document.body.clientHeight;
+            this.styleObj1["height"] = h - height + "px"
+        },
+        mounted() {
+            this.timestamp = Date.parse(new Date())
+            this.scrollFn()
+            this.loadMore()
+        },
+        watch: {
+            goodsObj(val) {
+                this.scroll.refresh()
+            }
+        },
+        components: {
+            payModel
+        },
+        methods: {
+            // 付款弹框
+            alertpaymodel() {
+                this.payM = true;
 
-export default {
-    data () {
-        return {
-            dataList:'',
-            Lists:'',
-            last:''
-        }
-    },
-    mounted(){
-        this.$http.post(process.env.API_HOST + "/mall_api/shop/get_serverlist", {
-            shopname: this.$route.query.name,
-            type: 0,
-            categoryType: 0,
-            pageNum: 1,
-            pageSize: 10,
-            time:getNowFormatDate(),
-        })
-        .then( (response) => {
-            this.dataList=response.data.data.wareList;
-        })
-        .catch( (error) => {
-            console.log(error);
-        })    
-    },
-    
-    components:{
-        Search,
-        Footer
-    },
-    methods: {
-        loadMore() {
-            this.loading = true;
-            setTimeout(() => {
-                let last = this.list[this.list.length - 1];
-                for (let i = 1; i <= 10; i++) {
-                this.list.push(last + i);
-                }
-                this.loading = false;
-            }, 2500);
-        }
-    },
+            },
+            cancelpaymodel() {
+                this.payM = false;
+            },
+            // 切换导航
+            tabNav(index) {
+                this.goodsObj = []
+                this.currentIndex = this.items[index].tab
+                this.pageNum = 1,
+                    this.loadMore()
+            },
+            loadMore() {
+                let parameter = {
+                    shopname: this.$route.query.name,
+                    type: 0,
+                    categoryType: 0,
+                    pageNum: 1,
+                    pageSize: 10,
+                    time:getNowFormatDate()
+                };
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/shop/get_serverlist",parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            var aa = response.data.data.wareList
+                            this.txtsmg = "上拉加载更多"
+                            if (aa.length < this.pageSize && aa.length > 0) {
+                                this.txtsmg = "已经加载完毕"
+                                this.stop = false
+                            }
+                            for (var i = 0; i < aa.length; i++) {
+                                aa[i].invalidTime = getMillisecond(aa[i].invalidTime)
+                                this.goodsObj.push(aa[i])
+                            }
+                            console.log(this.goodsObj)
+                        }
+                    })
+                    .catch(error => {
+                        Indicator.close();
+                    });
+            },
+            scrollFn() {
+                this.$nextTick(() => {
+                    if (!this.scroll) {
+                        this.scroll = new BScroll(this.$refs.bscroll, {
+                            scrollY: true,
+                            click: true,
+                            probeType: 2,
+                            pullUpLoad: {
+                                threshold: 10
+                            },
+                            mouseWheel: {    // pc端同样能滑动
+                                speed: 20,
+                                invert: false
+                            },
+                            useTransition: false  // 防止iphone微信滑动卡顿
+                        });
+                    } else {
+                        // this.scroll.refresh();
+                    }
+                    this.scroll.on('scroll', (pos) => {
+                        //如果下拉超过50px 就显示下拉刷新的文字
+                        if (pos.y > 50) {
+                            this.dropDown = true
+                        } else {
+                            this.dropDown = false
+                        }
+                    })
+                    //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
+                    this.scroll.on('touchEnd', (pos) => {
+                        // 下拉动作
+                        if (pos.y > 50) {
+                            this.goodsObj.length = 0
+                            this.pageNum = 1
+                            this.loadMore()
+                            this.dropDown = false
+                            this.txtsmg = ""
+                        }
+                        //上拉加载 总高度>下拉的高度+10 触发加载更多
+                        if (this.scroll.maxScrollY > pos.y + 10) {
+                            if (this.stop == false) {
+                                return false
+                            }
+                            this.txtsmg = "上拉加载更多"
+                            this.pageNum++
+                            this.loadMore()
+                        }
+                    })
+                });
+            },
 
-}
+
+
+            itemClick(index) {
+                let oid = this.goodsObj[index].oid
+                this.$router.push("/order/orderDetail?id=" + oid);
+            }
+
+
+        }
+    }
 </script>
 
+
 <style lang="scss" scoped>
-    .title{
-        padding-left: 30px;
-        height: 450px;
-        line-height: 45px;
-        
-    }
-    .list_img{
-            width: 32%;
-            display: inline-block;
-            text-align: center;
-            padding: 10px;
+    .nav_type {
+        width: 100%;
+        height: 50px;
+        display: flex;
+        background: #fff;
+        line-height: 50px;
+        font-size: 14px;
+
+        a {
+            flex: 1;
         }
+    }
+
+    .drop-down {
+        position: absolute;
+        top: 50px;
+        lefT: 0px;
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+    }
+
+    ul {
+        padding-top: 5px;
+    }
+
     .list_one {
         width: 100%;
         display: flex;
         padding: 10px;
         border-bottom: 1px solid #d3d3d3;
+
         .left {
             width: 5rem;
             height: 5rem;
             margin-right: 10px;
         }
+
         .right {
             flex: 1;
             text-align: left;
+
             .txt {
                 height: 2.2rem;
                 overflow: hidden;
@@ -104,11 +240,13 @@ export default {
                 -webkit-box-orient: vertical;
                 font-size: 0.7rem;
             }
+
             .money {
                 color: #cc0000;
                 font-size: 0.9rem;
                 margin-bottom: 10px;
             }
+
             .number {
                 flex: 1;
                 height: 1.5rem;
@@ -116,6 +254,6 @@ export default {
                 font-size: 0.7rem;
             }
         }
-        
+
     }
 </style>

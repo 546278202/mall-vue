@@ -16,9 +16,6 @@ import afterSaleDetail from '@/page/saleService/afterSaleDetail'
 import collection from '@/page/collection/collection'
 import record from '@/page/collection/record'
 import discuss from '@/page/discuss/discuss'
-import searchlist from '@/page/searchlist/searchlist'
-
-
 Vue.use(Router)
 export default new Router({
     
@@ -125,12 +122,7 @@ export default new Router({
             name: 'discuss',
             component: discuss
         },
-        //搜索列表
-        {
-            path: '/searchlist',
-            name: 'searchlist',
-            component: searchlist
-        },
+
   
     ]
 })

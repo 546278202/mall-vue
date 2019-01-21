@@ -1,6 +1,6 @@
 <template>
     <div class="rules">
-        <Search @ee="cc"></Search>
+        <Search @SearchModel="SearchModel"></Search>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
@@ -28,7 +28,12 @@
             </div>
         </div>
         <Footer></Footer>
-        <searchModel ></searchModel>
+        <!-- 搜索model -->
+        <searchModel 
+            ref="mychild" 
+            v-on:childByValue="childByValue">
+        </searchModel>
+       
     </div>
 </template>
 <script>
@@ -47,16 +52,17 @@
                 pageSize: 20,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 txtsmg: "",
-                stop: true,
+                stop: true,              
             }
         },
         
-       
         //获取屏幕高度
         beforeMount(height) {
             var height = 50+45
             var h = document.documentElement.clientHeight || document.body.clientHeight;
+            var w = document.documentElement.clientWidth || document.body.clientWidth;
             this.styleObj1["height"] = h - height + "px"
+
         },
         mounted() {
             this.scrollFn()
@@ -69,8 +75,12 @@
             searchModel
         },
         methods: {
-            cc: function (str) {
-                alert(str)
+            // 调用子组件
+            SearchModel() {
+                this.$refs.mychild.parentHandleclick(true);
+            },
+            childByValue(){
+                this.$refs.mychild.parentHandleclick(false);
             },
             loadMore() {
                 let parameter = {
@@ -78,7 +88,6 @@
                     pageNum: this.pageNum,
                     pageSize: this.pageSize
                 };
-                Indicator.open("加载中...");
                 this.$http
                     .post(
                         process.env.API_HOST + "/mall_api/shop/get_ware_list",
