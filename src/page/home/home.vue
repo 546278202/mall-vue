@@ -89,11 +89,7 @@
                     pageSize: this.pageSize
                 };
                 this.$http
-                    .post(
-                        process.env.API_HOST + "/mall_api/shop/get_ware_list",
-                        parameter
-                    )
-
+                    .post(process.env.API_HOST + "/mall_api/shop/get_ware_list",parameter)
                     .then(response => {
                         Indicator.close();
                         if (response.data.code == 0 && response.data.success == true) {
@@ -165,15 +161,16 @@
     ul{
         overflow: hidden;
         li{
+            position: relative;
             width: 50%;
+            box-sizing: border-box;
             padding: 5px;
             float: left;
+            overflow: hidden;
+            font-size: 0.7rem;
             background: #fff;
-            box-sizing: border-box;
-            border-bottom: 5px solid #eee;
-            border: 2px solid #eee;
-            font-size: 14px;
-            text-align:left;
+            text-align: left;
+            margin-bottom:5px;
             .txt {
                 height: 2rem;
                 margin: 5px 0;
@@ -183,6 +180,9 @@
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
             }
+        }
+        li:nth-child(odd){
+            border-right: 5px #f5f5f5 solid;
         }
     }
    

@@ -1,9 +1,7 @@
 <template>
     <div class="rules">
         <router-view></router-view>
-        <div class="nav_type">
-            <a v-for="(item,index) in items" :key="index" type="2" @click="tabNav(index)" :class='currentIndex==item.tab? "font-red":""'>{{item.text}}</a>
-        </div>
+        <Search @SearchModel="SearchModel"></Search>
         <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
@@ -29,6 +27,7 @@
 
 <script>
     import Header from "../../components/Header";
+    import Search from "../../components/Search";
     import BScroll from 'better-scroll'
     import { Indicator, InfiniteScroll, Spinner, Toast } from "mint-ui";
     import { getNowFormatDate, getMillisecond } from "../../config/mUtils"
@@ -36,25 +35,13 @@
     export default {
         data() {
             return {
-                items: [
-                    { tab: '', text: "全部订单" },
-                    { tab: '0', text: "待付款" },
-                    { tab: '1', text: "代发货" },
-                    { tab: '2', text: "待收货" },
-                    { tab: '3', text: "已完成" },
-                ],
-                currentIndex: this.$route.query.tabCode,
                 goodsObj: [],
                 dropDown: false,
                 pageNum: 1,
                 pageSize: 20,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 txtsmg: "",
-                flag: '',
                 stop: true,
-                payM: false,	//支付框状态
-                paynum: '',	//支付金额
-                timestamp: '', //当前毫秒值 
             }
         },
         //获取屏幕高度
@@ -64,7 +51,6 @@
             this.styleObj1["height"] = h - height + "px"
         },
         mounted() {
-            this.timestamp = Date.parse(new Date())
             this.scrollFn()
             this.loadMore()
         },
@@ -74,24 +60,11 @@
             }
         },
         components: {
-            payModel
+            Search,
         },
         methods: {
-            // 付款弹框
-            alertpaymodel() {
-                this.payM = true;
-
-            },
-            cancelpaymodel() {
-                this.payM = false;
-            },
-            // 切换导航
-            tabNav(index) {
-                this.goodsObj = []
-                this.currentIndex = this.items[index].tab
-                this.pageNum = 1,
-                    this.loadMore()
-            },
+          
+          
             loadMore() {
                 let parameter = {
                     shopname: this.$route.query.name,
@@ -106,13 +79,14 @@
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             var aa = response.data.data.wareList
+                            console.log(aa)
                             this.txtsmg = "上拉加载更多"
                             if (aa.length < this.pageSize && aa.length > 0) {
                                 this.txtsmg = "已经加载完毕"
                                 this.stop = false
                             }
                             for (var i = 0; i < aa.length; i++) {
-                                aa[i].invalidTime = getMillisecond(aa[i].invalidTime)
+                                // aa[i].invalidTime = getMillisecond(aa[i].invalidTime)
                                 this.goodsObj.push(aa[i])
                             }
                             console.log(this.goodsObj)
@@ -171,34 +145,16 @@
                     })
                 });
             },
-
-
-
             itemClick(index) {
                 let oid = this.goodsObj[index].oid
                 this.$router.push("/order/orderDetail?id=" + oid);
             }
-
-
         }
     }
 </script>
 
 
 <style lang="scss" scoped>
-    .nav_type {
-        width: 100%;
-        height: 50px;
-        display: flex;
-        background: #fff;
-        line-height: 50px;
-        font-size: 14px;
-
-        a {
-            flex: 1;
-        }
-    }
-
     .drop-down {
         position: absolute;
         top: 50px;
@@ -210,7 +166,6 @@
         font-size: 14px;
         color: #666;
     }
-
     ul {
         padding-top: 5px;
     }
@@ -220,7 +175,7 @@
         display: flex;
         padding: 10px;
         border-bottom: 1px solid #d3d3d3;
-
+        background: #fff;
         .left {
             width: 5rem;
             height: 5rem;

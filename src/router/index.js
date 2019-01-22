@@ -16,6 +16,14 @@ import afterSaleDetail from '@/page/saleService/afterSaleDetail'
 import collection from '@/page/collection/collection'
 import record from '@/page/collection/record'
 import discuss from '@/page/discuss/discuss'
+import setpage from '@/page/setpage/setpage'
+import addresslist from '@/page/address/addresslist'
+import addpage from '@/page/address/addpage'
+
+
+
+
+
 Vue.use(Router)
 export default new Router({
     
@@ -122,7 +130,24 @@ export default new Router({
             name: 'discuss',
             component: discuss
         },
-
+        //设置页面
+        {
+            path: '/setpage',
+            name: 'setpage',
+            component: setpage
+        },
+        //地址列表
+        {
+            path: '/addresslist',
+            name: 'addresslist',
+            component: addresslist
+        },
+        //添加地址
+        {
+            path: '/addpage',
+            name: 'addpage',
+            component: addpage
+        },
   
     ]
 })

@@ -18,7 +18,7 @@
                 </div>
             </div>	
             <div style="position:relative;margin-top:37px;">
-                <button id="login_btn" class="button" style="width: 275px;margin:0 auto;" @click="getMessage">确定</button>
+                <button class="button" style="width: 275px;margin:0 auto;" @click="getMessage">确定</button>
             </div>
             <div style="position:relative;">
                 <div style="width: 275px;margin:0 auto;text-align: right;line-height:25px; ">

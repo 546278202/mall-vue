@@ -6,7 +6,7 @@
             <div class="bscroll-container">
                 <ul>
                     <li v-for="(item,index) in goodsObj">
-                        <div style="flex:1;height: 40px;line-height: 40px;background: #F5F5F5;padding: 0 10px;">{{item.lookTime.split(" ")[0]}}</div>
+                        <div style="flex:1;height: 40px;line-height: 40px;padding: 0 10px;">{{item.lookTime.split(" ")[0]}}</div>
                         <div style="display:flex;">
                             <div class="a1" style="margin-right:10px;">
                                 <img :src="item.warePic" style="height:5rem;width:5rem;display: block;">
@@ -18,7 +18,6 @@
                         </div>    
                     </li>
                     <div style="display: flex;justify-content: center;font-size: 14px;color:#666;height: 45px;align-items: center;">
-                        <!-- <mt-spinner :size="18" type="fading-circle" v-show="loadingState" ></mt-spinner> -->
                         <div style="margin-left:10px;">{{txtsmg}}</div>
                     </div>
                 </ul>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import store from './store/store'
 import App from './App'
 import router from './router'
+import './config/rem'
 /*引入公共样式*/
 import './style/common.css'
 import 'swiper/dist/css/swiper.css'
@@ -43,8 +44,8 @@ router.beforeEach((to, from, next) => {
 	if (to.matched.some(m => m.meta.auth)) {
 		console.log(store.state.baseUser)
 		// 对路由进行验证     
-		if (store.state.baseUser != null) { // 已经登陆       
-			next()   // 正常跳转到你设置好的页面     
+		if (store.state.baseUser != null) {   
+			next()   // 正常跳转  
 		}
 		else {
 			// 未登录则跳转到登陆界面，query:{ Rurl: to.fullPath}表示把当前路由信息传递过去方便登录后跳转回来；

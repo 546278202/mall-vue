@@ -2,11 +2,13 @@
     <div>
         <div class="My_top">
   			<div class="My-top-naver">
-			    <a class="My-top-left" id="goSet"><i class="iconfont icon-shezhi" style="font-size: 2rem ;"></i></a>
-		  	   	<a class="My-top-right">
+                <router-link class="My-top-left" :to="{path:'/setpage'}">
+                    <i class="iconfont icon-shezhi" style="font-size: 2rem ;"></i>
+                </router-link>
+                <router-link class="My-top-right" :to="{path:'/collection'}">
                     <div>消息</div>
                     <i class="iconfont icon-xiaoxi" style="font-size: 1.3rem ;"></i>
-                </a>
+                </router-link> 
 	  	   	</div>
             <div class="My-top-block">
 				<div style="height:1.5rem;text-align:center;color:#333333; display:flex;">
@@ -173,7 +175,7 @@ export default {
             height: 40px;
             line-height: 40px;
             padding: 0 10px;
-            font-size: 15px;
+            font-size: 0.7rem;
             .txt{
                 height: 25px;
             }

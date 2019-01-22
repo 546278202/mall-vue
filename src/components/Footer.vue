@@ -9,7 +9,6 @@
 </template>
 <script>
     import router from '../router'
-
     export default {
         data() {
             return {
@@ -29,7 +28,9 @@
             } else {
                 this.active = window.location.hash.split('?')[0].split('#')[1];
             }
-            this.getCarNum()
+            if(this.$store.state.baseUser){
+                this.getCarNum()
+            }
         },
         methods: {
             routerLink(item) {

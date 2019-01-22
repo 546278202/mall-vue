@@ -143,7 +143,7 @@
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				};
-				Indicator.open("加载中...");
+			
 				this.$http
 					.post(
 						process.env.API_HOST + "/mall_api/order/get_order_info",
@@ -157,12 +157,14 @@
 								this.txtsmg="已经加载完毕"
 								this.stop=false
 							}
-							for (var i = 0; i < aa.length; i++) {	
-								aa[i].invalidTime=getMillisecond(aa[i].invalidTime)
+							for (var i = 0; i < aa.length; i++) {
+								// aa[i].invalidTime=getMillisecond(aa[i].invalidTime)
 								this.goodsObj.push(aa[i])
 							}
-							console.log(this.goodsObj)
-							Indicator.close();
+							
+							if(this.goodsObj.length==0){
+								this.txtsmg="暂无数据"
+							}
 						}
 					})
 					.catch(error => {
