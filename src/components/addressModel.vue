@@ -1,171 +1,233 @@
 <template>
-        <div v-show="payshowstate">
-            <div class="bj-wrap"></div>
-            <div class="alert-wrap">
-                <div style="height:2.5rem;line-height: 2.5rem;text-align: center;display:flex;position:relative;">
-                    <span  style="width:40px;padding:0 10px;position:absolute;left:0;top:0;" @click="tocancel">
-                        <img src="../images/delete.png" style="width:14px;">
-                    </span>
-                    <span style="flex:1;text-align: center;">确认支付</span>
+    <div v-show="{{state}}">
+        <div class="bj-wrap"></div>
+        <div class="BgInner">
+            <div class="SelectedContent">
+                <span style="flex:1;">请选择区域:天津市-市辖区-河东区</span>
+                <span style="width:45px;text-align: center;" @click="closeModel"><i class="iconfont icon-guanbi" style="font-size: 1rem ;"></i></span>
+            </div>
+            <div ref="scroll_wrap" style="display:flex;height:100%;flex-direction: row;">
+                <div ref="menuFoodList1" :style='styleObj1'>
+                    <div class="bscroll-container">
+                        <ul style="text-align: left;overflow: scroll;padding-bottom:45px;flex-direction: column" @click="getProvince($event)">
+                            <li class="Single" v-for="(item,index) in items" :data-index="index"  :class="{active:index==currentIndex1}">{{item.name}}</li>
+                        </ul>
+                    </div>
                 </div>
-                <div style="height:3.75rem ;line-height:3.75rem ;text-align: center;color:#333;font-size: 30px;"><span>￥{{paynum}}</span></div>
-                <div class="AllPayList">
-                    <div class="PayList">
-                       
+                <div ref="menuFoodList2" :style='styleObj1'>
+                    <div class="bscroll-container">
+                        <ul style="text-align: left;overflow: scroll;padding-bottom:45px;flex-direction: column" @click="getCity($event)">
+                            <li class="Single" v-for="(item,index) in citydata" :data-index="index" :class="{active:index==currentIndex2}">{{item.name}}</li>
+                        </ul>
                     </div>
-                    <div class="PayList">
-                       
-                    </div>
-                    <div style="width: 80%;margin: 0 auto;margin-top:10px;margin-bottom:1.5rem;">
-                        <button class="button" @click='getpaycode'>确定</button>
+                </div>
+                <div ref="menuFoodList3" :style='styleObj1'>
+                    <div class="bscroll-container">
+                        <ul style="text-align: left;overflow: scroll;padding-bottom:45px;flex-direction: column" @click="getArea($event)">
+                            <li class="Single" v-for="(item,index) in AreaData" :data-index="index" :class="{active:index==currentIndex3}">{{item.name}}</li>
+                        </ul>
                     </div>
                 </div>
             </div>
+
         </div>
-    </template>
-    <script>
-        export default {
-            props: ["type", "payshowstate", "paynum"],
-            data () {
-                return {
-                    checkedValue:0,  
-                }
-            },
-            mounted() {
-               
-            },
-            methods: {
-                //向父组件传值
-                tocancel() {
-                    this.$emit("cancelpaymodel");
-                },
-                getpaycode(){
-                    this.$emit('transferUser',this.checkedValue);   
-                },
-                // 调用支付宝
-                ZhiFuBao(a, b, c) {
-                    let parameter = {
-                        "oid": a,
-                        "wareName": b,
-                        "price": c
-                    }
-                    this.$http
-                        .get(process.env.API_HOST + "/mall_api/pay/payH5", {
-                            params: parameter
-                        })
-                        .then(response => {
-                            if (response.status == 200 & response.statusText == "OK") {
-                                window.location.href = response.request.responseURL
-                            }
-                        })
-                        .catch(error => {
-                            Indicator.close();
-                            console.log(error);
-                        });
-                },
-                WeiXin(ordersInfoIds, waresName, shifukuan, ip) {
-                    let parameter = {
-                        "ordersInfoIds": ordersInfoIds,
-                        "waresName": waresName,
-                        "price": shifukuan * 100,
-                        "ip": ip,
-                        "tradeType": "MWEB",
-                    }
-                    this.$http
-                        .get(process.env.API_HOST + "/mall_api/pay/wxprepay", {
-                            params: parameter
-                        })
-                        .then(response => {
-                            if (response.status == 200 & response.statusText == "OK") {
-                                var urlStr = response.data.data.mwebUrl;
-                                var s1 = urlStr.split("amp;")[0];
-                                var s2 = urlStr.split("amp;")[1];
-                                var mwebUrl = s1 + s2;
-                                window.location.href = mwebUrl;
-                            }
-                        })
-                        .catch(error => {
-                            Indicator.close();
-                            console.log(error);
-                        });
-                }
+    </div>
+</template>
+<script>
+    import BScroll from 'better-scroll'
+    import data from '../config/city.json'
+    export default {
+        props: ["startModel","closeModel"],
+        data() {
+            return {
+                state:false,
+                items: data,  //省
+                citydata: [], //市
+                AreaData:[],  //区
+                foodScroll: null,
+                styleObj1: { "height": "100%", "width": "33.33%", "overflow": "hidden", 'font-size': '14px', },
+                currentIndex1:0,
+                currentIndex2:0,
+                currentIndex3:0,
             }
-    
-        };
-    </script>
-    <style lang="scss" scoped>
-        .bj-wrap {
-            width: 100%;
-            height: 100%;
-            z-index: 998;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            display: block;
-            background-color: rgba(0,0,0,.7);
+        },
+        mounted() {
+            console.log(data)
+
+        },
+        watch: {
+            starModel(val, old) {
+                this.$nextTick(function () {
+                    const listContainer1 = this.$refs.menuFoodList1;
+                    const listContainer2 = this.$refs.menuFoodList2;
+                    const listContainer3 = this.$refs.menuFoodList3;
+                    this.listenScroll(listContainer1)
+                    this.listenScroll(listContainer2)
+                    this.listenScroll(listContainer3)
+                })
+            },
+            // 城市数据
+            citydata(val, old) {
+                this.$nextTick(function () {
+                    const listContainer1 = this.$refs.menuFoodList1;
+                    const listContainer2 = this.$refs.menuFoodList2;
+                    const listContainer3 = this.$refs.menuFoodList3;
+                    this.listenScroll(listContainer1)
+                    this.listenScroll(listContainer2)
+                    this.listenScroll(listContainer3)
+                })
+            },
+        },
+        methods: {
+            startModel(){
+                this.state=true
+            },
+            closeModel(){
+                this.closeModel();       
+            },
+            listenScroll(element) {
+                this.foodScroll = new BScroll(element, {
+                    swipeTime: 2000,
+                    scrollY: true,
+                    click: true,
+                    probeType: 2,
+                    pullUpLoad: {
+                        threshold: 10
+                    },
+                    mouseWheel: {
+                        speed: 20,
+                        invert: false
+                    },
+                    useTransition: false
+                });
+            },
+            
+            getProvince(e) {
+                let index = e.target.dataset.index
+                this.citydata = this.items[index].sub
+                this.currentIndex1=index
+                this.AreaData=[]
+                this.currentIndex2=0
+            },
+            getCity(e){
+                let index = e.target.dataset.index
+                this.currentIndex2=index;
+                this.AreaData=this.citydata[index].sub
+                this.currentIndex3=0
+            },
+            getArea(e){
+                let index = e.target.dataset.index
+                this.currentIndex3=index;
+            },
+           
         }
-        .alert-wrap {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background: #fff;
-            z-index: 999;
-            height: 50%;
-            animation: myfirst 0.3s;
-            -moz-animation: myfirst 0.3s;	/* Firefox */
-            -webkit-animation: myfirst 0.3s;	/* Safari 和 Chrome */
-            -o-animation: myfirst 0.3s;	/* Opera */
-        }
-        .PayList {
-            height: 2.5rem;
-            line-height: 2.5rem;
-            display: flex;
-            padding: 0 40px;
-        }
-        .button {
-            background: #F3CB0A;
-            color: #fff;
-            border: 1px solid #F3CB0A;
-            width: 100%;
-            display: block;
-            height: 40px;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            -webkit-appearance: none;
-            padding: 0 .5rem;
-            margin: 0;
-            font-family: inherit;
-            font-size: .8rem;
-            text-align: center;
-            text-decoration: none;
+    };
+</script>
+<style lang="scss" scoped>
+    .bj-wrap {
+        width: 100%;
+        height: 100%;
+        z-index: 998;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: block;
+        background-color: rgba(0, 0, 0, .7);
+        overflow: hidden;
+    }
+
+    .BgInner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        background: #fff;
+        z-index: 10601;
+        font-size: 14px;
+        display: block;
+        text-align: left;
+        overflow: hidden;
+        animation: myfirst 0.3s;
+        -moz-animation: myfirst 0.3s;
+        /* Firefox */
+        -webkit-animation: myfirst 0.3s;
+        /* Safari 和 Chrome */
+        -o-animation: myfirst 0.3s;
+        /* Opera */
+    }
+
+    .SelectedContent {
+        background: #F3CB0A;
+        display: flex;
+        height: 45px;
+        line-height: 45px;
+        padding-left:10px;
+        color: #fff;
+        font-size: 0.7rem;
+        cursor: pointer;
+    }
+
+    ul {
+        display: flex;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+
+        .Single {
+            height: 45px;
+            line-height: 45px;
+            font-size: 0.7rem;
+            overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             cursor: pointer;
-            border-radius: 2rem;
+            padding: 0 10px;
         }
-        @keyframes myfirst{
-            from {height: 0%;}
-            to {height:50%;}
+    }
+    .active{
+        color: #F3CB0A;
+    }
+    @keyframes myfirst {
+        from {
+            height: 0%;
         }
-        /* Firefox */
-        @-moz-keyframes myfirst {
-            from {height: 0%;}
-            to {height:50%;}
+
+        to {
+            height: 60%;
         }
-        /* Safari 和 Chrome */
-        @-webkit-keyframes myfirst{
-            from {height: 0%;}
-            to {height:50%;}
+    }
+
+    /* Firefox */
+    @-moz-keyframes myfirst {
+        from {
+            height: 0%;
         }
-        /* Opera */
-        @-o-keyframes myfirst {
-            from {height: 0%;}
-            to {height:50%;}
+
+        to {
+            height: 60%;
         }
-        .mint-radiolist-label{
-            display: flex;
-            justify-content: space-between;
+    }
+
+    /* Safari 和 Chrome */
+    @-webkit-keyframes myfirst {
+        from {
+            height: 0%;
         }
-        
-    </style>
+
+        to {
+            height: 60%;
+        }
+    }
+
+    /* Opera */
+    @-o-keyframes myfirst {
+        from {
+            height: 0%;
+        }
+
+        to {
+            height: 60%;
+        }
+    }
+</style>

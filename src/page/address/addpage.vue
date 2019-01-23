@@ -12,17 +12,16 @@
                         <input placeholder="请输入收货人电话" v-model="phone" style="border:0;">
                         <div class="right_icon"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
                     </li>
-                    <li>
-                        <input placeholder="请输入所在区域" style="border:0;">
+                    <li @click.stop="startModel">
+                        <input placeholder="请输入所在区域"  disabled="disabled" style="border:0;background: #Fff;">
                         <div class="right_icon"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
                     </li>
-                    <li @click="getAddressModel">
+                    <li >
                         <input placeholder="请输入详细地址" v-model="detail_address" style="border:0;">
                         <div class="right_icon"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
                     </li>
                     <li>
                         <input placeholder="设置默认地址" v-model="detail_address"  disabled="disabled" style="border:0;background: #Fff;">
-
                         <span style="margin-right:10px" @change="tapVal"><mt-switch v-model="flag"></mt-switch></span>
                     </li>
                 </ul>
@@ -31,9 +30,11 @@
                 <a class="button" @click="saveAddress">保存</a>
             </div>
         </div>
-        <!-- 支付框 -->
+    
         <addressModel ref="mychild"
-            :payshowstate='payM'>
+            :startModel='startModel'
+            :closeModel='closeModel'     
+            >
         </addressModel>
     </div>
 </template>
@@ -53,7 +54,7 @@
                 flag:true,//默认地址
                 defaultAddress:0,//0默认
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
-                payM:false,
+                state:false,
             }
         },
 
@@ -75,8 +76,11 @@
             addressModel
         },
         methods: {
-            getAddressModel() {
-                this.payM = true;
+            startModel(e) {
+                // this.$refs.mychild.startModel()
+            },
+            closeModel(e) {
+                this.state =false                
             },
             //获取默认地址
             tapVal(){
