@@ -2,18 +2,16 @@
     <div>
         <mt-popup v-model="popupVisible" position="" modal="false" pop-transition="popup-fade">
             <ul :style="styleObj1">
-                <div class="top-naver" style="display:flex;height: 50px;align-items: center;border-bottom: 1px solid #ccc;background: #fff;box-sizing: border-box;">
+                <div class="top-naver">
                     <a class="top-left" style="width: 45px;align-items: center;display: flex;justify-content: center;"
                         @click="closeSeachModel">
                         <i class="iconfont icon-fanhui" style="font-size: 1rem"></i>
                     </a>
                     <div class="searchInput">
                         <i class="iconfont icon-iconfontzhizuobiaozhun22"></i>
-                        <input placeholder="请输入商品名称" v-model="something" style="width: 100%;border:0;">
+                        <input placeholder="请输入商品名称" v-model="something">
                     </div>
-                    <a class="top-right" style="width:45px;font-size: 16px;" @click="loadMore">
-                        搜索
-                    </a>
+                    <a class="top-right" style="width: 2.25rem;"  @click="loadMore">搜索</a>
                 </div>
                 <div style="height: 100%;display: block;font-size: 14px;text-align: left;">
                     <div style="padding:10px" v-if="goodsObj">
@@ -55,6 +53,7 @@
         },
         mounted() {
             this.goodsObj=JSON.parse(localStorage.getItem('SearchHistory'))
+            console.log(this.goodsObj)
         },
         methods: {
             // 被父调用
@@ -97,24 +96,37 @@
     };
 </script>
 <style lang="scss" scoped>
+    .top-naver{
+        display:flex;
+        height: 2.5rem;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+        background: #fff;
+    }
+    .searchInput {
+        position: relative;
+        border: 1px solid #ccc;
+        height: 1.5rem;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        line-height: 1.5rem;
+        flex: 1;
+        padding: 0 0.5rem;
+        display: flex;
+        align-items: center;
+        input{
+            width: 100%;
+            border:0;
+            font-size:0.7rem;
+        }
+    }
     .shareUl {
         width: 100%;
         height: 580px;
         background-color: #fff;
     }
 
-    .searchInput {
-        position: relative;
-        border: 1px solid #ccc;
-        height: 30px;
-        border-radius: 30px;
-        overflow: hidden;
-        line-height: 30px;
-        flex: 1;
-        padding: 0 10px;
-        display: flex;
-        align-items: center;
-    }
+    
 
     .DelHist {
         float: right;

@@ -4,17 +4,19 @@
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
-                    <li v-for="(item,index) in goodsObj" :key="index">
-                        <router-link :to="{path:'/addresslist'}">
-                            <div class="MsgTitle">
-                                <div style="width:100%;">
-                                    <span >万龙</span><span style="float:right;">18613844440</span>
-                                </div>
-                                <div style="width:100%;">北京市-市辖区- </div>
-                                <div style="width:100%;">测试1</div>
+                    <li 
+                        v-for="(item,index) in goodsObj" 
+                        @click="goeditpage(index)"
+                        :key="index" 
+                        :class="item.defaultAddress==0 ? 'active':''">
+                        <div class="MsgTitle">
+                            <div style="width:100%;">
+                                <span >{{item.receiverName}}</span><span style="float:right;">{{item.receiverPhone}}</span>
                             </div>
-                            <div class="Edit"><i class="iconfont icon-bianji-copy" style="font-size: 1rem ;"></i></div>
-                        </router-link>
+                            <div style="width:100%;">{{item.receiverProvince+"-"+item.receiverCity+"-"+item.receiverDistrict}}</div>
+                            <div style="width:100%;">{{item.receiverAddress}}</div>
+                        </div>
+                        <div class="Edit"><i class="iconfont icon-bianji-copy" style="font-size: 1rem ;"></i></div>
                     </li>
                 </ul>
             </div>
@@ -33,7 +35,7 @@
         data() {
             return {
                 goodsObj: [],
-                styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
+                styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },                
             }
         },
 
@@ -67,12 +69,20 @@
                     .catch(error => { });
             },
 
-            // 退出登录
-            signOut() {
-                MessageBox.confirm('确定执行此操作?').then(action => {
-                    sessionStorage.removeItem('baseUser')
-                    this.$router.push("/login")
-                });
+            // 跳转编辑
+            goeditpage(index){
+                let aa=this.goodsObj[index]
+                let arr={
+                    shipId:aa.shipId,
+                    receiverName:aa.receiverName,
+                    receiverPhone:aa.receiverPhone,
+                    receiverAddress:aa.receiverAddress,
+                    defaultAddress:aa.defaultAddress,
+                    receiverProvince:aa.receiverProvince,
+                    receiverCity:aa.receiverCity,
+                    receiverDistrict:aa.receiverDistrict,
+                }    
+                this.$router.push({path:'editpage' ,query:arr})
             },
             scrollFn() {
                 this.$nextTick(() => {
@@ -101,7 +111,7 @@
 <style lang="scss" scoped>
     ul {
         overflow: hidden;
-        a{
+        li{
             display: flex;
             width: 100%;
             padding-left: 10px;
@@ -158,4 +168,5 @@
             border-radius: 2rem;
         }
     }
+    .active{color:#F3CB0A}
 </style>

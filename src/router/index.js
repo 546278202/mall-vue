@@ -17,16 +17,13 @@ import collection from '@/page/collection/collection'
 import record from '@/page/collection/record'
 import discuss from '@/page/discuss/discuss'
 import setpage from '@/page/setpage/setpage'
-import addresslist from '@/page/address/addresslist'
+import list from '@/page/address/list'
 import addpage from '@/page/address/addpage'
-
-
-
-
+import editpage from '@/page/address/editpage'
 
 Vue.use(Router)
 export default new Router({
-    
+
     routes: [
         {
             path: '/',
@@ -47,28 +44,28 @@ export default new Router({
             path: '/buyCar',
             name: 'buyCar',
             component: buyCar,
-            meta:{auth:true} // 设置当前路由需要校验  不需要校验的路由就不用写了
+            meta: { auth: true } // 设置当前路由需要校验  不需要校验的路由就不用写了
         },
         {
             path: '/getSUm',
             name: 'getSUm',
             component: getSum,
-            meta:{auth:true} 
-            
-        }, 
+            meta: { auth: true }
+
+        },
         {
             path: '/nowbuy',
             name: 'nowbuy',
             component: nowbuy,
-            meta:{auth:true} 
-            
-        }, 
-      
+            meta: { auth: true }
+
+        },
+
         {
             path: '/mine',
             name: 'mine',
             component: mine,
-            meta:{auth:true}
+            meta: { auth: true }
         },
         {
             path: '/login',
@@ -98,7 +95,7 @@ export default new Router({
             path: '/order/orderDetail',
             name: 'orderDetail',
             component: orderDetail
-          
+
         },
         //售后服务
         {
@@ -138,9 +135,9 @@ export default new Router({
         },
         //地址列表
         {
-            path: '/addresslist',
-            name: 'addresslist',
-            component: addresslist
+            path: '/list',
+            name: 'list',
+            component: list
         },
         //添加地址
         {
@@ -148,7 +145,13 @@ export default new Router({
             name: 'addpage',
             component: addpage
         },
-  
+        //编辑地址
+        {
+            path: '/editpage',
+            name: 'editpage',
+            component: editpage
+        },
+
     ]
 })
 

@@ -16,13 +16,15 @@
                         <input placeholder="请输入所在区域" v-model="pro_city_area" disabled="disabled" style="border:0;background: #Fff;">
                         <div class="right_icon"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
                     </li>
-                    <li >
+                    <li>
                         <input placeholder="请输入详细地址" v-model="detail_address" style="border:0;">
                         <div class="right_icon"><i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i></div>
                     </li>
                     <li>
-                        <input placeholder="设置默认地址"   disabled="disabled" style="border:0;background: #Fff;">
-                        <span style="margin-right:10px" @change="tapVal"><mt-switch v-model="flag"></mt-switch></span>
+                        <input placeholder="设置默认地址" disabled="disabled" style="border:0;background: #Fff;">
+                        <span style="margin-right:10px" @change="tapVal">
+                            <mt-switch v-model="flag"></mt-switch>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -30,33 +32,30 @@
                 <a class="button" @click="saveAddress">保存</a>
             </div>
         </div>
-    
-        <addressModel ref="mychild"
-            :startModel='startModel'
-            :closeModel='closeModel' 
-            @listenToChildEvent="listenToChildEvent"    
-            >
+
+        <addressModel ref="mychild" :startModel='startModel' :closeModel='closeModel' @listenToChildEvent="listenToChildEvent">
         </addressModel>
     </div>
 </template>
 <script>
     import Header from '../../components/Header'
     import BScroll from 'better-scroll'
-    import { Indicator, InfiniteScroll, Spinner, Popup, MessageBox,Toast ,Switch } from "mint-ui";
+    import { Indicator, InfiniteScroll, Spinner, Popup, MessageBox, Toast, Switch } from "mint-ui";
     import { getNowFormatDate } from "../../config/mUtils"
     import addressModel from "../../components/addressModel";
 
     export default {
         data() {
             return {
-                name:'',
-                phone:'',
-                pro_city_area:'', //省市区
-                detail_address:'',//详细地址
-                flag:true,//默认地址
-                defaultAddress:0,//0默认
+                data: '',
+                name: this.$route.query.receiverName,
+                phone: this.$route.query.receiverPhone,
+                pro_city_area: this.$route.query.receiverProvince + "-" + this.$route.query.receiverCity + "-" + this.$route.query.receiverDistrict, //省市区
+                detail_address: this.$route.query.receiverAddress,//详细地址
+                flag: true,//默认地址
+                defaultAddress: 0,//0默认
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
-                state:false,
+                state: false,
             }
         },
 
@@ -69,8 +68,10 @@
 
         },
         mounted() {
-            this.$store.commit('changeTitle', "新增地址")
+            this.$store.commit('changeTitle', "编辑地址")
             this.scrollFn()
+            this.data = this.$route.query
+            console.log(this.$route.query)
         },
 
         components: {
@@ -82,48 +83,48 @@
                 this.$refs.mychild.startModel()
             },
             closeModel(e) {
-                this.$refs.mychild.closeModel()           
+                this.$refs.mychild.closeModel()
             },
-            listenToChildEvent(e){
-                this.pro_city_area=e
+            listenToChildEvent(e) {
+                this.pro_city_area = e
             },
             //获取默认地址
-            tapVal(){
-                if(this.flag==true){
-                    this.defaultAddress=0
-                }else{
-                    this.defaultAddress=1
+            tapVal() {
+                if (this.flag == true) {
+                    this.defaultAddress = 0
+                } else {
+                    this.defaultAddress = 1
                 }
             },
             //保存地址
             saveAddress() {
-                let parameter = { 
-                    userId:this.$store.state.baseUser.userId,
-                    receiverName:this.name,
-                    receiverPhone:this.phone,
-                    receiverProvince:this.pro_city_area.split("-")[0],
-                    receiverCity:this.pro_city_area.split("-")[1],
-                    receiverDistrict:this.pro_city_area.split("-")[2],
-                    receiverAddress:this.detail_address,
-                    defaultAddress:this.defaultAddress,
+                let parameter = {
+                    shipId: this.$route.query.shipId,
+                    userId: this.$store.state.baseUser.userId,
+                    receiverName: this.name,
+                    receiverPhone: this.phone,
+                    receiverProvince: this.pro_city_area.split("-")[0],
+                    receiverCity: this.pro_city_area.split("-")[1],
+                    receiverDistrict: this.pro_city_area.split("-")[2],
+                    receiverAddress: this.detail_address,
+                    defaultAddress: this.defaultAddress,
                 };
-                if(this.name=='' || this.phone=='' || this.pro_city_area=='' || this.pro_city_area=='' || this.detail_address==''){
-                    Toast({message: '信息填写不完整！'});
+                if (this.name == '' || this.phone == '' || this.pro_city_area == '' || this.pro_city_area == '' || this.detail_address == '') {
+                    Toast({ message: '信息填写不完整！' });
                     return false;
                 }
-                
+
                 this.$http
-                    .post(process.env.API_HOST + "/mall_api/shipping/add", parameter)
+                    .post(process.env.API_HOST + "/mall_api/shipping/update_shipping", parameter)
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             console.log(response.data.data)
-                            Toast({message: '添加成功'});
-                            this.goodsObj = response.data.data
+                            Toast({ message: '编辑成功' });
                         }
                     })
                     .catch(error => { });
             },
-               
+
             scrollFn() {
                 this.$nextTick(() => {
                     if (!this.scroll) {
@@ -135,23 +136,13 @@
                             pullUpLoad: {
                                 threshold: 10
                             },
-                            mouseWheel: {    // pc端同样能滑动
+                            mouseWheel: {
                                 speed: 20,
                                 invert: false
                             },
-                            useTransition: false  // 防止iphone微信滑动卡顿
+                            useTransition: false
                         });
                     }
-                    //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
-                    this.scroll.on('touchEnd', (pos) => {
-                        if (this.scroll.maxScrollY > pos.y + 10) {
-                            if (this.stop == false) {
-                                return false
-                            }
-                            this.txtsmg = "上拉加载更多"
-                            this.pageNum++
-                        }
-                    })
                 });
             }
         }
@@ -172,9 +163,9 @@
             padding-left: 10px;
 
             input {
-                height: 100%;
-                line-height: 50px;
                 width: 100%;
+                height:40px;
+                font-size:14px;
             }
 
             .right_icon {

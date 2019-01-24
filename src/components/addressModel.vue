@@ -1,9 +1,9 @@
 <template>
-    <div v-show="{{state}}">
+    <div v-show="state">
         <div class="bj-wrap"></div>
         <div class="BgInner">
             <div class="SelectedContent">
-                <span style="flex:1;">请选择区域:天津市-市辖区-河东区</span>
+                <span style="flex:1;">请选择区域:{{currentPro+"-"+currentCity+"-"+currentArea}}</span>
                 <span style="width:45px;text-align: center;" @click="closeModel"><i class="iconfont icon-guanbi" style="font-size: 1rem ;"></i></span>
             </div>
             <div ref="scroll_wrap" style="display:flex;height:100%;flex-direction: row;">
@@ -37,7 +37,6 @@
     import BScroll from 'better-scroll'
     import data from '../config/city.json'
     export default {
-        props: ["startModel","closeModel"],
         data() {
             return {
                 state:false,
@@ -49,6 +48,10 @@
                 currentIndex1:0,
                 currentIndex2:0,
                 currentIndex3:0,
+                currentPro:'', 
+                currentCity:'',
+                currentArea:'',
+
             }
         },
         mounted() {
@@ -83,7 +86,7 @@
                 this.state=true
             },
             closeModel(){
-                this.closeModel();       
+                this.state=false      
             },
             listenScroll(element) {
                 this.foodScroll = new BScroll(element, {
@@ -108,16 +111,22 @@
                 this.currentIndex1=index
                 this.AreaData=[]
                 this.currentIndex2=0
+                this.currentPro=e.target.innerText
+                
             },
             getCity(e){
                 let index = e.target.dataset.index
                 this.currentIndex2=index;
                 this.AreaData=this.citydata[index].sub
                 this.currentIndex3=0
+                this.currentCity=e.target.innerText
             },
             getArea(e){
                 let index = e.target.dataset.index
                 this.currentIndex3=index;
+                this.currentArea=e.target.innerText
+                this.closeModel()
+                this.$emit("listenToChildEvent",this.currentPro+"-"+this.currentCity+"-"+this.currentArea)
             },
            
         }

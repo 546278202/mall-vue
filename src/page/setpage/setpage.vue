@@ -4,7 +4,7 @@
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
-                    <router-link :to="{path:'/addresslist'}" class="detail_top">
+                    <router-link :to="{path:'/list'}" class="detail_top">
                         <div>收货地址</div>		  	   
                         <div class="top-right"><i class="iconfont icon-arrow_right" style="font-size: 0.8rem ;"></i></div>	
                     </router-link>

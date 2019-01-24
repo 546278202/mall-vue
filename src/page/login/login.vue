@@ -1,158 +1,145 @@
-<template> 
-    <div style="display: flex;background:#F3CB0A;height: 100%;justify-content: center;align-items: center;">
+<template>
+    <div class="wrap">
         <div class="login-content">
-            <div class="login-top"><a href="../regist/step1.html">注册</a></div>
-            <div class="content-block" style="text-align: center;margin: 0;height:74px;">
-                <img src="../../images/login1.png" style="height:74px;">
+            <div style="display:flex;justify-content: center;margin-top:1rem;font-size: 18px;">
+                <div style="text-align:right;width: 13.75rem;">注册</div>
             </div>
-            <div style="margin-top:40px;">
+            <div class="content-block" style="text-align: center;margin: 0;height:3.7rem ;">
+                <img src="../../images/login1.png" style="height:3.7rem ;">
+            </div>
+            <div style="margin-top:2rem;">
                 <div class="item">
                     <i class="iconfont icon-zhanghao"></i>
                     <input type="text" v-model="input1" placeholder="请输入号码/手机号">
                 </div>
-            </div>	
-            <div style="margin-top:15px;">
+            </div>
+            <div style="margin-top:0.75rem;">
                 <div class="item">
                     <i class="iconfont icon-mima"></i>
                     <input type="text" v-model="input2" placeholder="请输入密码">
                 </div>
-            </div>	
-            <div style="position:relative;margin-top:37px;">
-                <button class="button" style="width: 275px;margin:0 auto;" @click="getMessage">确定</button>
             </div>
-            <div style="position:relative;">
-                <div style="width: 275px;margin:0 auto;text-align: right;line-height:25px; ">
-                    <!-- <a href="../forget/step1.html" style="font-size:10px;color:#666;">忘记密码</a>
-                    <a href="msglogin.html" style="font-size:10px;color:#666;float:left;">快捷登陆</a> -->
-                </div>
+            <div style="display:flex;justify-content: center;margin-top:2rem;">
+                <button class="button" @click="getMessage">确定</button>
             </div>
         </div>
-    </div> 
+    </div>
 </template>
 <script>
-import md5 from 'js-md5';
-import { Indicator,Toast } from 'mint-ui'
-export default {
-    data () {
-        return {
-            dataList:[],
-            message:'',
-            input1:'',
-            input2:''
-        }
-    },
-    mounted(){
+    import md5 from 'js-md5';
+    import { Indicator, Toast } from 'mint-ui'
+    export default {
+        data() {
+            return {
+                dataList: [],
+                message: '',
+                input1: '',
+                input2: ''
+            }
+        },
+        mounted() {
 
-    },
-    
-    components:{
-      
-    },
-    created() {
-        
-    },
-    methods: {
-        getMessage:function(){
-            let data={  
-                userName:this.input1,
-                pwd:md5(this.input2)
-            }
-            if(data.userName==''){
-                return false
-            }
-            if(data.pwd==''){
-                return false
-            }
-            console.log(data)
-            this.$http.post(process.env.API_HOST + "/mall_api/user/login", data)
-            .then( (response) => {
-                let res=response.data;
-                if(res.code==0 && res.success==true){
-                    sessionStorage.baseUser=JSON.stringify(res.data);
-                    this.$store.commit('changeLogin',JSON.stringify(res.data));   
-                    setTimeout(()=>{
-                        this.$router.push({path:'/home'});
-                    },600)
-                    Indicator.close();
-                }else{
-                    Toast(res.msg);
+        },
+
+        components: {
+
+        },
+        created() {
+
+        },
+        methods: {
+            getMessage: function () {
+                let data = {
+                    userName: this.input1,
+                    pwd: md5(this.input2)
                 }
-            
-            })
-            .catch( (error) => {
-                Indicator.close();
-                console.log(error);
-            })    
-        } 
-    },
-}
+                if (data.userName == '' || data.pwd == '') {
+                    return false
+                }
+                this.$http.post(process.env.API_HOST + "/mall_api/user/login", data)
+                    .then((response) => {
+                        let res = response.data;
+                        if (res.code == 0 && res.success == true) {
+                            sessionStorage.baseUser = JSON.stringify(res.data);
+                            this.$store.commit('changeLogin', JSON.stringify(res.data));
+                            setTimeout(() => {
+                                this.$router.push({ path: '/home' });
+                            }, 600)
+                        } else {
+                            Toast(res.msg);
+                        }
+
+                    })
+                    .catch((error) => {})
+            }
+        },
+    }
 </script>
 
 <style lang="scss" scoped>
-    #app {
+    .wrap {
+        display: flex;
         background: #F3CB0A;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
     }
-    .item{
-        position:relative;
-        width: 275px;
-        margin:0 auto;
+
+    .item {
+        position: relative;
+        width: 13.75rem;
+        margin: 0 auto;
         overflow: hidden;
-        height: 40px;
-        padding-left: 30px;
-        background:#fff;
+        height: 2rem;
+        padding-left:10px;
+        background: #fff;
         border: 1px solid #ccc;
-        font-size:14px;
-        line-height:40px;
-        border-radius: 20px;
-        text-align:left;
-        input{
-            width: 100%;
+        font-size: 0.7rem;
+        line-height: 2rem;
+        border-radius: 1rem;
+        text-align: left;
+        box-sizing: border-box;
+        display: flex;
+        input {
+            width:100%;
+            font-size:0.7rem;
+            border-radius: 1rem;
         }
     }
+
     .login-content {
         background: #fff;
         border-radius: 20px;
         height: 20rem;
         width: 100%;
     }
-    .login-top {
-        text-align: right;
-        padding: 5%;
-        padding-right: 10%;
-        padding-bottom: 0;
-        height: 60px;
-    }
-    .login-top>a {
-        color: #333;
-        font-size: 15px;
-    }
     .icon-zhanghao {
-        position: absolute;
         left: 5px;
         font-size: 1.2rem;
         color: #000;
     }
-    .iconfont{
-        position: absolute;
+
+    .iconfont {
         left: 5px;
         font-size: 1.2rem;
         color: #000;
     }
-    .button{
+
+    .button {
         background: #F3CB0A;
         color: #fff;
         border: 1px solid #F3CB0A;
-        width: 100%;
+        width: 13.75rem;
         display: block;
-        height: 40px;
+        height: 2rem;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         -webkit-appearance: none;
         padding: 0 .5rem;
         margin: 0;
         font-family: inherit;
-        font-size: 15px;
-        line-height: 40px;
+        font-size: 0.75rem;
+        line-height: 2rem;
         text-align: center;
         text-decoration: none;
         text-overflow: ellipsis;
@@ -160,5 +147,4 @@ export default {
         cursor: pointer;
         border-radius: 2rem;
     }
-    
 </style>

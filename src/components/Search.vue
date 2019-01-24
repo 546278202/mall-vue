@@ -1,14 +1,14 @@
 <template>
-    <div class="top-naver" style="display:flex;height: 50px;align-items: center;border-bottom: 1px solid #ccc;background: #fff;">
-        <a class="top-left" style="line-height: 2.5rem;width: 45px;" @click="$router.back(-1)">
+    <div class="top-naver">
+        <a class="top-left" style="line-height: 2.5rem;width: 2.25rem;" @click="$router.back(-1)">
             <i class="iconfont icon-fanhui" style="font-size: 1rem"></i>
         </a>
-        <div class="searchInput" >
+        <div class="searchInput">
             <i class="iconfont icon-iconfontzhizuobiaozhun22"></i>
-            <input placeholder="请输入商品名称"  @click="clickSearch" style="width: 100%;border:0;">
+            <input placeholder="请输入商品名称" @click="clickSearch">
         </div>
-        <slot name='logo'>  
-            <a class="top-right" style="width:45px;">
+        <slot name='logo'>
+            <a class="top-right" style="width: 2.25rem;">
                 <i class="iconfont icon-xiaoxi" style="font-size: 1rem ;"></i>
                 <p style="font-size: 0.6rem ;">消息</p>
             </a>
@@ -16,39 +16,51 @@
     </div>
 </template>
 <script>
-export default {
-    data () {
-        return {
-            message:''
-        }
-    },
-    mounted(){
-        
-    },
-    methods: {
-        goBack() {
-            this.$route.go(-1)
+    export default {
+        data() {
+            return {
+                message: ''
+            }
         },
-        // 子调用父
-        clickSearch(){
-            this.$emit('SearchModel')
+        mounted() {
+
         },
-      
-    },    
-    
-}
+        methods: {
+            goBack() {
+                this.$route.go(-1)
+            },
+            // 子调用父
+            clickSearch() {
+                this.$emit('SearchModel')
+            },
+
+        },
+
+    }
 </script>
 <style scoped>
-    .searchInput{
+    .top-naver{
+        display:flex;
+        height: 2.5rem;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+        background: #fff;
+    }
+    .searchInput {
         position: relative;
         border: 1px solid #ccc;
-        height: 30px;
-        border-radius: 30px;
+        height: 1.5rem;
+        border-radius: 1.5rem;
         overflow: hidden;
-        line-height: 30px;
-        flex:1;
-        padding: 0 10px;
+        line-height: 1.5rem;
+        flex: 1;
+        padding: 0 0.5rem;
         display: flex;
         align-items: center;
+        input{
+            width: 100%;
+            border:0;
+            font-size:0.7rem;
+        }
     }
 </style>
