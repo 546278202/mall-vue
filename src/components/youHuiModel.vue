@@ -9,7 +9,7 @@
                 <div class="bscroll-container">
                     <ul>
                         <li v-for="(item,index) in goodsObj" :key="index" >
-                            <div></div>
+                            <div>{{item.code}}</div>
                             <div style="flex:1;padding:0 10px;"><input placeholder="输入兑换码" v-model="code" style="border:0;font-size:0.7rem;"></div>
                             <div class="checkCode"><span @click="checkYuiHuiCode($event)" :data-index=index >确定</span></div>
                         </li>
@@ -31,7 +31,9 @@
             return {
                 code:'',
                 warenumber:'',
-                goodsObj:[1],
+                goodsObj:[
+                    {code:1212}
+                ],
                 styleObj1: { "height": '100%', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
             };
         },
@@ -86,7 +88,8 @@
                             console.log(response.data.data)
                             Toast({ message: '校验成功' });
                         }else{
-                            this.
+                            let aa={code:1213}
+                            this.goodsObj.push(aa)
                             Toast({ message: '校验失败' });
                             return false
                         }
