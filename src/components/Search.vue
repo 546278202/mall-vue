@@ -5,7 +5,7 @@
         </a>
         <div class="searchInput">
             <i class="iconfont icon-iconfontzhizuobiaozhun22"></i>
-            <input placeholder="请输入商品名称" @click="clickSearch">
+            <input placeholder="请输入商品名称" @click="clickSearch" style="width: 100%;font-size:0.7rem;">
         </div>
         <slot name='logo'>
             <a class="top-right" style="width: 2.25rem;">
@@ -57,10 +57,5 @@
         padding: 0 0.5rem;
         display: flex;
         align-items: center;
-        input{
-            width: 100%;
-            border:0;
-            font-size:0.7rem;
-        }
     }
 </style>

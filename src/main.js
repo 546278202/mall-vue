@@ -42,7 +42,7 @@ axios.interceptors.response.use(function (config) {
 
 router.beforeEach((to, from, next) => {
 	if (to.matched.some(m => m.meta.auth)) {
-		console.log(store.state.baseUser)
+		// console.log(store.state.baseUser)
 		// 对路由进行验证     
 		if (store.state.baseUser != null) {   
 			next()   // 正常跳转  

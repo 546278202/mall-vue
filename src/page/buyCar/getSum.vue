@@ -1,10 +1,10 @@
 <template>
-    <div >
+    <div>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
                     <Header></Header>
-                    <div class="DefaultAddress">
+                    <router-link :to="{path:'/list'}" class="DefaultAddress">
                         <div class="Edit" style="padding-right: 20px;">
                             <span style="display:flex;align-items: center;">
                                 <img src="../../images/Location.png" style="height:30px;">
@@ -25,9 +25,9 @@
                             </div>
                         </div>
                         <div class="Edit">
-                            <i class="iconfont icon-arrow_right" style="font-size: 1rem ;"></i>
+                            <i class="iconfont icon-arrow_right" style="font-size:0.8rem;"></i>
                         </div>
-                    </div>
+                    </router-link>
                     <div>
                         <li v-for="(item,index1) in goodsObj" :key="index1">
                             <div class="ShopName">
@@ -63,18 +63,17 @@
                                         </div>
                                     </div>
 
-                                    <div class="YuHuiMa" style="height:45px;line-height:45px;display:flex;font-size:0.8rem;border-top: 1px solid #dcdcdc;padding: 0px 10px;justify-content: space-between;">
-                                        <div @click="alerts" style="flex:1;text-align: left;">输入优惠码：</div>
+                                    <div v-if="list.couponPrice!=null" class="YuHuiMa">
+                                        <div @click="getYouHuiModel(list.warenumber)" style="flex:1;text-align: left;">输入优惠码：</div>
                                         <div>已优惠￥0.00</div>
                                     </div>
-
                                 </div>
                             </div>
-                            <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
+                            <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">发票：</div>
                                 <div style="flex:1;line-height:45px;text-align:right;">不使用</div>
                             </div>
-                            <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
+                            <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">买家留言：</div>
                                 <div style="flex:1;line-height:45px;">
                                     <input placeholder="填写内容已和卖家协商确认">
@@ -105,16 +104,18 @@
             </div>
         </div>
         <!-- 优惠卷 -->
-        <showModel 
-            type='alert' 
+        <youHuiModel 
+            ref="youhui" 
             @tocancel='cancelfall' 
             :showstate='showa'>
-        </showModel>
+        </youHuiModel>
         <!-- 支付框 -->
-        <payModel type='alertpaymodel' ref="mychild"
+        <payModel 
+            type='alertpaymodel' 
+            ref="mychild" 
             @cancelpaymodel='cancelpaymodel' 
-            :payshowstate='payM' 
-            @transferUser='transferUser'   
+            :payshowstate='payM'
+            @transferUser='transferUser' 
             :paynum='totalMoney+totalFare-totalpreferential'>
         </payModel>
     </div>
@@ -122,7 +123,7 @@
 <script>
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
-    import showModel from "../../components/showModel";
+    import youHuiModel from "../../components/youHuiModel";
     import payModel from "../../components/payModel";
     import BScroll from 'better-scroll'
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
@@ -158,14 +159,14 @@
         },
         //获取屏幕高度
         beforeMount(height) {
-            var height =0
+            var height = 0
             var h = document.documentElement.clientHeight || document.body.clientHeight;
             this.styleObj1["height"] = h - height + "px"
         },
         components: {
             Header,
             Footer,
-            showModel,
+            youHuiModel,
             payModel
         },
         methods: {
@@ -186,11 +187,14 @@
                             },
                             useTransition: false  // 防止iphone微信滑动卡顿
                         });
-                    } 
+                    }
                 });
             },
-            alerts() {
+            getYouHuiModel(e) {
                 this.showa = true;
+                this.$refs.youhui.getDomHeight(e)
+                this.$refs.youhui.scrollFn("ww")
+
             },
             cancelfall() {
                 this.showa = false
@@ -205,7 +209,7 @@
                 } else {
                     this.$router.push("/order?tabCode=0")
                     // window.location.href = 'orderdetail.html?orderNo=' + orderNo
-                   
+
                 }
             },
 
@@ -374,7 +378,6 @@
                 data = JSON.stringify(data);
                 var parameter = { orders: data };
                 console.log(parameter);
-                Indicator.open("加载中...");
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
                     .then(response => {
@@ -425,11 +428,21 @@
         flex-direction: column;
     }
 
-    ul{
-        padding-bottom:3rem;
+    ul {
+        padding-bottom: 3rem;
+        font-size: 0.7rem;
+
         li {
             margin-top: 5px;
             background: #fff;
+            .YuHuiMa{
+                height:45px;
+                line-height:45px;
+                display:flex;
+                border-top: 1px solid #dcdcdc;
+                padding: 0px 10px;
+                justify-content: space-between;
+            }
         }
 
         .ShopName {
@@ -504,10 +517,11 @@
     .DefaultAddress {
         display: flex;
         width: 100%;
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         padding: 0px 10px;
         padding-right: 5px;
         background: #fff;
+        margin-top: 5px;
 
         .Edit {
             display: flex;
@@ -535,6 +549,7 @@
         border-radius: 2px;
         -webkit-appearance: none;
         outline: 0;
+        font-size: 0.7rem;
     }
 
     .Postage {

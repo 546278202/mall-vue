@@ -119,7 +119,6 @@
 <script>
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
-    import showModel from "../../components/showModel";
     import payModel from "../../components/payModel";
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
     export default {
@@ -150,7 +149,6 @@
         components: {
             Header,
             Footer,
-            showModel,
             payModel
         },
         methods: {

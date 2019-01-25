@@ -1,9 +1,9 @@
 <template>
     <div>
-        <mt-popup v-model="popupVisible" position="" modal="false" pop-transition="popup-fade">
+        <mt-popup v-model="popupVisible" position="right" modal="true" closeOnClickModal="true" pop-transition="popup-fade">
             <ul :style="styleObj1">
                 <div class="top-naver">
-                    <a class="top-left" style="width: 45px;align-items: center;display: flex;justify-content: center;"
+                    <a class="top-left" style="width: 2.25rem;align-items: center;display: flex;justify-content: center;"
                         @click="closeSeachModel">
                         <i class="iconfont icon-fanhui" style="font-size: 1rem"></i>
                     </a>
@@ -11,7 +11,7 @@
                         <i class="iconfont icon-iconfontzhizuobiaozhun22"></i>
                         <input placeholder="请输入商品名称" v-model="something">
                     </div>
-                    <a class="top-right" style="width: 2.25rem;"  @click="loadMore">搜索</a>
+                    <a class="top-right" style="width: 2.25rem;font-size: 0.8rem;"  @click="loadMore">搜索</a>
                 </div>
                 <div style="height: 100%;display: block;font-size: 14px;text-align: left;">
                     <div style="padding:10px" v-if="goodsObj">

@@ -135,11 +135,11 @@
                             pullUpLoad: {
                                 threshold: 10
                             },
-                            mouseWheel: {    // pc端同样能滑动
+                            mouseWheel: {    
                                 speed: 20,
                                 invert: false
                             },
-                            useTransition: false  // 防止iphone微信滑动卡顿
+                            useTransition: false  
                         });
                     }
                     //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
