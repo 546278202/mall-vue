@@ -4,6 +4,7 @@ import home from '@/page/home/home'
 import productList from '@/page/productList/productList'
 import mine from '@/page/mine/mine'
 import login from '@/page/login/login'
+import register from '@/page/login/register'
 import search from '@/page/search/search'
 import detail from '@/page/detail/detail'
 import buyCar from '@/page/buyCar/buyCar'
@@ -71,6 +72,11 @@ export default new Router({
             path: '/login',
             name: 'login',
             component: login
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: register
         },
         //搜索页
         {

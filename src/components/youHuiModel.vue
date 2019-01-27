@@ -9,8 +9,8 @@
                 <div class="bscroll-container">
                     <ul>
                         <li v-for="(item,index) in goodsObj" :key="index" >
-                            <div>{{item.code}}</div>
-                            <div style="flex:1;padding:0 10px;"><input placeholder="输入兑换码" v-model="code" style="border:0;font-size:0.7rem;"></div>
+                            <div>优惠码:</div>
+                            <div style="flex:1;padding:0 10px;"><input placeholder="输入兑换码" v-model="item.code"  style="border:0;font-size:0.7rem;"></div>
                             <div class="checkCode"><span @click="checkYuiHuiCode($event)" :data-index=index >确定</span></div>
                         </li>
                     </ul>
@@ -29,10 +29,9 @@
         props: ["showstate"],
         data() {
             return {
-                code:'',
                 warenumber:'',
                 goodsObj:[
-                    {code:1212}
+                    {code:''}
                 ],
                 styleObj1: { "height": '100%', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
             };
@@ -72,25 +71,23 @@
             },
             // 校验优惠码
             checkYuiHuiCode(e) {
-                console.log(e.target.dataset.index)
+                let _index=e.target.dataset.index
                 let parameter = {
-                    cCode:this.code,
+                    cCode:this.goodsObj[_index].code,
                     cGoodsNum:this.warenumber
-                };
-                if(this.code==''){
+                };     
+                if(this.goodsObj[_index].code=='' || this.warenumber==''){
                     return false
-                }
-                
+                }        
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/common/checkCoupon", parameter)
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
-                            console.log(response.data.data)
                             Toast({ message: '校验成功' });
-                        }else{
-                            let aa={code:1213}
+                            let aa={code:''}
                             this.goodsObj.push(aa)
-                            Toast({ message: '校验失败' });
+                        }else{
+                            Toast({ message: response.data.msg});
                             return false
                         }
                     })

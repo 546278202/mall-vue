@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="login-content">
             <div style="display:flex;justify-content: center;margin-top:1rem;font-size: 18px;">
-                <div style="text-align:right;width: 13.75rem;">注册</div>
+                <router-link style="text-align:right;width: 13.75rem;" :to="{path:'/register'}">注册</router-link>
             </div>
             <div class="content-block" style="text-align: center;margin: 0;height:3.7rem ;">
                 <img src="../../images/login1.png" style="height:3.7rem ;">
