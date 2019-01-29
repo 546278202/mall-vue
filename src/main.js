@@ -18,19 +18,21 @@ import { Indicator } from 'mint-ui'
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
-	if (config.method == 'post') {
+	console.log(config)
+	if(config.method == 'post'){
 		config.data = qs.stringify(config.data);
 	}
-	if (config.method == 'get') {
-
+	if(config.method == 'get'){
+		config.data = qs.stringify(config.data);
 	}
 	config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 	Indicator.open('加载中...')
 	return config
-}), function (error) {
-	Indicator.close()
-	return Promise.reject(error)
-}
+}), 
+// function (error) {
+// 	Indicator.close()
+// 	return Promise.reject(error)
+// }
 axios.interceptors.response.use(function (config) {
 	Indicator.close()
 	return config

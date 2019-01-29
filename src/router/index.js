@@ -5,6 +5,7 @@ import productList from '@/page/productList/productList'
 import mine from '@/page/mine/mine'
 import login from '@/page/login/login'
 import register from '@/page/login/register'
+import password from '@/page/login/password'
 import search from '@/page/search/search'
 import detail from '@/page/detail/detail'
 import buyCar from '@/page/buyCar/buyCar'
@@ -21,6 +22,11 @@ import setpage from '@/page/setpage/setpage'
 import list from '@/page/address/list'
 import addpage from '@/page/address/addpage'
 import editpage from '@/page/address/editpage'
+import faPiao from '@/page/faPiao/faPiao'
+import editFaPiao from '@/page/faPiao/editFaPiao'
+
+
+
 
 Vue.use(Router)
 export default new Router({
@@ -77,6 +83,11 @@ export default new Router({
             path: '/register',
             name: 'register',
             component: register
+        },
+        {
+            path: '/password',
+            name: 'password',
+            component: password
         },
         //搜索页
         {
@@ -157,7 +168,18 @@ export default new Router({
             name: 'editpage',
             component: editpage
         },
-
+        //添加发票
+        {
+            path: '/faPiao',
+            name: 'faPiao',
+            component: faPiao
+        },
+        //编辑发票
+        {
+            path: '/editFaPiao',
+            name: 'editFaPiao',
+            component: editFaPiao
+        },
     ]
 })
 

@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
+                            <div class="FaPiaoLi" @click="getfaPiaoModel" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">发票：</div>
                                 <div style="flex:1;line-height:45px;text-align:right;">不使用</div>
                             </div>
@@ -118,12 +118,18 @@
             @transferUser='transferUser' 
             :paynum='totalMoney+totalFare-totalpreferential'>
         </payModel>
+        <!-- 发票 -->
+        <faPiaoModel>
+            
+        </faPiaoModel>
     </div>
 </template>
 <script>
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
     import youHuiModel from "../../components/youHuiModel";
+    import faPiaoModel from "../../components/faPiaoModel";
+
     import payModel from "../../components/payModel";
     import BScroll from 'better-scroll'
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
@@ -167,6 +173,7 @@
             Header,
             Footer,
             youHuiModel,
+            faPiaoModel,
             payModel
         },
         methods: {
@@ -195,6 +202,9 @@
                 this.$refs.youhui.getDomHeight(e)
                 this.$refs.youhui.scrollFn("ww")
 
+            },
+            getfaPiaoModel(){
+                this.$router.push({ path: '/faPiao' });
             },
             cancelfall() {
                 this.showa = false

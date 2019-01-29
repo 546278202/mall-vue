@@ -94,7 +94,13 @@
                     return false;
                 }
                 if(this.checkCode==this.input2){
-                    console.log("ss")
+                    setTimeout(() => {
+                        let obj={
+                            userName: this.input1,
+                            verificationCode:this.checkCode,
+                        }    
+                        this.$router.push({ path: '/password',query:obj});
+                    }, 600)
                 }
             }
         }
