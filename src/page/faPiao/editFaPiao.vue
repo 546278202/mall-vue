@@ -47,7 +47,7 @@
 <script>
     import Header from "../../components/Header";
     import BScroll from "better-scroll";
-    import { Indicator, InfiniteScroll, Spinner, Checklist, Toast, Radio } from "mint-ui";
+    import { Indicator, InfiniteScroll, Spinner, Checklist, Toast, Radio ,MessageBox} from "mint-ui";
     import { getNowFormatDate } from "../../config/mUtils";
     export default {
         data() {
@@ -55,9 +55,8 @@
                 goodsObj: [],
                 data: "",
                 styleObj1: { height: "", width: "100%", overflow: "hidden", "font-size": "40px" },
-                falg: false,
                 allChecked: true,
-                allChecked_val:0,
+                allChecked_val: 0,
                 checkedValue: 0
             };
         },
@@ -74,13 +73,15 @@
             this.$store.commit("changeTitle", "发票抬头");
             this.scrollFn();
             this.loadMore();
+
+
         },
         watch: {
-            allChecked(val){
-                if(val==true){
-                    this.allChecked_val="0"
-                }else{
-                    this.allChecked_val="1"
+            allChecked(val) {
+                if (val == true) {
+                    this.allChecked_val = "0"
+                } else {
+                    this.allChecked_val = "1"
                 }
             },
             checkedValue(val) {
@@ -164,13 +165,13 @@
             },
             // 更新新数据
             getSave() {
-                let parameter=''
+                let parameter = ''
                 if (this.checkedValue == "0") {
                     parameter = {
                         invoiceId: this.$route.query.id,
                         invoicetype: this.checkedValue,
                         invoiceName: this.data[0].val,
-                        status:this.allChecked_val
+                        status: this.allChecked_val
                     };
                 }
                 // // 企业
@@ -180,38 +181,47 @@
                         invoicetype: this.checkedValue,
                         status: this.allChecked_val,
                         invoiceName: this.data[0].val,
-                        invoiceNumber:this.data[1].val,
-                        address:this.data[2].val,
-                        phone:this.data[3].val,
-                        bank:this.data[4].val,
+                        invoiceNumber: this.data[1].val,
+                        address: this.data[2].val,
+                        phone: this.data[3].val,
+                        bank: this.data[4].val,
                         bankAccount: this.data[5].val
                     };
                 }
-                
-
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/invoice/updateInvoice", parameter)
                     .then(response => {
-                        if(response.data.code==0 && response.data.success==true){
+                        if (response.data.code == 0 && response.data.success == true) {
                             Toast("更新数据成功");
-                        }else{
+                        } else {
                             Toast(response.data.msg);
                         }
                     })
                     .catch(error => {
                         Indicator.close();
                     });
-               
+
             },
-            // 管理状态
+            // 删除状态
             administration() {
-                if (this.falg == true) {
-                    console.log("ss");
-                    this.falg = false;
-                } else {
-                    console.log("ssqq");
-                    this.falg = true;
+                var parameter = {
+                    "invoiceId": this.$route.query.id
                 }
+                MessageBox.confirm('确定执行此操作?').then(action => {
+                    this.$http
+                        .post(process.env.API_HOST + "/mall_api/invoice/delInvoice", parameter)
+                        .then(response => {
+                            if (response.data.code == 0 && response.data.success == true) {
+                                Toast("删除成功");
+                                this.$router.push("/faPiao");
+                            } else {
+                                Toast(response.data.msg);
+                            }
+                        })
+                        .catch(error => {
+                            Indicator.close();
+                        });
+                })
             }
         }
     };

@@ -179,11 +179,11 @@
                             pullUpLoad: {
                                 threshold: 10
                             },
-                            mouseWheel: {    // pc端同样能滑动
+                            mouseWheel: {  
                                 speed: 20,
                                 invert: false
                             },
-                            useTransition: false  // 防止iphone微信滑动卡顿
+                            useTransition: false 
                         });
                     }
                 });

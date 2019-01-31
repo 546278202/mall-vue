@@ -69,9 +69,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="FaPiaoLi" @click="getfaPiaoModel" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
+                            <div class="FaPiaoLi" @click="getfaPiaoModel(index1)" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">发票：</div>
-                                <div style="flex:1;line-height:45px;text-align:right;">不使用</div>
+                                <div style="flex:1;line-height:45px;text-align:right;">{{item.fapiao.invoiceName}}</div>
                             </div>
                             <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">买家留言：</div>
@@ -129,7 +129,6 @@
     import Footer from "../../components/Footer";
     import youHuiModel from "../../components/youHuiModel";
     import faPiaoModel from "../../components/faPiaoModel";
-
     import payModel from "../../components/payModel";
     import BScroll from 'better-scroll'
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
@@ -151,23 +150,18 @@
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
             };
         },
-
         mounted() {
-            if (this.$store.state.baseUser.userId == "") {
-                this.$router.push("/login");
-                return false;
-            }
             this.$store.commit("changeTitle", "确认订单");
             this.loadAddress();
             this.loadMore();
             this.scrollFn();
-
         },
         //获取屏幕高度
         beforeMount(height) {
             var height = 0
             var h = document.documentElement.clientHeight || document.body.clientHeight;
             this.styleObj1["height"] = h - height + "px"
+
         },
         components: {
             Header,
@@ -177,6 +171,12 @@
             payModel
         },
         methods: {
+            // 给发票赋值
+            abc(){
+                if(this.$route.query!=''){
+                    this.goodsObj[this.$route.query.index].fapiao=JSON.parse(sessionStorage.getItem('fapiaoData'))
+                }
+            },
             scrollFn() {
                 this.$nextTick(() => {
                     if (!this.scroll) {
@@ -188,11 +188,11 @@
                             pullUpLoad: {
                                 threshold: 10
                             },
-                            mouseWheel: {    // pc端同样能滑动
+                            mouseWheel: {  
                                 speed: 20,
                                 invert: false
                             },
-                            useTransition: false  // 防止iphone微信滑动卡顿
+                            useTransition: false 
                         });
                     }
                 });
@@ -203,8 +203,10 @@
                 this.$refs.youhui.scrollFn("ww")
 
             },
-            getfaPiaoModel(){
-                this.$router.push({ path: '/faPiao' });
+            // 发票
+            getfaPiaoModel(index){
+                let paramer={index:index}
+                this.$router.push({ path: '/faPiao',query:paramer});
             },
             cancelfall() {
                 this.showa = false
@@ -218,8 +220,6 @@
                     this.$router.push("/order?tabCode=0")
                 } else {
                     this.$router.push("/order?tabCode=0")
-                    // window.location.href = 'orderdetail.html?orderNo=' + orderNo
-
                 }
             },
 
@@ -253,6 +253,7 @@
                             this.groupData();
                             this.calTotalMoney();
                             this.calTotalFare()
+                            this.abc()
                         }
                     })
                     .catch(error => {
@@ -271,6 +272,7 @@
                         dest.push({
                             mallAdminId: ai.mallAdminId,
                             checked: false,
+                            fapiao: '',
                             list: [ai]
                         });
                         map[ai.mallAdminId] = ai;
@@ -285,7 +287,6 @@
                     }
                 }
                 this.goodsObj = dest;
-                console.log(this.goodsObj);
             },
 
             // 计算商品总金额
@@ -371,7 +372,7 @@
                             specName: a.specname,
                             cCode: "",
                             orderRemark: "",
-                            invoiceInfo: "",
+                            invoiceInfo: goodsObj[i].fapiao,
                             distributionValue: "",
                             mallAdminId: a.mallAdminId,
                             sameWareSumPostCharge: this.mdparr[i]

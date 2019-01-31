@@ -151,14 +151,12 @@
                             pullUpLoad: {
                                 threshold: 10
                             },
-                            mouseWheel: {    // pc端同样能滑动
+                            mouseWheel: {   
                                 speed: 20,
                                 invert: false
                             },
-                            useTransition: false  // 防止iphone微信滑动卡顿
+                            useTransition: false 
                         });
-                    } else {
-
                     }
                     //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
                     this.scroll.on('touchEnd', (pos) => {
@@ -212,6 +210,7 @@
                     this.$router.push("/buyCar")
                 }
             },
+            // 加入购物车
             addcar() {
                 if (JSON.parse(sessionStorage.getItem("baseUser")) == null) {
                     this.$router.push("/login")
@@ -227,10 +226,12 @@
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/cart/add", data)
                     .then(response => {
-                        console.log(response.data);
                         if (response.data.code == 0 && response.data.success == true) {
                             Toast("添加成功");
                             this.getCarNum()
+                        }else{
+                            Toast(response.data.msg);
+                            return false
                         }
                     })
                     .catch(error => {
