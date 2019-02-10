@@ -218,6 +218,9 @@
                         paramer.bankAccount=a.bankAccount
                     }
                     sessionStorage.setItem('fapiaoData', JSON.stringify(paramer))
+                    
+                    console.log(JSON.parse(sessionStorage.getItem('getlist')))
+                    
                     this.$router.push({ path: '/getSum',query:{index:this.$route.query.index}});
                 }
             },

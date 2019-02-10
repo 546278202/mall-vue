@@ -60,18 +60,20 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="YuHuiMa" style="height:45px;line-height:45px;display:flex;font-size:0.8rem;border-top: 1px solid #dcdcdc;padding: 0px 10px;justify-content: space-between;">
-                                <div @click="alerts" style="flex:1;text-align: left;">输入优惠码：</div>
+                            <div v-if="item.couponPrice!=null" class="YuHuiMa" @click="getYouHuiModel(item.warenumber)">
+                                <div  style="flex:1;text-align:left;">输入优惠码：</div>
                                 <div>已优惠￥0.00</div>
                             </div>
-
                         </div>
                     </div>
-                    <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
+                     <div class="FaPiaoLi" @click="getfaPiaoModel(index1)" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
+                            <div style="line-height: 45px;">发票：</div>
+                            <div style="flex:1;line-height:45px;text-align:right;">{{"item.fapiao.invoiceName"}}</div>
+                        </div>
+                    <!-- <div class="FaPiaoLi" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
                         <div style="line-height: 45px;">发票：</div>
                         <div style="flex:1;line-height:45px;text-align:right;">不使用</div>
-                    </div>
+                    </div> -->
                     <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;font-size:0.8rem;border-top: 1px solid #dcdcdc;">
                         <div style="line-height: 45px;">买家留言：</div>
                         <div style="flex:1;line-height:45px;">
@@ -100,10 +102,12 @@
                 <div class="SettlementBtn" @click="onLinePay">在线支付</div>
             </div>
         </ul>
-        <!-- 优惠卷 -->
-        <showModel type='alert' @tocancel='cancelfall' :showstate='showa'>
-
-        </showModel>
+         <!-- 优惠卷 -->
+        <youHuiModel 
+            ref="youhui" 
+            @tocancel='cancelfall' 
+            :showstate='showa'>
+        </youHuiModel>
         <!-- 支付框 -->
         <payModel 
             type='alertpaymodel' 
@@ -119,6 +123,8 @@
 <script>
     import Header from "../../components/Header";
     import Footer from "../../components/Footer";
+    import youHuiModel from "../../components/youHuiModel";
+    import faPiaoModel from "../../components/faPiaoModel";
     import payModel from "../../components/payModel";
     import { Indicator, Toast, InfiniteScroll } from "mint-ui";
     export default {
@@ -135,7 +141,7 @@
                 mdparr: [],
                 showa: false,
                 payM:false,
-                advancePaymentOrder:''//预支付订单
+                advancePaymentOrder:''
             };
         },
 
@@ -149,12 +155,22 @@
         components: {
             Header,
             Footer,
+            youHuiModel,
+            faPiaoModel,
             payModel
         },
         methods: {
-            alerts() {
+            getYouHuiModel(e) {
                 this.showa = true;
+                this.$refs.youhui.getDomHeight(e)
+                this.$refs.youhui.scrollFn("ww")
             },
+            // 发票
+            getfaPiaoModel(index){
+                let paramer={index:index}
+                this.$router.push({ path: '/faPiao',query:paramer});
+            },
+           
             cancelfall(){
                 this.showa = false;
             },
@@ -170,10 +186,7 @@
                     userId: this.$store.state.baseUser.userId
                 };
                 this.$http
-                    .post(
-                        process.env.API_HOST + "/mall_api/shipping/get_default_shipping",
-                        parameter
-                    )
+                    .post(process.env.API_HOST + "/mall_api/shipping/get_default_shipping",parameter)
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             this.address = response.data.data;
@@ -184,7 +197,6 @@
                     });
             },
             
-
             // 计算商品总金额
             calTotalMoney: function () {
                 var oThis = this;
@@ -329,9 +341,16 @@
         padding-bottom: 100px;
         li {
             margin-top: 5px;
-            background: #fff;
+            background: #fff;  
+            .YuHuiMa{
+                height:45px;
+                line-height:45px;
+                display:flex;
+                border-top: 1px solid #dcdcdc;
+                padding: 0px 10px;
+                justify-content: space-between;
+            }
         }
-
         .ShopName {
             width: 100%;
             display: flex;

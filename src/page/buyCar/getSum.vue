@@ -137,7 +137,7 @@
         data() {
             return {
                 address: "",
-                goodsObj: "",
+                goodsObj: '',
                 loading: false,
                 allChecked: false,
                 totalMoney: 0,
@@ -155,6 +155,8 @@
             this.loadAddress();
             this.loadMore();
             this.scrollFn();
+            this.abc()
+
         },
         //获取屏幕高度
         beforeMount(height) {
@@ -173,9 +175,15 @@
         methods: {
             // 给发票赋值
             abc(){
-                if(this.$route.query!=''){
-                    this.goodsObj[this.$route.query.index].fapiao=JSON.parse(sessionStorage.getItem('fapiaoData'))
-                }
+                let index=this.$route.query.index
+                this.goodsObj[index].fapiao=JSON.parse(sessionStorage.getItem('fapiaoData'))
+
+                // sessionStorage.setItem("getlist", JSON.stringify(this.goodsObj));
+                // console.log(this.goodsObj)
+
+                // sessionStorage.setItem("getlist", JSON.stringify(this.goodsObj));
+                // console.log(JSON.parse(sessionStorage.getItem('fapiaoData')))
+                // this.goodsObj=JSON.parse(sessionStorage.getItem('fapiaoData'))
             },
             scrollFn() {
                 this.$nextTick(() => {
@@ -205,6 +213,9 @@
             },
             // 发票
             getfaPiaoModel(index){
+                console.log(this.goodsObj[index].fapiao.invoiceName)
+                console.log(this.goodsObj)
+                
                 let paramer={index:index}
                 this.$router.push({ path: '/faPiao',query:paramer});
             },
@@ -228,10 +239,7 @@
                     userId: this.$store.state.baseUser.userId
                 };
                 this.$http
-                    .post(
-                        process.env.API_HOST + "/mall_api/shipping/get_default_shipping",
-                        parameter
-                    )
+                    .post(process.env.API_HOST + "/mall_api/shipping/get_default_shipping",parameter)
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             this.address = response.data.data;
@@ -242,27 +250,13 @@
                     });
             },
             loadMore() {
-                let parameter = {
-                    userId: this.$store.state.baseUser.userId
-                };
-                this.$http
-                    .post(process.env.API_HOST + "/mall_api/cart/list", parameter)
-                    .then(response => {
-                        if (response.data.code == 0 && response.data.success == true) {
-                            this.goodsObj = response.data.data.cartWareVOList;
-                            this.groupData();
-                            this.calTotalMoney();
-                            this.calTotalFare()
-                            this.abc()
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                this.groupData();
+                this.calTotalMoney();
+                this.calTotalFare();
             },
             // 将数据分组
             groupData() {
-                let arr = this.goodsObj;
+                let arr = JSON.parse(sessionStorage.getItem('getlist'));
                 var map = {},
                     dest = [];
                 for (var i = 0; i < arr.length; i++) {

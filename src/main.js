@@ -18,7 +18,7 @@ import { Indicator } from 'mint-ui'
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
-	console.log(config)
+	// console.log(config)
 	if(config.method == 'post'){
 		config.data = qs.stringify(config.data);
 	}

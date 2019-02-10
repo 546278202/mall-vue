@@ -232,6 +232,18 @@
             },
             // 结算
             getSum(){
+                let abc=[]
+                for (var i = 0;i < this.goodsObj.length; i++) {
+                    var list = this.goodsObj[i]['list'];
+                    list.forEach(function (item, index, arr) {
+                        if (list[index]['checked']) {
+                            abc.push(item)
+                        }
+                    });
+                }
+                sessionStorage.setItem("getlist", JSON.stringify(abc));
+                console.log(JSON.parse(sessionStorage.getItem('getlist')))
+
                 this.$router.push("/getSum")
             },
             // 增加数量

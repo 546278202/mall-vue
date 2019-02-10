@@ -260,8 +260,9 @@
                         "warenumber":this.data.warenumber,
                         "sameWareSumPostCharge":''
                     }]
-                    sessionStorage.setItem("nowbuylist", JSON.stringify(data));
-                    this.$router.push({path:'/nowbuy'});
+                    sessionStorage.setItem("getlist", JSON.stringify(data))
+                    console.log(JSON.parse(sessionStorage.getItem("getlist")))
+                    this.$router.push({path:'/getSum'});
             },
             //获取购物车数量
             getCarNum(){
