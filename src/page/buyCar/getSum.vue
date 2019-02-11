@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="FaPiaoLi" @click="getfaPiaoModel(index1)" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
+                            <div class="FaPiaoLi" @click="tofaPiaoPage(index1)" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">发票：</div>
                                 <div style="flex:1;line-height:45px;text-align:right;">{{item.fapiao.invoiceName}}</div>
                             </div>
@@ -175,15 +175,43 @@
         methods: {
             // 给发票赋值
             abc(){
-                let index=this.$route.query.index
-                this.goodsObj[index].fapiao=JSON.parse(sessionStorage.getItem('fapiaoData'))
+                let faPiaoList=JSON.parse(sessionStorage.getItem('faPiaoList'))
+                console.log(faPiaoList)
+                for(var i=0;i<this.goodsObj.length;i++){
+                    let a=faPiaoList[i]
 
-                // sessionStorage.setItem("getlist", JSON.stringify(this.goodsObj));
-                // console.log(this.goodsObj)
-
-                // sessionStorage.setItem("getlist", JSON.stringify(this.goodsObj));
-                // console.log(JSON.parse(sessionStorage.getItem('fapiaoData')))
-                // this.goodsObj=JSON.parse(sessionStorage.getItem('fapiaoData'))
+                    console.log(a.invoiceType)
+                    
+                    let paramer={
+                        invoiceType:a.invoiceType,
+                        invoiceName:a.invoiceName,
+                        invoiceNumber:a.invoiceNumber,
+                        address:a.address,
+                        phone:a.phone,
+                        bank: a.bank,
+                        bankAccount:a.bankAccount,
+                    }
+                   
+                    if(paramer.invoiceName==null){
+                        paramer.invoiceName=''
+                    }
+                    if(paramer.invoiceNumber==null){
+                        paramer.invoiceNumber=''
+                    }
+                    if(paramer.address==null){
+                        paramer.address=''
+                    }
+                    if(paramer.phone==null){
+                        paramer.phone=''
+                    }
+                    if(paramer.bank==null){
+                        paramer.bank=''
+                    }
+                    if(paramer.bankAccount==null){
+                        paramer.bankAccount=''
+                    }
+                    this.goodsObj[i].fapiao=paramer
+                }
             },
             scrollFn() {
                 this.$nextTick(() => {
@@ -212,10 +240,13 @@
 
             },
             // 发票
-            getfaPiaoModel(index){
-                console.log(this.goodsObj[index].fapiao.invoiceName)
-                console.log(this.goodsObj)
-                
+            tofaPiaoPage(index){
+                let arr=[];
+                for(var i=0;i<this.goodsObj.length;i++){
+                    arr.push(this.goodsObj[i].fapiao)
+                    console.log(this.goodsObj[i].fapiao)
+                }
+                sessionStorage.setItem('faPiaoList', JSON.stringify(arr))
                 let paramer={index:index}
                 this.$router.push({ path: '/faPiao',query:paramer});
             },
@@ -357,6 +388,7 @@
                     var wareList = [];
                     for (var j = 0; j < goodsObj[i].list.length; j++) {
                         var a = goodsObj[i].list[j];
+                       
                         var List = {
                             priceSum: a.quantity * a.wareprice,
                             cartId: a.cartId,
@@ -371,6 +403,9 @@
                             mallAdminId: a.mallAdminId,
                             sameWareSumPostCharge: this.mdparr[i]
                         };
+                        // 更改键值
+                        List.invoiceInfo['invoicetype'] = List.invoiceInfo['invoiceType'];
+                        delete List.invoiceInfo['invoiceType'];
                         wareList.push(List);
                     }
                     wareListParent.push(wareList);

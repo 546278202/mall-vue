@@ -188,39 +188,23 @@
                 if (this.falg == true) {
                     let id = this.goodsObj[index].invoiceId
                     this.$router.push("/editFaPiao?id=" + id);
-                }else{                   
-                    let paramer={
-                        invoicetype:'',
-                        invoiceName:'',
-                        invoiceNumber:'',
-                        address:'',
-                        phone:'',
-                        bank:'',
-                        bankAccount:''
-                    }    
+                }else{      
+                      
+                    let faPiaoList=JSON.parse(sessionStorage.getItem('faPiaoList'))
                     let a=this.goodsObj[index]
-                     // 个人发票
-                    if(a.invoiceType==0){
-                        paramer.invoicetype=a.invoiceType
-                        paramer.invoiceName=a.invoiceName
-                        paramer.invoiceNumber=a.invoiceNumber
-                        paramer.address=a.address
-                        paramer.phone=a.phone
-                        paramer.bank=a.bank
-                        paramer.bankAccount=a.bankAccount
-                    }else{
-                        paramer.invoicetype=a.invoiceType
-                        paramer.invoiceName=a.invoiceName
-                        paramer.invoiceNumber=a.invoiceNumber
-                        paramer.address=a.address
-                        paramer.phone=a.phone
-                        paramer.bank=a.bank
-                        paramer.bankAccount=a.bankAccount
+                    let paramer={
+                        invoiceType:a.invoiceType,
+                        invoiceName:a.invoiceName,
+                        invoiceNumber:a.invoiceNumber,
+                        address:a.address,
+                        phone:a.phone,
+                        bank: a.bank,
+                        bankAccount:a.bankAccount,
                     }
-                    sessionStorage.setItem('fapiaoData', JSON.stringify(paramer))
-                    
-                    console.log(JSON.parse(sessionStorage.getItem('getlist')))
-                    
+
+                    faPiaoList[this.$route.query.index]=paramer
+
+                    sessionStorage.setItem('faPiaoList', JSON.stringify(faPiaoList))      
                     this.$router.push({ path: '/getSum',query:{index:this.$route.query.index}});
                 }
             },
