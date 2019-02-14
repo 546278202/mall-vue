@@ -8,7 +8,8 @@ const  store= new Vuex.Store({
     state:{
         baseUser:JSON.parse(sessionStorage.getItem("baseUser")),
         title:null,
-        searchModel:0
+        searchModel:0,
+        // seachModeState:false//搜索框
     },
     mutations:{
         changeLogin(state,data){
@@ -20,7 +21,8 @@ const  store= new Vuex.Store({
 
 		getsearchModel(state,msg){
 			state.searchModel=msg
-		},
+        },
+        // changeSeachModeState(state,data){state.seachModeState=data},
     }
 })
 export default store

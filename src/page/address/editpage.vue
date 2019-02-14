@@ -151,6 +151,7 @@
 
 <style lang="scss" scoped>
     ul {
+        margin-top: 5px;
         overflow: hidden;
 
         li {
@@ -161,7 +162,7 @@
             box-sizing: border-box;
             background: #fff;
             padding-left: 10px;
-
+            border-bottom: 1px solid #dcdcdc;
             input {
                 width: 100%;
                 height:40px;

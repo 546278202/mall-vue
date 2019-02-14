@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mt-popup v-model="popupVisible" position="right" modal="true" closeOnClickModal="true" pop-transition="popup-fade">
+        <div class="search_model" v-show="flag">
             <ul :style="styleObj1">
                 <div class="top-naver">
                     <a class="top-left" style="width: 2.25rem;align-items: center;display: flex;justify-content: center;"
@@ -25,19 +25,19 @@
                     </div>
                 </div>
             </ul>
-        </mt-popup>
+        </div>
     </div>
 </template>
 <script>
     import { Indicator, InfiniteScroll, Spinner, Popup ,MessageBox } from "mint-ui";
     import { getNowFormatDate } from "../config/mUtils"
-
+    import bus from '../assets/eventBus'
     export default {
         data() {
             return {
                 something: '',
                 goodsObj: [],
-                popupVisible: false,
+                flag: false,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 pageNum: 1,
                 pageSize: 20,
@@ -52,16 +52,14 @@
             this.styleObj1["width"] = w + "px"
         },
         mounted() {
+            bus.$on("abc",(msg)=>{
+                this.flag=true
+            })
             this.goodsObj=JSON.parse(localStorage.getItem('SearchHistory'))
-            console.log(this.goodsObj)
         },
         methods: {
-            // 被父调用
-            parentHandleclick(e) {
-                this.popupVisible = e
-            },
             closeSeachModel() {
-                this.$emit('childByValue')
+                this.flag=false
             },
             //搜索
             loadMore() {
@@ -96,6 +94,14 @@
     };
 </script>
 <style lang="scss" scoped>
+    .search_model{
+        position: fixed;
+        top:0;
+        left:0;
+        width: 100%;
+        height:100%;
+        background: #fff;
+    }
     .top-naver{
         display:flex;
         height: 2.5rem;

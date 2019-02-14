@@ -10,7 +10,7 @@
                 <div class="bscroll-container">
                     <ul>
                         <div class="bottom">
-                            <div class="btn">{{specJson.specName}}</div>
+                            <div class="btn">{{specJson.specName}}:</div>
                             <div class="ColorWrap" style="overflow: hidden;">
                                 <li v-for="(item,index) in specJson.specValue" 
                                     @click="addClass(index,item)" 
@@ -41,12 +41,12 @@
 </template>
 <script>
     import BScroll from 'better-scroll'
-
+    import { listenScroll } from "../../../config/mUtils"
     export default {
         props: ["type", "payshowstate", "specJson",],
         data() {
             return {
-                checkedValue: 0,
+                checkedValue:'',
                 currentIndex: 0,
                 currentprice: '',
                 buyNum: 1,
@@ -56,6 +56,7 @@
         watch: {
             specJson: function (newVal, oldVal) {
                 this.currentprice = newVal.specValue[0].specPrice
+                this.checkedValue = newVal.specValue[0].specName
             }
         },
         //获取屏幕高度
@@ -67,28 +68,11 @@
         },
         mounted() {
 
-
         },
-
         methods: {
             scrollFn() {
                 this.$nextTick(() => {
-                    if (!this.scroll) {
-                        this.scroll = new BScroll(this.$refs.bscroll, {
-                            swipeTime: 2000,
-                            scrollY: true,
-                            click: true,
-                            probeType: 2,
-                            pullUpLoad: {
-                                threshold: 10
-                            },
-                            mouseWheel: {    // pc端同样能滑动
-                                speed: 20,
-                                invert: false
-                            },
-                            useTransition: false  // 防止iphone微信滑动卡顿
-                        });
-                    }
+                    listenScroll(this.$refs.bscroll)
                 });
             },
             addClass(index, item) {
@@ -109,13 +93,11 @@
 
             addUp() {
                 this.buyNum++
-                console.log(this.buyNum)
             },
 
             addDown() {
                 if (this.buyNum > 1) {
                     this.buyNum--
-                    console.log(this.buyNum)
                 }
             },
         }
@@ -160,7 +142,6 @@
     }
 
     .bottom {
-        line-height: 1.5rem;
         padding-left: 10px;
         margin-bottom: 20px;
         overflow: hidden;
@@ -181,12 +162,12 @@
 
     .KG4 {
         background: #dcdcdc;
-        padding: 0 5px;
+        padding: 5px 5px;
         text-align: center;
         border-radius: 5px;
         margin-right: 10px;
         margin-bottom: 10px;
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         color: #999;
         float: left;
     }
@@ -216,6 +197,11 @@
         .subtraction {
             width: 2.3rem;
             height: 1.5rem;
+        }
+        a{
+            display:flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 

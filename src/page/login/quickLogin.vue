@@ -1,8 +1,7 @@
 <template>
     <div class="wrap">
         <div class="login-content">
-            <!-- <router-link style="display:flex;justify-content: center;margin-top:1rem;font-size: 18px;" :to="{path:'/login'}">登陆</router-link> -->
-            <div class="login_title">欢迎注册新用户</div>
+            <div class="login_title">快捷登陆</div>
             <div style="margin-top:2rem;">
                 <div class="item">
                     <i class="iconfont icon-zhanghao"></i>
@@ -21,35 +20,35 @@
                 </div>
             </div>
             <div style="display:flex;justify-content: center;margin-top:2rem;">
-                <button class="button" @click="toNext">下一步</button>
+                <button class="button" @click="toNext">登陆</button>
             </div>
         </div>
     </div>
 </template>
 <script>
     import md5 from "js-md5";
-	import { Indicator, InfiniteScroll, Spinner,Toast} from "mint-ui";
+    import { Indicator, InfiniteScroll, Spinner, Toast } from "mint-ui";
     export default {
         data() {
             return {
                 input1: "",
                 input2: "",
-                checkCode:''
+                checkCode: ''
             };
         },
-        mounted() { 
+        mounted() {
 
         },
 
         components: {
 
         },
-        created() { 
+        created() {
 
         },
         methods: {
             // 是否注册过
-            isRegist(){
+            isRegist() {
                 if (!(/^1[34578]\d{9}$/.test(this.input1))) {
                     Toast({ message: '手机号码输入错误，请重填！' });
                     return false;
@@ -57,7 +56,7 @@
                 let parameter = {
                     userName: this.input1,
                 };
-                
+
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/user/checkIsRegister", parameter)
                     .then(response => {
@@ -79,7 +78,7 @@
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             console.log(response.data.data)
-                            this.checkCode=response.data.data
+                            this.checkCode = response.data.data
                             Toast("已发送到您的手机");
                         } else {
                             Toast(response.data.msg);
@@ -87,18 +86,28 @@
                     })
                     .catch(error => { });
             },
-            // 下一步
-            toNext(){
+            //快捷登陆
+            toNext() {
                 if (!(/^1[34578]\d{9}$/.test(this.input1))) {
                     Toast({ message: '手机号码输入错误，请重填！' });
                     return false;
                 }
-                if(this.checkCode==this.input2){
-                    let parameter={
-                        userName: this.input1,
-                        verificationCode:this.checkCode,
-                    }    
-                    this.$router.push({ path: '/password',query:parameter});
+                if (this.checkCode == this.input2) {
+                    var parameter = {
+                        "phone": this.input1
+                    };
+                    this.$http
+                    .post(process.env.API_HOST + "/mall_api/im/convinienceLogin", parameter)
+                    .then(response => {
+                        if(response.data.code==0 && response.data.success==true){
+                            sessionStorage.baseUser = JSON.stringify(response.data.data);
+                            this.$store.commit('changeLogin', JSON.stringify(response.data.data));
+                            this.$router.push({ path: '/home' });
+                        }
+                    })
+                    .catch(error => { 
+
+                    });
                 }
             }
         }

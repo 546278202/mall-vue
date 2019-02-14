@@ -22,6 +22,13 @@
             <div style="display:flex;justify-content: center;margin-top:2rem;">
                 <button class="button" @click="getMessage">确定</button>
             </div>
+            <div>
+                <div class="item item1">
+                    <router-link :to="{path:'/forget1'}">忘记密码</router-link>
+                    <router-link :to="{path:'/quickLogin'}">快捷登陆</router-link>
+                </div>
+            </div>
+            
         </div>
     </div>
 </template>
@@ -58,19 +65,18 @@
                 }
                 this.$http.post(process.env.API_HOST + "/mall_api/user/login", data)
                     .then((response) => {
-                        let res = response.data;
-                        if (res.code == 0 && res.success == true) {
-                            sessionStorage.baseUser = JSON.stringify(res.data);
-                            this.$store.commit('changeLogin', JSON.stringify(res.data));
-                            setTimeout(() => {
-                                this.$router.push({ path: '/home' });
-                            }, 600)
+                        if (response.data.code == 0 && response.data.success == true) {
+                            sessionStorage.baseUser = JSON.stringify(response.data.data);
+                            this.$store.commit('changeLogin', JSON.stringify(response.data.data));
+                            this.$router.push({ path: '/home' });
                         } else {
-                            Toast(res.msg);
+                            Toast(response.data.msg);
                         }
 
                     })
-                    .catch((error) => {})
+                    .catch((error) => {
+
+                    })
             }
         },
     }
@@ -106,7 +112,16 @@
             border-radius: 1rem;
         }
     }
-
+    .item1{
+        justify-content:space-between;
+        border: none;
+        padding-left:0;
+        height: 1.2rem;
+        line-height: 1.2rem;
+        a{
+            font-size:10px;color:#666;
+        }
+    }
     .login-content {
         background: #fff;
         border-radius: 20px;

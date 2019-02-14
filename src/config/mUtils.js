@@ -1,3 +1,5 @@
+import BScroll from 'better-scroll'
+
 /**
  * 获取当前时间
  */
@@ -25,27 +27,36 @@ export const getNowFormatDate = () => {
         date.getMinutes() +
         seperator2 +
         date.getSeconds();
-        return currentdate;
+    return currentdate;
 }
-/**
- * 时间日期转换为毫秒
- * 如果格式是:yyyy/mm/dd hh:mm:ss可以直接转换。var oldTime = (new Date("2018/07/09 14:13:11")).getTime(); 得到毫秒数  
-    * 如果日期格式是:yyyy-mm-dd hh:mm:ss需要转化格式
-    * var startDate ='2018-07-09 14:13:11';
-    * startDate= startDate.replace(new RegExp("-","gm"),"/");
-    * var startDateM = (new Date(startDate)).getTime(); //得到毫秒数
- */
-export const getMillisecond = (startDate) => {
-    startDate.replace(new RegExp("-","gm"),"/");
-    return new Date(startDate).getTime(); 
-}
+
 /**
 *毫秒转化倒计时
 */
-export const formatDuring=(mss)=>{
+export const formatDuring = (mss) => {
     var days = parseInt(mss / (1000 * 60 * 60 * 24));
     var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = (mss % (1000 * 60)) / 1000;
-    return  hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒 ";
+    return hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒 ";
+}
+
+/**
+*滚动事件
+*/
+export const listenScroll = (element) => {
+    this.scroll = new BScroll(element, {
+        swipeTime: 2000,
+        scrollY: true,
+        click: true,
+        probeType: 2,
+        pullUpLoad: {
+            threshold: 10
+        },
+        mouseWheel: {    // pc端同样能滑动
+            speed: 20,
+            invert: false
+        },
+        useTransition: false  // 防止iphone微信滑动卡顿
+    });
 }

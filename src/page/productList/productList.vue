@@ -1,5 +1,5 @@
 <template>
-    <div class="rules">
+    <div>
         <Search></Search>
         <div style="flex-direction:row;display:flex;">
             <div class="bscroll1" ref="bscroll"  :style='styleObj1'>
@@ -16,7 +16,7 @@
                     </ul>
                 </div>
             </div> 
-            <div class="bscroll2" id="menuFoodList" ref="menuFoodList" :style="styleObj2">
+            <div class="bscroll2" ref="menuFoodList" :style="styleObj2">
                 <div class="bscroll-container">
                     <ul style="flex:1;background: #fff;text-align: left;overflow: scroll;">
                         <li v-for="(item,index) in menuList" :key="index">
@@ -33,11 +33,14 @@
             </div>       
         </div>
         <Footer></Footer>
+        <!-- 搜索model -->
+        <searchModel></searchModel>
     </div>
 </template>
 <script>
     import Search from '../../components/Search'
     import Footer from '../../components/Footer'
+    import searchModel from "../../components/searchModel";
     import BScroll from 'better-scroll'
     import { Indicator, InfiniteScroll, Spinner } from "mint-ui";
     import { getNowFormatDate } from "../../config/mUtils"
@@ -75,7 +78,8 @@
         },
         components: {
             Search,
-            Footer
+            Footer,
+            searchModel
         },
         methods: {
             //获取食品列表的高度，存入shopListTop
@@ -123,7 +127,6 @@
                 this.menuIndex = index;
                 //menuIndexChange解决运动时listenScroll依然监听的bug
                 this.menuIndexChange = false;
-                console.log( this.foodScroll)
                 this.foodScroll.scrollTo(0, -this.shopListTop[index], 400);
                 this.foodScroll.on('scrollEnd', () => {
                     this.menuIndexChange = true;
@@ -137,11 +140,8 @@
 <style lang="scss" scoped>
     .title {
         padding-left: 30px;
-       
         line-height: 45px;
-
     }
-
     .list_img {
         width: 32%;
         display: inline-block;

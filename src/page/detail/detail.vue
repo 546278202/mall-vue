@@ -33,14 +33,14 @@
                     </div>
 
                     <div class="shop-msg">
-                        <div class="Voucher" @click="alertDemo">
+                        <div class="Voucher" @click="alertpaymodel">
                             <a class="one">已选</a>
                             <a style="font-size: 0.6rem;color:#999;">{{mspecName+" , "+buyNum}}</a>
                             <a class="go-Voucher">
                                 <i class="iconfont icon-xiangyou"></i>
                             </a>
                         </div>
-                        <div class="Voucher">
+                        <div class="Voucher sever">
                             <a class="one">服务</a>
                             <a style="font-size: 0.6rem;color:#999;">坏果包赔</a>
                             <a class="go-Voucher"></a>
@@ -64,7 +64,7 @@
                 <p>店铺</p>
             </a>
             <a @click="addcar" class="add-car">加购物车</a>
-            <a class="to-buy open-popup" style="color:#fff;font-size: 15px;" @click="nowbuy">立刻购买</a>
+            <a class="to-buy open-popup" style="color:#fff;font-size: 15px;" @click="toGetSum">立刻购买</a>
         </div>
         <!-- 弹出层 -->
         <model ref="mychild" type="alertpaymodel" @cancelpaymodel="cancelpaymodel" :payshowstate="payM" @surBtn="surBtn" :specJson="specJson"></model>
@@ -76,7 +76,7 @@
     import BScroll from 'better-scroll'
     import model from './children/model'
     import discuss from './children/discuss'
-
+	import { getNowFormatDate, getMillisecond,listenScroll} from "../../config/mUtils"
     import { Swipe, SwipeItem, Indicator, Toast } from 'mint-ui'
     export default {
         data() {
@@ -94,14 +94,16 @@
                 payM: false,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 CarNum:'',//购物车数量
-                isCollection:"" 
+                isCollection:'' 
             }
         },
+       
         mounted() {
             this.$store.commit('changeTitle', "购物车")
             this.getData(),
             this.scrollFn(),
             this.getCarNum()
+            this.addLookHistory()
         },
         watch: {
            
@@ -122,7 +124,8 @@
         methods: {
             getData() {
                 let data = {
-                    "wareid": this.$route.query.id,
+                    userId: this.$store.state.baseUser? this.$store.state.baseUser.userId : '' ,
+                    wareid: this.$route.query.id,
                 }
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/shop/get_ware_info", data)
@@ -143,37 +146,8 @@
             },
             scrollFn() {
                 this.$nextTick(() => {
-                    if (!this.scroll) {
-                        this.scroll = new BScroll(this.$refs.bscroll, {
-                            scrollY: true,
-                            click: true,
-                            probeType: 2,
-                            pullUpLoad: {
-                                threshold: 10
-                            },
-                            mouseWheel: {   
-                                speed: 20,
-                                invert: false
-                            },
-                            useTransition: false 
-                        });
-                    }
-                    //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
-                    this.scroll.on('touchEnd', (pos) => {
-                        if (this.scroll.maxScrollY > pos.y + 10) {
-                            if (this.stop == false) {
-                                return false
-                            }
-                            // this.txtsmg = "上拉加载更多"
-                            // this.pageNum++
-                            // this.loadMore()
-                        }
-                    })
+                    listenScroll(this.$refs.bscroll)
                 });
-            },
-            alertDemo() {
-                this.alertpaymodel();
-               
             },
             alertpaymodel() {
                 this.payM = true
@@ -239,7 +213,11 @@
                     });
             },
             // 立刻购买
-            nowbuy() {
+            toGetSum() {
+                if(this.$store.state.baseUser==null){
+                    this.$router.push({path:'/login'});
+                    return false
+                }
                 var data=[{
                         "priceSum": this.mPrice*this.buyNum,
                         "userId": this.$store.state.baseUser.userId,
@@ -261,11 +239,13 @@
                         "sameWareSumPostCharge":''
                     }]
                     sessionStorage.setItem("getlist", JSON.stringify(data))
-                    console.log(JSON.parse(sessionStorage.getItem("getlist")))
                     this.$router.push({path:'/getSum'});
             },
             //获取购物车数量
             getCarNum(){
+                if(this.$store.state.baseUser==null){
+                    return false
+                }
                 let parameter={
                     userId:this.$store.state.baseUser.userId,
                 }
@@ -283,6 +263,10 @@
             },
             // 点击收藏
             clickCollection(){
+                if (this.$store.state.baseUser == null) {
+                    this.$router.push({path:'/login'});
+                    return false
+                }
                 this.$nextTick(function(){
                     if(this.isCollection==1){
                         this.getCollection()                        
@@ -303,7 +287,11 @@
                         if (response.data.code == 0 && response.data.success == true) {
                             Toast("收藏成功");
                             this.isCollection=0
+                        }else{
+                            Toast(response.data.msg);
+                            return false
                         }
+                        
                     })
                     .catch(error => {
                         console.log(error);
@@ -326,7 +314,27 @@
                     .catch(error => {
                         console.log(error);
                     });
-            }
+            },
+            // 加入浏览记录
+            addLookHistory() {
+                if (this.$store.state.baseUser == null) {
+                    return false
+                }
+                let data = {
+                    userId: this.$store.state.baseUser.userId,
+                    wareId: this.$route.query.id,
+                    lookTime: getNowFormatDate()
+                }
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/look/add", data)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
         }
     }
 </script>
@@ -390,7 +398,9 @@
             flex-direction: column-reverse;
         }
     }
-
+    .sever{
+        border-bottom:none;
+    }
     .page-infinite-wrapper {
         margin-top: -1px;
         overflow: scroll;

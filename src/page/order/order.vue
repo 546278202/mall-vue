@@ -145,10 +145,7 @@
 				};
 			
 				this.$http
-					.post(
-						process.env.API_HOST + "/mall_api/order/get_order_info",
-						parameter
-					)
+					.post(process.env.API_HOST + "/mall_api/order/get_order_info",parameter)
 					.then(response => {
 						if (response.data.code == 0 && response.data.success == true) {
 							var aa = response.data.data.list
@@ -158,7 +155,6 @@
 								this.stop=false
 							}
 							for (var i = 0; i < aa.length; i++) {
-								// aa[i].invalidTime=getMillisecond(aa[i].invalidTime)
 								this.goodsObj.push(aa[i])
 							}
 							
@@ -168,7 +164,7 @@
 						}
 					})
 					.catch(error => {
-						Indicator.close();
+						console.log(error)
 					});
 			},
 			scrollFn() {
@@ -187,6 +183,7 @@
 								},
 								useTransition: false 
 						});
+
 					} 
 					this.scroll.on('scroll', (pos) => {
 						//如果下拉超过50px 就显示下拉刷新的文字
@@ -239,7 +236,6 @@
 			stateClick(index,e){
 				var orderNo=this.goodsObj[index].oid
 				let _index=e.target.dataset.index
-				console.log(_index)
 				var x=''
 				switch (_index){
 					case "0":

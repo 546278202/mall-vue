@@ -11,11 +11,11 @@
             </div>
             <div class="My-top-block">
                 <div style="height:1.5rem;text-align:center;color:#333333; display:flex;">
-                    <div class="person">
-                        <a id="touXing" class="touXing"><i class="iconfont icon-wode-" style="font-size: 2rem ;"></i></a>
-                    </div>
+                    <router-link :to="{path:'/information'}" class="person">
+                        <div class="touXing"><i class="iconfont icon-wode-" style="font-size: 2rem ;"></i></div>
+                    </router-link>
                 </div>
-                <div id="UserName" style="height:3.5rem;font-weight: bold;text-align: center;color: #333333;font-size: 15px;line-height:2.5rem;">{{dataList.nickName}}</div>
+                <div style="height:3.5rem;font-weight: bold;text-align: center;color: #333333;font-size: 15px;line-height:2.5rem;">{{dataList.nickName}}</div>
                 <div style="height:2.5rem;text-align:center;color:#333333; display:flex;">
                     <router-link style="flex:1;" :to="{path:'/collection'}">
                         <p style="font-size:12px;color:#333;">我的收藏</p>

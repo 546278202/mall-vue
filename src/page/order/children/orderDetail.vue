@@ -4,7 +4,10 @@
             <div class="bscroll-container">
                 <ul>
                     <div class="state_model">
-                        <div class="CurrentTime">{{stateText}}</div>
+                        <div class="CurrentTime">
+                            <div>{{stateText}}</div>
+                            <div style="font-size:12px;">{{timeText}}</div>
+                        </div>
                         <div style="align-items: center;display: flex;flex:0.5;">
                             <div style="width:50px;height:50px;border-radius:25px;overflow: hidden;">
                                 <img src="../../../images/orderdetail.png" style="height:50px;">
@@ -96,6 +99,7 @@
                 pageSize: 20,
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
                 stateText: "加载中...",
+                timeText: "",
                 payM:false,	//支付框状态
 				paynum:'',	//实际金额
                 couponSum:''//支付前获取优惠值
@@ -149,11 +153,14 @@
 
             getTime() {
                 setInterval(()=> {
-                    let endtimeHaoMiao = getMillisecond(this.data.invalidTime)
-                    let nowtimeHaoMiao = getMillisecond(getNowFormatDate())
+                    var nowtimeHaoMiao = Date.parse(new Date()); 
+                    var stringTime=this.data.invalidTime.replace(new RegExp("-","gm"),"/")
+                    var endtimeHaoMiao= (new Date(stringTime)).getTime(); 
+                    let DifferenceMiao = Number(endtimeHaoMiao-nowtimeHaoMiao)
                     if (this.data.ordersStatus == 0) {
                         if (endtimeHaoMiao - nowtimeHaoMiao > 0) {
-                            this.stateText = "待买家付款剩余" + formatDuring(endtimeHaoMiao - nowtimeHaoMiao)
+                            this.stateText = "待买家付款" 
+                            this.timeText= "剩余"+ formatDuring(DifferenceMiao)
                         } else {
                             this.stateText = "交易已完成"
                         }
@@ -169,6 +176,7 @@
                     }
                 }, 1000)
             },
+        
             scrollFn() {
                 this.$nextTick(() => {
                     if (!this.scroll) {
@@ -235,7 +243,7 @@
         height: 75px;
         background: #f3cb0a;
         display: flex;
-        font-size: .85rem;
+        font-size: 0.7rem;
 
         .CurrentTime {
             text-align: left;
@@ -328,7 +336,7 @@
 
     .jie_sun_list {
         padding: 5px 10px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         background: #fff;
         text-align: left;
 

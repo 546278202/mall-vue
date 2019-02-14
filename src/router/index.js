@@ -4,6 +4,9 @@ import home from '@/page/home/home'
 import productList from '@/page/productList/productList'
 import mine from '@/page/mine/mine'
 import login from '@/page/login/login'
+import quickLogin from '@/page/login/quickLogin'
+import forget1 from '@/page/login/forget1'
+import forget2 from '@/page/login/forget2'
 import register from '@/page/login/register'
 import password from '@/page/login/password'
 import search from '@/page/search/search'
@@ -19,6 +22,7 @@ import collection from '@/page/collection/collection'
 import record from '@/page/collection/record'
 import discuss from '@/page/discuss/discuss'
 import setpage from '@/page/setpage/setpage'
+import information from '@/page/information/information'
 import list from '@/page/address/list'
 import addpage from '@/page/address/addpage'
 import editpage from '@/page/address/editpage'
@@ -74,11 +78,31 @@ export default new Router({
             component: mine,
             meta: { auth: true }
         },
+        // 登陆页面
         {
             path: '/login',
             name: 'login',
             component: login
         },
+        // 快捷登陆
+        {
+            path: '/quickLogin',
+            name: 'quickLogin',
+            component: quickLogin
+        },
+        // 忘记密码1
+        {
+            path: '/forget1',
+            name: 'forget1',
+            component: forget1
+        },
+        // 忘记密码2
+        {
+            path: '/forget2',
+            name: 'forget2',
+            component: forget2
+        },
+        // 注册页面
         {
             path: '/register',
             name: 'register',
@@ -89,7 +113,7 @@ export default new Router({
             name: 'password',
             component: password
         },
-        //搜索页
+        //搜索页面
         {
             path: '/search',
             name: 'search',
@@ -149,6 +173,12 @@ export default new Router({
             path: '/setpage',
             name: 'setpage',
             component: setpage
+        },
+        //个人资料
+        {
+            path: '/information',
+            name: 'information',
+            component: information
         },
         //地址列表
         {

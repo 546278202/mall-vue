@@ -1,9 +1,9 @@
 <template>
     <div>
+        <Header></Header>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
-                    <Header></Header>
                     <router-link :to="{path:'/list'}" class="DefaultAddress">
                         <div class="Edit" style="padding-right: 20px;">
                             <span style="display:flex;align-items: center;">
@@ -118,20 +118,17 @@
             @transferUser='transferUser' 
             :paynum='totalMoney+totalFare-totalpreferential'>
         </payModel>
-        <!-- 发票 -->
-        <faPiaoModel>
-            
-        </faPiaoModel>
+       
     </div>
 </template>
 <script>
     import Header from "../../components/Header";
-    import Footer from "../../components/Footer";
     import youHuiModel from "../../components/youHuiModel";
     import faPiaoModel from "../../components/faPiaoModel";
     import payModel from "../../components/payModel";
     import BScroll from 'better-scroll'
-    import { Indicator, Toast, InfiniteScroll } from "mint-ui";
+    import {Indicator, Toast, InfiniteScroll } from "mint-ui";
+    import {listenScroll} from "../../config/mUtils"
     export default {
         name: 'demo',
         data() {
@@ -150,38 +147,38 @@
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
             };
         },
+       
         mounted() {
             this.$store.commit("changeTitle", "确认订单");
             this.loadAddress();
             this.loadMore();
-            this.scrollFn();
-            this.abc()
-
+            this.faPiaoFuZhi()
+            setTimeout(()=>{
+                this.scrollFn()
+            },500)
         },
+      
         //获取屏幕高度
         beforeMount(height) {
-            var height = 0
+            var height = 50
             var h = document.documentElement.clientHeight || document.body.clientHeight;
             this.styleObj1["height"] = h - height + "px"
-
         },
         components: {
             Header,
-            Footer,
             youHuiModel,
             faPiaoModel,
             payModel
         },
         methods: {
             // 给发票赋值
-            abc(){
+            faPiaoFuZhi(){
                 let faPiaoList=JSON.parse(sessionStorage.getItem('faPiaoList'))
-                console.log(faPiaoList)
+                if(faPiaoList==null){
+                    return 
+                }
                 for(var i=0;i<this.goodsObj.length;i++){
-                    let a=faPiaoList[i]
-
-                    console.log(a.invoiceType)
-                    
+                    let a=faPiaoList[i] 
                     let paramer={
                         invoiceType:a.invoiceType,
                         invoiceName:a.invoiceName,
@@ -213,26 +210,7 @@
                     this.goodsObj[i].fapiao=paramer
                 }
             },
-            scrollFn() {
-                this.$nextTick(() => {
-                    if (!this.scroll) {
-                        this.scroll = new BScroll(this.$refs.bscroll, {
-                            swipeTime: 2000,
-                            scrollY: true,
-                            click: true,
-                            probeType: 2,
-                            pullUpLoad: {
-                                threshold: 10
-                            },
-                            mouseWheel: {  
-                                speed: 20,
-                                invert: false
-                            },
-                            useTransition: false 
-                        });
-                    }
-                });
-            },
+            
             getYouHuiModel(e) {
                 this.showa = true;
                 this.$refs.youhui.getDomHeight(e)
@@ -312,8 +290,18 @@
                     }
                 }
                 this.goodsObj = dest;
-            },
 
+            },
+            // 滚动事件
+            scrollFn() {
+                this.$nextTick(() => {
+                    if (!this.scroll) {
+                         listenScroll(this.$refs.bscroll)
+                    }else{
+                        this.scroll.refresh();
+                    };
+                });
+            },
             // 计算商品总金额
             calTotalMoney: function () {
                 var oThis = this;
@@ -403,9 +391,13 @@
                             mallAdminId: a.mallAdminId,
                             sameWareSumPostCharge: this.mdparr[i]
                         };
+                        
                         // 更改键值
-                        List.invoiceInfo['invoicetype'] = List.invoiceInfo['invoiceType'];
-                        delete List.invoiceInfo['invoiceType'];
+                        if(List.invoiceInfo!=''){
+                            List.invoiceInfo['invoicetype'] = List.invoiceInfo['invoiceType'];
+                            delete List.invoiceInfo['invoiceType'];
+                        }
+                       
                         wareList.push(List);
                     }
                     wareListParent.push(wareList);
@@ -417,21 +409,19 @@
                 };
                 data = JSON.stringify(data);
                 var parameter = { orders: data };
-                console.log(parameter);
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/order/create_order", parameter)
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
-                            console.log(response.data)
                             // 预支付订单
                             this.advancePaymentOrder = response.data.data;
-                            Indicator.close();
                             this.alertpaymodel();
+                        }else{
+                            Toast(response.data.msg);
+                            return false
                         }
                     })
                     .catch(error => {
-                        Indicator.close();
-                        Toast("下单失败");
                         console.log(error);
                     });
             },
@@ -463,11 +453,6 @@
 </script>
 
 <style lang="scss" scoped>
-    .wrap {
-        display: flex;
-        flex-direction: column;
-    }
-
     ul {
         padding-bottom: 3rem;
         font-size: 0.7rem;
@@ -597,11 +582,9 @@
         display: flex;
         height: 2rem;
         line-height: 2rem;
-        font-size: 0.8rem;
         padding: 0 10px;
         overflow: hidden;
         background: #fff;
-
         .FontColr {
             color: #cc0000;
         }

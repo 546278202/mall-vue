@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="login-content">
             <!-- <router-link style="display:flex;justify-content: center;margin-top:1rem;font-size: 18px;" :to="{path:'/login'}">登陆</router-link> -->
-            <div class="login_title">欢迎注册新用户</div>
+            <div class="login_title">忘记密码</div>
             <div style="margin-top:2rem;">
                 <div class="item">
                     <i class="iconfont icon-zhanghao"></i>
@@ -98,8 +98,12 @@
                         userName: this.input1,
                         verificationCode:this.checkCode,
                     }    
-                    this.$router.push({ path: '/password',query:parameter});
+                    this.$router.push({ path: '/forget2',query:parameter});
+                }else{
+                    Toast({ message: '验证码输入错误' });
+                    return false;
                 }
+
             }
         }
     };
@@ -129,6 +133,7 @@
         text-align: left;
         box-sizing: border-box;
         display: flex;
+
         input {
             width: 100%;
             font-size: 0.7rem;

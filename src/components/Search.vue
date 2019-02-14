@@ -16,22 +16,25 @@
     </div>
 </template>
 <script>
+    import bus from '../assets/eventBus'
     export default {
         data() {
             return {
-                message: ''
+
             }
         },
         mounted() {
 
         },
+       
         methods: {
             goBack() {
                 this.$route.go(-1)
             },
-            // 子调用父
+
+            //统计组件之间调用
             clickSearch() {
-                this.$emit('SearchModel')
+                bus.$emit("abc","1334")
             },
 
         },

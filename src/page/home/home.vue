@@ -1,6 +1,6 @@
 <template>
-    <div class="rules">
-        <Search @SearchModel="SearchModel"></Search>
+    <div>
+        <Search></Search>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
@@ -29,11 +29,7 @@
         </div>
         <Footer></Footer>
         <!-- 搜索model -->
-        <searchModel 
-            ref="mychild" 
-            v-on:childByValue="childByValue">
-        </searchModel>
-       
+        <searchModel></searchModel>
     </div>
 </template>
 <script>
@@ -75,13 +71,7 @@
             searchModel
         },
         methods: {
-            // 调用子组件
-            SearchModel() {
-                this.$refs.mychild.parentHandleclick(true);
-            },
-            childByValue(){
-                this.$refs.mychild.parentHandleclick(false);
-            },
+
             loadMore() {
                 let parameter = {
                     time: getNowFormatDate(),
@@ -93,7 +83,6 @@
                     .then(response => {
                         Indicator.close();
                         if (response.data.code == 0 && response.data.success == true) {
-                            console.log(response.data.data.wareList)
                             this.items = response.data.data.recommendWare;
                             var aa = response.data.data.wareList
 							this.txtsmg="上拉加载更多"
@@ -115,18 +104,17 @@
                 this.$nextTick(() => {
                     if (!this.scroll) {
                         this.scroll = new BScroll(this.$refs.bscroll, {
-                            swipeTime: 2000,
                             scrollY: true,
                             click: true,
-                            probeType: 2,
+                            probeType: '',
                             pullUpLoad: {
                                 threshold: 10
                             },
-                            mouseWheel: {    // pc端同样能滑动
+                            mouseWheel: { 
                                 speed: 20,
                                 invert: false
                             },
-                            useTransition: false  // 防止iphone微信滑动卡顿
+                            useTransition: false  
                         });
                     } 
                     //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
