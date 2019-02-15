@@ -162,7 +162,7 @@
             box-sizing: border-box;
             background: #fff;
             padding-left: 10px;
-            border-bottom: 1px solid #dcdcdc;
+            border-bottom: 1px solid #f5f5f5;
             input {
                 width: 100%;
                 height:40px;

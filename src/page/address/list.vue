@@ -116,7 +116,7 @@
             display: flex;
             width: 100%;
             padding-left: 10px;
-            border-bottom: 1px solid #dcdcdc;
+            border-bottom: 1px solid #f5f5f5;
             font-size:16px;
             background: #fff;
             text-align: left;

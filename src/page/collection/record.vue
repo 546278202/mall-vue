@@ -3,7 +3,7 @@
         <Header>
             <a slot="logo" class="administration" @click="administration">管理</a>
         </Header>
-        <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
+        <!-- <p class="drop-down" v-if="dropDown">松手刷新数据...</p> -->
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>

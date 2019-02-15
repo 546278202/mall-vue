@@ -55,7 +55,7 @@
                                                         {{list.quantity}}
                                                         <input type="text">
                                                     </div>
-                                                    <div class="subtraction">
+                                                    <div class="subtraction"  @click="addDown(index1, index)">
                                                         <i class="iconfont icon-iconfontmove"></i>
                                                     </div>
                                                 </div>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="FaPiaoLi" @click="tofaPiaoPage(index1)" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">发票：</div>
-                                <div style="flex:1;line-height:45px;text-align:right;">{{item.fapiao.invoiceName}}</div>
+                                <div style="flex:1;line-height:45px;text-align:right;">{{item.fapiao.invoiceName ? item.fapiao.invoiceName:"不使用"}}</div>
                             </div>
                             <div class="RemarksList" style="height:45px;display:flex;padding: 0 10px;border-top: 1px solid #dcdcdc;">
                                 <div style="line-height: 45px;">买家留言：</div>
@@ -96,7 +96,7 @@
                     <div class="CartTotalAmount">
                         <div class="AllSelection" style="display: flex;margin-right: 10px;align-items: center;"></div>
                         <div class="Settlement">
-                            <span style="font-size:0.6rem;">合计:￥{{totalMoney+totalFare-totalpreferential}}</span>
+                            <span style="font-size:0.6rem;">合计:￥{{(totalMoney+totalFare-totalpreferential).toFixed(2)}}</span>
                         </div>
                         <div class="SettlementBtn" @click="onLinePay">在线支付</div>
                     </div>
@@ -152,7 +152,6 @@
             this.$store.commit("changeTitle", "确认订单");
             this.loadAddress();
             this.loadMore();
-            this.faPiaoFuZhi()
             setTimeout(()=>{
                 this.scrollFn()
             },500)
@@ -174,43 +173,13 @@
             // 给发票赋值
             faPiaoFuZhi(){
                 let faPiaoList=JSON.parse(sessionStorage.getItem('faPiaoList'))
-                if(faPiaoList==null){
+                if(faPiaoList==null || faPiaoList==''){
                     return 
                 }
                 for(var i=0;i<this.goodsObj.length;i++){
-                    let a=faPiaoList[i] 
-                    let paramer={
-                        invoiceType:a.invoiceType,
-                        invoiceName:a.invoiceName,
-                        invoiceNumber:a.invoiceNumber,
-                        address:a.address,
-                        phone:a.phone,
-                        bank: a.bank,
-                        bankAccount:a.bankAccount,
-                    }
-                   
-                    if(paramer.invoiceName==null){
-                        paramer.invoiceName=''
-                    }
-                    if(paramer.invoiceNumber==null){
-                        paramer.invoiceNumber=''
-                    }
-                    if(paramer.address==null){
-                        paramer.address=''
-                    }
-                    if(paramer.phone==null){
-                        paramer.phone=''
-                    }
-                    if(paramer.bank==null){
-                        paramer.bank=''
-                    }
-                    if(paramer.bankAccount==null){
-                        paramer.bankAccount=''
-                    }
-                    this.goodsObj[i].fapiao=paramer
+                    this.goodsObj[i].fapiao=faPiaoList[i]
                 }
             },
-            
             getYouHuiModel(e) {
                 this.showa = true;
                 this.$refs.youhui.getDomHeight(e)
@@ -221,8 +190,10 @@
             tofaPiaoPage(index){
                 let arr=[];
                 for(var i=0;i<this.goodsObj.length;i++){
+                    if(this.goodsObj[i].fapiao.invoiceName==''){
+                        this.goodsObj[i].fapiao=''
+                    }
                     arr.push(this.goodsObj[i].fapiao)
-                    console.log(this.goodsObj[i].fapiao)
                 }
                 sessionStorage.setItem('faPiaoList', JSON.stringify(arr))
                 let paramer={index:index}
@@ -290,7 +261,7 @@
                     }
                 }
                 this.goodsObj = dest;
-
+                this.faPiaoFuZhi()
             },
             // 滚动事件
             scrollFn() {
@@ -303,19 +274,18 @@
                 });
             },
             // 计算商品总金额
-            calTotalMoney: function () {
-                var oThis = this;
+            calTotalMoney() {
                 this.totalMoney = 0;
                 for (var i = 0, len = this.goodsObj.length; i < len; i++) {
                     var list = this.goodsObj[i]["list"];
-                    list.forEach(function (item, index, arr) {
-                        oThis.totalMoney +=
-                            parseFloat(item.wareprice) * parseFloat(item.quantity);
+                    list.forEach( (item, index, arr)=> {
+                        this.totalMoney +=parseFloat(item.wareprice) * parseFloat(item.quantity);
                     });
                 }
+                this.totalMoney=this.totalMoney.toFixed(2)
             },
             // 计算每个店铺的运费总额
-            calEveryFare: function (index) {
+            calEveryFare(index){
                 var everyStoreFare = 0,
                     list = this.goodsObj[index]['list'];
                 list.forEach(function (item, index, arr) {
@@ -359,13 +329,15 @@
             },
 
             addUp(index1, index) {
-                var list = this.goodsObj[index1]["list"];
-                ++this.goodsObj[index1]["list"][index].quantity;
+                let list = this.goodsObj[index1]["list"];
+                ++list[index].quantity;
+                this.calTotalMoney()
             },
-            addDown() {
-                if (this.buyNum > 1) {
-                    this.buyNum--;
-                    console.log(this.buyNum);
+            addDown(index1, index) {
+                let list = this.goodsObj[index1]["list"];
+                if(list[index].quantity>1){
+                    --list[index].quantity;
+                    this.calTotalMoney()
                 }
             },
             // 在线结算

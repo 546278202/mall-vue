@@ -6,7 +6,9 @@
                 <ul>
                     <mt-swipe :auto="4000" style="height:200px;">
                         <mt-swipe-item v-for="item in items" :key="item">
-                            <img v-bind:src="item.wareCover" style="width: 100%;height: 100%;">
+                            <router-link :to="{path:'/detail' , query:{id:item.wareid}}">
+                                <img :src="item.wareCover" style="width: 100%;height: 100%;">
+                            </router-link>   
                         </mt-swipe-item>
                     </mt-swipe>
                     <div class="block-img">

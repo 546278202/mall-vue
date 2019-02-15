@@ -303,6 +303,7 @@
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
                 font-size: 0.7rem;
+                text-align: left;
             }
 
             .ShopSize {

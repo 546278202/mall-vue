@@ -17,10 +17,10 @@
                     <div style="padding:10px" v-if="goodsObj">
                         <span>最近搜索</span>
                         <span class="DelHist" @click="DeleteLocalData">
-                            <i class="iconfont icon-unie639" style="font-size: 0.8rem ;"></i>
+                            <i class="iconfont icon-unie639" style="font-size: 0.7rem ;"></i>
                         </span>
                     </div>
-                    <div style="padding:0 10px; font-size:0.7rem;height:100%;">
+                    <div style="padding:0 10px; font-size:0.6rem;height:100%;">
                         <span v-for="(item,index) in goodsObj" :key="index"  class="HistoryList"><a>{{item}}</a></span>
                     </div>
                 </div>
@@ -64,21 +64,22 @@
             //搜索
             loadMore() {
                 let keyword=this.something
-                if(keyword==''){
-                    this.$router.push("/search?name="+this.something);
+                
+                this.closeSeachModel()
+                this.$router.push("/search?name="+this.something);
+        
+                var aa=JSON.parse(localStorage.getItem('SearchHistory'))
+                if(aa==null){
+                    aa=[];
+                    aa.push(keyword);
+                    localStorage.setItem('SearchHistory',JSON.stringify(aa));
                 }else{
-                    var aa=JSON.parse(localStorage.getItem('SearchHistory'))
-                    if(aa==null){
-                        aa=[];
+                    if(aa.indexOf(keyword)==-1){
                         aa.push(keyword);
                         localStorage.setItem('SearchHistory',JSON.stringify(aa));
-                    }else{
-                        if(aa.indexOf(keyword)==-1){
-                            aa.push(keyword);
-                            localStorage.setItem('SearchHistory',JSON.stringify(aa));
-                        }	
-                    }
+                    }	
                 }
+            
                 this.goodsObj=JSON.parse(localStorage.getItem('SearchHistory'))
             },
             // 删除
@@ -150,8 +151,6 @@
     }
 
     .HistoryList>a {
-        height: 1.2rem;
-        line-height: 1.2rem;
         border-radius: 3px;
         display: block;
         width: 100%;
@@ -163,5 +162,6 @@
         padding-right: 13px;
         overflow: hidden;
         box-sizing: border-box;
+        padding:4px 5px;
     }
 </style>

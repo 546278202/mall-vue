@@ -1,7 +1,6 @@
 <template>
-    <div class="rules">
-        <router-view></router-view>
-        <Search @SearchModel="SearchModel"></Search>
+    <div>
+        <Search></Search>
         <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
@@ -21,13 +20,15 @@
                 </ul>
             </div>
         </div>
-
+        <!-- 搜索model -->
+        <searchModel></searchModel>
     </div>
 </template>
 
 <script>
     import Header from "../../components/Header";
     import Search from "../../components/Search";
+    import searchModel from "../../components/searchModel";
     import BScroll from 'better-scroll'
     import { Indicator, InfiniteScroll, Spinner, Toast } from "mint-ui";
     import { getNowFormatDate, getMillisecond } from "../../config/mUtils"
@@ -61,10 +62,9 @@
         },
         components: {
             Search,
+            searchModel
         },
         methods: {
-          
-          
             loadMore() {
                 let parameter = {
                     shopname: this.$route.query.name,
@@ -185,9 +185,7 @@
         .right {
             flex: 1;
             text-align: left;
-
             .txt {
-                height: 2.2rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
@@ -195,13 +193,11 @@
                 -webkit-box-orient: vertical;
                 font-size: 0.7rem;
             }
-
             .money {
                 color: #cc0000;
                 font-size: 0.9rem;
                 margin-bottom: 10px;
             }
-
             .number {
                 flex: 1;
                 height: 1.5rem;

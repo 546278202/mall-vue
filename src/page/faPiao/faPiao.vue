@@ -16,6 +16,9 @@
                         <div v-if="item.invoiceType==1" style="flex:1;text-align: right;">企业</div>
                         <div v-if="falg" class="EditBtn"><i class="iconfont icon-arrow_right" style="font-size: '' ;"></i></div>
                     </li>
+                    <li @click="CancelUseFaPiao">不使用</li>
+
+
                     <div class="title">
                         <label class="mint-radiolist-label">
                             <span style="margin-right: 5px;">企业</span>
@@ -58,7 +61,7 @@
     import Header from "../../components/Header";
     import BScroll from 'better-scroll'
     import { Indicator, InfiniteScroll, Spinner, Checklist, Toast } from "mint-ui";
-    import { getNowFormatDate } from "../../config/mUtils"
+    import { getNowFormatDate,listenScroll } from "../../config/mUtils"
     export default {
         data() {
             return {
@@ -84,12 +87,13 @@
         mounted() {
             this.$store.commit('changeTitle', "发票抬头")
             this.scrollFn()
+            
             this.loadMore()
             this.tabData();
         },
         watch: {
             goodsObj(val) {
-                this.scroll.refresh()
+                
             },
             allChecked(val) {
                 if(val == true) {
@@ -156,25 +160,17 @@
                     ];
                 }
             },
+            // 滚动事件
             scrollFn() {
                 this.$nextTick(() => {
                     if (!this.scroll) {
-                        this.scroll = new BScroll(this.$refs.bscroll, {
-                            scrollY: true,
-                            click: true,
-                            probeType: 2,
-                            pullUpLoad: {
-                                threshold: 10
-                            },
-                            mouseWheel: {
-                                speed: 20,
-                                invert: false
-                            },
-                            useTransition: false
-                        });
-                    }
+                         listenScroll(this.$refs.bscroll)
+                    }else{
+                        this.scroll.refresh();
+                    };
                 });
             },
+
             // 管理状态
             administration() {
                 if (this.falg == true) {
@@ -190,7 +186,6 @@
                     this.$router.push("/editFaPiao?id=" + id);
                 }else{      
                       
-                    let faPiaoList=JSON.parse(sessionStorage.getItem('faPiaoList'))
                     let a=this.goodsObj[index]
                     let paramer={
                         invoiceType:a.invoiceType,
@@ -201,12 +196,24 @@
                         bank: a.bank,
                         bankAccount:a.bankAccount,
                     }
+                    let faPiaoList=JSON.parse(sessionStorage.getItem('faPiaoList'))
 
                     faPiaoList[this.$route.query.index]=paramer
-
-                    sessionStorage.setItem('faPiaoList', JSON.stringify(faPiaoList))      
+                    for(var i=0;i<faPiaoList.length;i++){
+                        if(faPiaoList[i].invoiceName==''){
+                            faPiaoList[i]=''
+                        }
+                    }
+                    sessionStorage.setItem('faPiaoList', JSON.stringify(faPiaoList))
                     this.$router.push({ path: '/getSum',query:{index:this.$route.query.index}});
                 }
+            },
+            // 取消发票
+            CancelUseFaPiao(){
+                let faPiaoList=JSON.parse(sessionStorage.getItem('faPiaoList'))
+                faPiaoList[this.$route.query.index]=''
+                sessionStorage.setItem('faPiaoList', JSON.stringify(faPiaoList))    
+                this.$router.push({ path: '/getSum',query:{index:this.$route.query.index}});  
             },
             // 添加抬头
             getSave() {
@@ -237,23 +244,20 @@
                     return false
                 }
                
-                this.$http
-                    .post(process.env.API_HOST + "/mall_api/invoice/addInvoice", parameter)
-                    .then(response => {
-                        console.log(response)
-                        if (response.data.code == 0 && response.data.success == true) {
-                            Toast("添加数据成功");
-                            this.loadMore()
-                        } else {
-                            Toast("添加数据失败");
-                        }
-                    })
-                    .catch(error => {
-                        Indicator.close();
-                    });
+                this.$http.post(process.env.API_HOST + "/mall_api/invoice/addInvoice", parameter)
+                .then(response => {
+                    console.log(response)
+                    if (response.data.code == 0 && response.data.success == true) {
+                        Toast("添加数据成功");
+                        this.loadMore()
+                    } else {
+                        Toast("添加数据失败");
+                    }
+                })
+                .catch(error => {
+                    Indicator.close();
+                });
             },
-            
-
         }
     }
 </script>

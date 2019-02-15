@@ -1,11 +1,9 @@
 <template>
-	<div class="rules">
-		<router-view></router-view>
-		
+	<div>		
 		<div class="nav_type">
 			<a v-for="(item,index) in items" :key="index" type="2" @click="tabNav(index)" :class='currentIndex==item.tab? "font-red":""'>{{item.text}}</a>
 		</div>
-		<p class="drop-down" v-if="dropDown">松手刷新数据...</p>
+		<p class="drop-down" v-if="dropDown">{{RefreshText}}</p>
 		<div class="bscroll" ref="bscroll" :style="styleObj1">
 			<div class="bscroll-container">
 				<ul>
@@ -23,14 +21,14 @@
 										<div class="ShopSize">{{item.specOne}}</div>
 										<div class="NumPrice">
 											<span>共{{item.wareNum}}件</span>
-											<span style="margin-left:20px;">单价：</span>
-											<sapn class="font-red" style="font-size: 0.8rem;">￥{{item.warePrice}}</sapn>
+											<span style="margin-left:20px;">单价:</span>
+											<sapn class="font-red" style="font-size: 0.8rem;">￥{{Number(item.warePrice).toFixed(2)}}</sapn>
 										</div>
 									</a>
 								</div>
 							</div>
 							<div style="background:#fff;text-align:right;font-size: 0.8rem;padding: 10px;border-top: 1px solid #eee;">
-								<a style="margin-left:20px;">合计：{{item.wareTotalPrice}}</a>
+								<a style="margin-left:20px;">合计:{{Number(item.wareTotalPrice).toFixed(2)}}</a>
 							</div>
 							<!-- 订单状态:0待付款,1待发货,2待收货,3已完成/待评价,4售后',5取消订单  -->
 							<div class="content3" @click.stop="stateClick(index,$event)" ref="menuStateList">
@@ -98,6 +96,7 @@
 				payM:false,	//支付框状态
 				paynum:'',	//支付金额
 				timestamp :'', //当前毫秒值 
+				RefreshText:''
 			}
 		},
 		//获取屏幕高度
@@ -159,7 +158,9 @@
 							}
 							
 							if(this.goodsObj.length==0){
+								this.dropDown = false
 								this.txtsmg="暂无数据"
+								
 							}
 						}
 					})
@@ -187,11 +188,14 @@
 					} 
 					this.scroll.on('scroll', (pos) => {
 						//如果下拉超过50px 就显示下拉刷新的文字
-						if (pos.y > 50) {
+						if(this.goodsObj.length>0){
+							this.RefreshText="下拉刷新"
 							this.dropDown = true
-						} else {
-							this.dropDown = false
+							if (pos.y > 50) {
+								this.RefreshText="释放立即刷新"
+							}		
 						}
+						
 					})
 					//touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
 					this.scroll.on('touchEnd', (pos) => {
@@ -200,7 +204,7 @@
 							this.goodsObj.length=0
 							this.pageNum=1
 							this.loadMore()
-							this.dropDown = false
+							// this.dropDown = false
 							this.txtsmg=""
 						}
 						//上拉加载 总高度>下拉的高度+10 触发加载更多
@@ -349,7 +353,7 @@
 		background: #fff;
 		line-height: 2.5rem;
 		font-size: 0.7rem;
-		border-top: 1px solid #d3d3d3;
+		border-top: 1px solid #f5f5f5;
 		text-align: right;
 		flex-direction: row-reverse;
 		.payment {

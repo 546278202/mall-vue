@@ -1,10 +1,12 @@
 <template>
     <div class="nav-box">
-        <a v-for="(item,index) in items" :key="index" @click="routerLink(item)" :class="{ act : active == item.path} ">
-            <div><i class="iconfont" :class="item.icon"></i> </div>
-            <div>{{item.text}}</div>
-            <span class="cart-num" v-if="item.active==2 && CarNum>0">{{CarNum}}</span>
-        </a>
+        <slot name='logo'>
+            <a v-for="(item,index) in items" :key="index" @click="routerLink(item)" :class="{ act : active == item.path} ">
+                <div><i class="iconfont" :class="item.icon"></i> </div>
+                <div>{{item.text}}</div>
+                <span class="cart-num" v-if="item.active==2 && CarNum>0">{{CarNum}}</span>
+            </a>
+        </slot>
     </div>
 </template>
 <script>
