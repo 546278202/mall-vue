@@ -60,9 +60,7 @@
                 this.$http.post(process.env.API_HOST + "/mall_api/user/register", parameter)
                     .then((response) => {
                         if (response.data.code == 0 && response.data.success == true) {
-                            setTimeout(() => {
-                                this.$router.push({ path: '/login'});
-                            }, 600)
+                            this.$router.push({ path: '/login'});
                         }else{
                             Toast(response.data.msg);
                         }

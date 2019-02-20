@@ -35,7 +35,7 @@
         display: flex;
         background: #fff;
         border-bottom: 1 solid #dcdcdc;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .searchInput {

@@ -91,10 +91,7 @@
                     pageSize: this.pageSize
                 };
                 this.$http
-                    .post(
-                        process.env.API_HOST + "/mall_api/collection/get_collection",
-                        parameter
-                    )
+                    .post(process.env.API_HOST + "/mall_api/collection/get_collection",parameter)
                     .then(response => {
                         if (response.data.code == 0 && response.data.success == true) {
                             var aa = response.data.data.list
@@ -107,11 +104,10 @@
                                 aa[i]['checked'] = this.flag;
                                 this.goodsObj.push(aa[i])
                             }
-                            Indicator.close();
                         }
                     })
                     .catch(error => {
-                        Indicator.close();
+
                     });
             },
             scrollFn() {
@@ -130,8 +126,6 @@
                             },
                             useTransition: false  // 防止iphone微信滑动卡顿
                         });
-                    } else {
-                        // this.scroll.refresh();
                     }
                     this.scroll.on('scroll', (pos) => {
                         //如果下拉超过50px 就显示下拉刷新的文字
@@ -224,25 +218,17 @@
                 }
               
                 let ids=idsarr.toString();
-                let parameter={
-                    "ids":ids
-                }
+                let parameter={"ids":ids}
                 this.$http
-                    .post(
-                        process.env.API_HOST + "/mall_api/collection/del_by_ids",
-                        parameter
-                    )
+                    .post(process.env.API_HOST + "/mall_api/collection/del_by_ids",parameter)
                     .then(response => {
                         console.log(response)
                         if (response.data.code == 0 && response.data.success == true) {
                             this.loadMore()
-                            Toast(response.data.msg);
-                           
-                            Indicator.close();
+                            Toast(response.data.msg);                           
                         }
                     })
                     .catch(error => {
-                        Indicator.close();
                     });
             }
         }

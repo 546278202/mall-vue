@@ -83,7 +83,6 @@
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/shop/get_ware_list",parameter)
                     .then(response => {
-                        Indicator.close();
                         if (response.data.code == 0 && response.data.success == true) {
                             this.items = response.data.data.recommendWare;
                             var aa = response.data.data.wareList
@@ -95,11 +94,10 @@
 							for (var i = 0; i < aa.length; i++) {
 								this.goodsObj.push(aa[i])
 							}
-                            Indicator.close();
                         }
                     })
                     .catch(error => {
-                        Indicator.close();
+                        
                     });
             },
             scrollFn() {

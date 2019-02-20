@@ -4,19 +4,11 @@
         <div class="bscroll" ref="bscroll" :style="styleObj1">
             <div class="bscroll-container">
                 <ul>
-                    <router-link :to="{path:'/list'}" class="detail_top">
-                        <div>收货地址</div>		  	   
-                        <div class="top-right"><i class="iconfont icon-arrow_right" style="font-size: 0.8rem ;"></i></div>	
-                    </router-link>
-                    <router-link :to="{path:'/setpassword'}" class="detail_top">
-                   	 
-                        <div>修改密码</div>		  	   
-                        <div class="top-right"><i class="iconfont icon-arrow_right" style="font-size: 0.8rem ;"></i></div>	
-                    </router-link>                   
+                    <a class="EditLeft"><input placeholder="请输入昵称" v-model="input1" style="border:0;"></a>
                 </ul>
             </div>
             <div class="yesbtn">
-                <a class="button" @click="signOut">退出登录</a>
+                <a class="button" @click="loadMore">确定</a>
             </div>
         </div>
     </div>
@@ -24,11 +16,14 @@
 <script>
     import Header from '../../components/Header'
     import BScroll from 'better-scroll'
-    import { Indicator, InfiniteScroll, Spinner ,Popup,MessageBox} from "mint-ui";
+    import { Indicator, InfiniteScroll, Spinner ,Popup,MessageBox,Toast} from "mint-ui";
     import { getNowFormatDate } from "../../config/mUtils"
+    import md5 from 'js-md5';
+
     export default {
         data() {
             return {
+                input1:'',
                 styleObj1: { "height": '', "width": "100%", "overflow": "hidden", 'font-size': '40px' },
             }
         },
@@ -42,21 +37,33 @@
 
         },
         mounted() {
-            this.$store.commit('changeTitle', "设置")
+            this.$store.commit('changeTitle', "我的资料")
             this.scrollFn()
         },
-       
         components: {
             Header,
         },
         methods: {
-            // 退出登录
-            signOut(){
-                MessageBox.confirm('确定执行此操作?').then(action => {
-                    sessionStorage.removeItem('baseUser')
-                    this.$router.push("/login")
-                });
-            },
+            loadMore() {
+                if(this.input1==''){
+                    return false
+                }
+                let parameter = {
+                    userName:this.$store.state.baseUser.userName,
+                    userNike:this.input1,
+                }
+                this.$http
+                    .post(process.env.API_HOST + "/mall_api/user/reset_nickname",parameter)
+                    .then(response => {
+                        if (response.data.code == 0 && response.data.success == true) {
+                            Toast('昵称修改成功')
+                        }
+                    })
+                    .catch(error => {
+
+                    });
+            },           
+           
             scrollFn() {
                 this.$nextTick(() => {
                     if (!this.scroll) {
@@ -74,17 +81,7 @@
                             },
                             useTransition: false  // 防止iphone微信滑动卡顿
                         });
-                    } 
-                    //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
-                    this.scroll.on('touchEnd', (pos) => {
-                        if (this.scroll.maxScrollY > pos.y + 10) {
-                            if (this.stop == false) {
-                                return false
-                            }
-                            this.txtsmg = "上拉加载更多"
-                            this.pageNum++
-                        }
-                    })
+                    }
                 });
             }
         }
@@ -106,7 +103,7 @@
     ul{
         overflow: hidden;
         margin-top: 5px;
-       a{
+        a{
             background: #fff;
             height: 50px;
             line-height: 50px;
@@ -115,16 +112,16 @@
             border-bottom: 1px solid #dcdcdc;
             justify-content: space-between;
             padding: 0 10px;
-            font-size:15px;
-       }
-       a:last-child{
-        border-bottom:none;
-       }
-       .content-block {
-            margin: 1.75rem 0;
-            padding: 0 .75rem;
-            color: #6d6d72;
+           
+            input {
+                width: 100%;
+                padding: 0 10px;
+                font-size:0.7rem;
+            }
         }
+        a:last-child{
+            border-bottom:none;
+        }   
     }
     .yesbtn {
         align-items: center;
@@ -160,6 +157,4 @@
             border-radius: 2rem;
         }
     }
-   
-   
 </style>

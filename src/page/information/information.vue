@@ -7,18 +7,16 @@
                     <router-link :to="{path:'/'}">
                         <div class="EditLeft">头像</div>
                         <div class="EditRight">
-                            <div class="touxiang">
-                                <i class="iconfont icon-wode-" style="font-size: 1.5rem;"></i>
-                            </div>
+                            <div class="touxiang"><i class="iconfont icon-wode-" style="font-size: 1.5rem;"></i></div>
                         </div>			  	   
                         <div class="top-right"><i class="iconfont icon-arrow_right" style="font-size: 0.7rem ;"></i></div>	
                     </router-link>
-                    <router-link :to="{path:'/'}">
+                    <router-link :to="{path:'/information/setname'}">
                         <div class="EditLeft">用户名</div>
                         <div class="EditRight">{{goodsObj.userNike}}</div>			  	   
                         <div class="top-right"><i class="iconfont icon-arrow_right" style="font-size: 0.7rem ;"></i></div>	
                     </router-link>
-                    <router-link :to="{path:'/'}">
+                    <router-link :to="{path:'/information/setphone'}">
                         <div class="EditLeft">手机号</div>
                         <div class="EditRight">{{goodsObj.userName}}</div>			  	   
                         <div class="top-right"><i class="iconfont icon-arrow_right" style="font-size: 0.7rem ;"></i></div>	

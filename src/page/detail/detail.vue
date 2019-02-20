@@ -59,10 +59,10 @@
                 <p>购物车</p>
                 <span class="tableState" v-if="CarNum>0">{{CarNum}}</span>
             </a>
-            <a>
+            <router-link v-if="data.mallNumber" class="myList" :to="{path:'/mall' , query:{mallNumber:data.mallNumber}}">
                 <i class="iconfont icon-shouye1"></i>
                 <p>店铺</p>
-            </a>
+            </router-link>
             <a @click="addcar" class="add-car">加购物车</a>
             <a class="to-buy open-popup" style="color:#fff;font-size: 15px;" @click="toGetSum">立刻购买</a>
         </div>
@@ -130,7 +130,6 @@
                 this.$http
                     .post(process.env.API_HOST + "/mall_api/shop/get_ware_info", data)
                     .then(response => {
-                        Indicator.close();
                         let data = response.data.data
                         this.data = data;
                         this.items = data.coverList;
@@ -139,6 +138,8 @@
                         this.mPrice = data.specJson.specValue[0].specPrice
                         this.mspecName = data.specJson.specValue[0].specName
                         this.isCollection=data.isCollection
+            console.log(this.data)
+
                     })
                     .catch(error => {
                         console.log(error);

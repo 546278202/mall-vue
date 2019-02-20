@@ -64,10 +64,11 @@
             //搜索
             loadMore() {
                 let keyword=this.something
-                
                 this.closeSeachModel()
                 this.$router.push("/search?name="+this.something);
-        
+                if(keyword==''){
+                    return false
+                }
                 var aa=JSON.parse(localStorage.getItem('SearchHistory'))
                 if(aa==null){
                     aa=[];

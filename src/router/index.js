@@ -13,7 +13,6 @@ import search from '@/page/search/search'
 import detail from '@/page/detail/detail'
 import buyCar from '@/page/buyCar/buyCar'
 import getSum from '@/page/buyCar/getSum'
-import nowbuy from '@/page/buyCar/nowbuy'
 import order from '@/page/order/order'
 import orderDetail from '@/page/order/children/orderDetail'
 import afterSaleList from '@/page/saleService/afterSaleList'
@@ -22,19 +21,19 @@ import collection from '@/page/collection/collection'
 import record from '@/page/collection/record'
 import discuss from '@/page/discuss/discuss'
 import setpage from '@/page/setpage/setpage'
+import setpassword from '@/page/setpage/setpassword'
 import information from '@/page/information/information'
+import setname from '@/page/information/setname'
+import setphone from '@/page/information/setphone'
 import list from '@/page/address/list'
 import addpage from '@/page/address/addpage'
 import editpage from '@/page/address/editpage'
 import faPiao from '@/page/faPiao/faPiao'
 import editFaPiao from '@/page/faPiao/editFaPiao'
-
-
-
+import mall from '@/page/mall/mall'
 
 Vue.use(Router)
 export default new Router({
-
     routes: [
         {
             path: '/',
@@ -64,14 +63,7 @@ export default new Router({
             meta: { auth: true }
 
         },
-        {
-            path: '/nowbuy',
-            name: 'nowbuy',
-            component: nowbuy,
-            meta: { auth: true }
-
-        },
-
+        // 我的页面
         {
             path: '/mine',
             name: 'mine',
@@ -174,11 +166,29 @@ export default new Router({
             name: 'setpage',
             component: setpage
         },
+        //设置密码
+        {
+            path: '/setpassword',
+            name: 'setpassword',
+            component: setpassword
+        },
         //个人资料
         {
             path: '/information',
             name: 'information',
-            component: information
+            component: information,
+        },
+        //修改用户
+        {
+            path: '/information/setname',
+            name: 'setname',
+            component: setname
+        },
+        //修改手机
+        {
+            path: '/information/setphone',
+            name: 'setphone',
+            component: setphone
         },
         //地址列表
         {
@@ -209,6 +219,12 @@ export default new Router({
             path: '/editFaPiao',
             name: 'editFaPiao',
             component: editFaPiao
+        },
+        //店铺商品
+        {
+            path: '/mall',
+            name: 'mall',
+            component: mall
         },
     ]
 })
