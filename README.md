@@ -2,7 +2,7 @@
 
 [README in English](README-en.md)
 
-精致商城H5(类似京东商城)
+精致商城H5
 
 ## 技术栈
 
@@ -14,7 +14,6 @@ vue2 + vuex + vue-router + webpack + ES6/7 + axios + sass + flex
 #### 注意：由于涉及大量的 ES6/7 等新属性，node 需要 6.0 以上版本
 
 ```
-git clone https://github.com/bailicangdu/vue2-elm.git  
 
 cd mall-vue
 
